@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <FileRef
+      location = "container:appIos.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:common-design/common-design.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:common-swiftui/common-swiftui.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:common-swiftui-test/common-swiftui-test.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:feed/feed.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:feed-test-fixtures/feed-test-fixtures.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:post/post.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:post-test-fixtures/post-test-fixtures.xcodeproj">
+   </FileRef>
+</Workspace>

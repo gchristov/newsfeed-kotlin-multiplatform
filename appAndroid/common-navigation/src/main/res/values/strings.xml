@@ -1,0 +1,3 @@
+<resources>
+    <string name="deeplink_url_scheme">news</string>
+</resources>

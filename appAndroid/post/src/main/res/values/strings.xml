@@ -1,0 +1,5 @@
+<resources>
+    <string name="post_read_time">1 min read</string>
+    <string name="post_add_favourite">Add to favourites</string>
+    <string name="post_remove_favourite">Remove from favourites</string>
+</resources>

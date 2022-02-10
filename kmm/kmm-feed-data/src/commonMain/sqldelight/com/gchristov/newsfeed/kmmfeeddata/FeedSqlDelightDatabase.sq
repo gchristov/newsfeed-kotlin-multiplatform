@@ -1,0 +1,29 @@
+CREATE TABLE Post (
+    uid TEXT NOT NULL PRIMARY KEY,
+    author TEXT NOT NULL,
+    title TEXT NOT NULL,
+    body TEXT,
+    pageId TEXT,
+    nextPageId TEXT
+);
+CREATE INDEX post_uid ON Post(uid);
+CREATE INDEX post_pageId ON Post(pageId);
+CREATE INDEX post_nextPageId ON Post(nextPageId);
+
+clearTable:
+DELETE
+FROM Post;
+
+selectWithPageId:
+SELECT *
+FROM Post
+WHERE Post.pageId == ?;
+
+selectWithId:
+SELECT *
+FROM Post
+WHERE Post.uid == ?;
+
+insert:
+INSERT OR REPLACE INTO Post(uid, author, title, body, pageId, nextPageId)
+VALUES (?, ?, ?, ?, ?, ?);
