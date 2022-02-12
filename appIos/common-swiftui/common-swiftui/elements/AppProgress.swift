@@ -2,14 +2,15 @@ import SwiftUI
 
 public struct AppCircularProgressIndicator: View {
     @EnvironmentObject var theme: Theme
+    private let tint: Color?
     
-    public init() {
-        // No-op
+    public init(tint: Color? = nil) {
+        self.tint = tint
     }
     
     public var body: some View {
         ProgressView()
-            .progressViewStyle(CircularProgressViewStyle(tint: theme.contentColors.action))
+            .progressViewStyle(CircularProgressViewStyle(tint: tint ?? theme.contentColors.action))
             .accessibilityLabel("Loading")
     }
 }

@@ -1,88 +1,129 @@
 package com.gchristov.newsfeed.feed
 
-import com.gchristov.newsfeed.commoncomposetest.createCustomComposeRule
+import com.gchristov.newsfeed.commoncomposetest.CommonComposeTestClass
 import com.gchristov.newsfeed.feedtestfixtures.FeedRobot
 import com.gchristov.newsfeed.feedtestfixtures.feed
+import com.gchristov.newsfeed.kmmcommontest.FakeClock
+import com.gchristov.newsfeed.kmmcommontest.FakeCoroutineDispatcher
 import com.gchristov.newsfeed.kmmcommontest.FakeResponse
 import com.gchristov.newsfeed.kmmfeed.FeedViewModel
-import com.gchristov.newsfeed.kmmfeeddata.model.DecoratedPost
-import com.gchristov.newsfeed.kmmfeeddata.model.Feed
+import com.gchristov.newsfeed.kmmfeeddata.model.DecoratedFeedItem
+import com.gchristov.newsfeed.kmmfeeddata.model.DecoratedFeedPage
+import com.gchristov.newsfeed.kmmfeeddata.usecase.*
 import com.gchristov.newsfeed.kmmfeedtestfixtures.FakeFeedRepository
 import com.gchristov.newsfeed.kmmfeedtestfixtures.FeedCreator
+import com.gchristov.newsfeed.kmmposttestfixtures.FakePostRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import org.junit.Rule
 import org.junit.Test
+import java.text.SimpleDateFormat
+import java.util.*
 import kotlin.test.assertEquals
 
 @ExperimentalCoroutinesApi
-class FeedTest {
-    @get:Rule
-    val composeRule = createCustomComposeRule()
-
-    private lateinit var lastClickedPost: DecoratedPost
+class FeedTest : CommonComposeTestClass() {
+    private lateinit var lastClickedItem: DecoratedFeedItem
 
     @Test
-    fun singlePageFeedLoadingIndicatorShown() = runTest(feedResponse = FakeResponse.LoadsForever) {
-        assertLoadingExists()
-        assertFeedItemDoesNotExist(
-            title = Post1Title,
-            author = Post1Author,
-            body = Post1Body,
-        )
-        assertBlockingErrorDoesNotExist()
-        assertNonBlockingErrorDoesNotExist()
+    fun emptyStateShown() {
+        // Given
+        val feed = FeedCreator.emptyFeed()
+        // When
+        runTest(feedPages = feed) {
+            // Then
+            assertLoadingDoesNotExist()
+            assertEmptyStateExists()
+            assertSectionDoesNotExist(Post1Section)
+            assertFeedItemDoesNotExist(
+                title = Post1Title,
+                date = Post1Date,
+            )
+            assertBlockingErrorDoesNotExist()
+            assertNonBlockingErrorDoesNotExist()
+        }
+    }
+
+    @Test
+    fun cacheShown() {
+        // Given
+        val cache = FeedCreator.singlePageFeed().first()
+        val response = FakeResponse.LoadsForever
+        // When
+        runTest(
+            feedPageCache = cache,
+            feedResponse = response
+        ) {
+            // Then
+            assertLoadingExists()
+            assertEmptyStateDoesNotExist()
+            assertSectionExists(Post1Section)
+            assertFeedItemExists(
+                title = Post1Title,
+                date = Post1Date,
+            )
+            assertSectionExists(Post2Section)
+            assertFeedItemExists(
+                title = Post2Title,
+                date = Post2Date,
+            )
+            assertSectionExists(Post3Section)
+            assertFeedItemExists(
+                title = Post3Title,
+                date = Post3Date,
+            )
+            assertSectionExists(Post4Section)
+            assertFeedItemExists(
+                title = Post4Title,
+                date = Post4Date,
+            )
+            assertFavouriteItemsShown(favouriteItems = 2)
+            assertBlockingErrorDoesNotExist()
+            assertNonBlockingErrorDoesNotExist()
+        }
+    }
+
+    @Test
+    fun singlePageFeedLoadingIndicatorShown() {
+        // Given
+        val response = FakeResponse.LoadsForever
+        // When
+        runTest(feedResponse = response) {
+            // Then
+            assertLoadingExists()
+            assertEmptyStateDoesNotExist()
+            assertSectionDoesNotExist(Post1Section)
+            assertFeedItemDoesNotExist(
+                title = Post1Title,
+                date = Post1Date,
+            )
+            assertBlockingErrorDoesNotExist()
+            assertNonBlockingErrorDoesNotExist()
+        }
     }
 
     @Test
     fun singlePageFeedShown() = runTest {
         assertLoadingDoesNotExist()
+        assertEmptyStateDoesNotExist()
+        assertSectionExists(Post1Section)
         assertFeedItemExists(
             title = Post1Title,
-            author = Post1Author,
-            body = Post1Body,
+            date = Post1Date,
         )
+        assertSectionExists(Post2Section)
         assertFeedItemExists(
             title = Post2Title,
-            author = Post2Author,
-            body = Post2Body,
+            date = Post2Date,
         )
-        assertFavouriteItemsShown(favouriteItems = 1)
-        assertBlockingErrorDoesNotExist()
-        assertNonBlockingErrorDoesNotExist()
-    }
-
-    @Test
-    fun multiPageFeedLoadingIndicatorShown() = runTest(
-        feed = FeedCreator.multiPageFeed(),
-        feedLoadMoreResponse = FakeResponse.LoadsForever
-    ) {
-        assertLoadingExists()
-        assertFeedItemExists(
-            title = Post1Title,
-            author = Post1Author,
-            body = Post1Body,
-        )
-        assertBlockingErrorDoesNotExist()
-        assertNonBlockingErrorDoesNotExist()
-    }
-
-    @Test
-    fun multiPageFeedShown() = runTest(feed = FeedCreator.multiPageFeed()) {
-        assertLoadingDoesNotExist()
-        assertFeedItemExists(
-            title = Post1Title,
-            author = Post1Author,
-            body = Post1Body,
-        )
-        assertFeedItemExists(
-            title = Post2Title,
-            author = Post2Author,
-            body = Post2Body,
-        )
+        assertSectionExists(Post3Section)
         assertFeedItemExists(
             title = Post3Title,
-            author = Post3Author,
-            body = Post3Body,
+            date = Post3Date,
+        )
+        assertSectionExists(Post4Section)
+        assertFeedItemExists(
+            title = Post4Title,
+            date = Post4Date,
         )
         assertFavouriteItemsShown(favouriteItems = 2)
         assertBlockingErrorDoesNotExist()
@@ -90,67 +131,179 @@ class FeedTest {
     }
 
     @Test
-    fun blockingErrorShown() = runTest(feedResponse = FakeResponse.Error()) {
-        assertLoadingDoesNotExist()
-        assertFeedItemDoesNotExist(
-            title = Post1Title,
-            author = Post1Author,
-            body = Post1Body,
-        )
-        assertBlockingErrorExists()
-        assertNonBlockingErrorDoesNotExist()
+    fun multiPageFeedLoadingIndicatorShown() {
+        // Given
+        val feed = FeedCreator.multiPageFeed()
+        val response = FakeResponse.LoadsForever
+        // When
+        runTest(
+            feedPages = feed,
+            feedLoadMoreResponse = response
+        ) {
+            // Then
+            assertLoadingExists()
+            assertEmptyStateDoesNotExist()
+            assertSectionExists(Post1Section)
+            assertFeedItemExists(
+                title = Post1Title,
+                date = Post1Date,
+            )
+            assertBlockingErrorDoesNotExist()
+            assertNonBlockingErrorDoesNotExist()
+        }
     }
 
     @Test
-    fun nonBlockingErrorShown() = runTest(
-        feed = FeedCreator.multiPageFeed(),
-        feedLoadMoreResponse = FakeResponse.Error()
-    ) {
-        assertLoadingDoesNotExist()
-        assertFeedItemExists(
-            title = Post1Title,
-            author = Post1Author,
-            body = Post1Body,
-        )
-        assertBlockingErrorDoesNotExist()
-        assertNonBlockingErrorExists()
+    fun multiPageFeedShown() {
+        // Given
+        val feed = FeedCreator.multiPageFeed()
+        // When
+        runTest(feedPages = feed) {
+            // Then
+            assertLoadingDoesNotExist()
+            assertEmptyStateDoesNotExist()
+            assertSectionExists(Post1Section)
+            assertFeedItemExists(
+                title = Post1Title,
+                date = Post1Date,
+            )
+            assertSectionExists(Post2Section)
+            assertFeedItemExists(
+                title = Post2Title,
+                date = Post2Date,
+            )
+            assertSectionExists(Post3Section)
+            assertFeedItemExists(
+                title = Post3Title,
+                date = Post3Date,
+            )
+            assertSectionExists(Post4Section)
+            assertFeedItemExists(
+                title = Post4Title,
+                date = Post4Date,
+            )
+            assertFavouriteItemsShown(favouriteItems = 2)
+            assertBlockingErrorDoesNotExist()
+            assertNonBlockingErrorDoesNotExist()
+        }
     }
 
     @Test
-    fun feedItemClickOpensPost() = runTest {
-        val post = FeedCreator.singlePageFeed().first().posts.first()
-        clickPost(post.post.title)
-        assertEquals(lastClickedPost, post)
+    fun blockingErrorShown() {
+        // Given
+        val response = FakeResponse.Error()
+        // When
+        runTest(feedResponse = response) {
+            // Then
+            assertLoadingDoesNotExist()
+            assertEmptyStateDoesNotExist()
+            assertSectionDoesNotExist(Post1Section)
+            assertFeedItemDoesNotExist(
+                title = Post1Title,
+                date = Post1Date,
+            )
+            assertBlockingErrorExists()
+            assertNonBlockingErrorDoesNotExist()
+        }
+    }
+
+    @Test
+    fun nonBlockingErrorShown() {
+        // Given
+        val feed = FeedCreator.multiPageFeed()
+        val response = FakeResponse.Error()
+        // When
+        runTest(
+            feedPages = feed,
+            feedLoadMoreResponse = response
+        ) {
+            // Then
+            assertLoadingDoesNotExist()
+            assertEmptyStateDoesNotExist()
+            assertSectionExists(Post1Section)
+            assertFeedItemExists(
+                title = Post1Title,
+                date = Post1Date,
+            )
+            assertBlockingErrorDoesNotExist()
+            assertNonBlockingErrorExists()
+        }
+    }
+
+    @Test
+    fun feedItemClickOpensPost() {
+        // Given
+        val post = FeedCreator.singlePageFeed().first().items.first()
+        runTest {
+            // When
+            clickPost(requireNotNull(post.raw.headline))
+            // Then
+            assertEquals(lastClickedItem, post)
+        }
     }
 
     private fun runTest(
-        feed: List<Feed> = FeedCreator.singlePageFeed(),
+        feedPages: List<DecoratedFeedPage> = FeedCreator.singlePageFeed(),
+        feedPageCache: DecoratedFeedPage? = null,
         feedResponse: FakeResponse = FakeResponse.CompletesNormally,
         feedLoadMoreResponse: FakeResponse = FakeResponse.CompletesNormally,
-        block: FeedRobot.() -> Unit
+        testBlock: FeedRobot.() -> Unit
     ) {
-        val feedRepository = FakeFeedRepository(feed = feed).apply {
+        // Setup test environment
+        val postRepository = FakePostRepository()
+        val feedRepository = FakeFeedRepository(
+            postRepository = postRepository,
+            feedPages = feedPages,
+            feedPageCache = feedPageCache
+        ).apply {
             this.feedResponse = feedResponse
             this.feedLoadMoreResponse = feedLoadMoreResponse
         }
+        val buildSectionedFeedUseCase = BuildSectionedFeedUseCase(
+            dispatcher = FakeCoroutineDispatcher,
+            clock = FakeClock
+        )
+        val getSectionedFeedUseCase = GetSectionedFeedUseCase(
+            feedRepository = feedRepository,
+            buildSectionedFeedUseCase = buildSectionedFeedUseCase,
+            mergeSectionedFeedUseCase = MergeSectionedFeedUseCase(dispatcher = FakeCoroutineDispatcher)
+        )
+        val redecorateSectionedFeedUseCase = RedecorateSectionedFeedUseCase(
+            feedRepository = feedRepository,
+            flattenSectionedFeedUseCase = FlattenSectionedFeedUseCase(dispatcher = FakeCoroutineDispatcher),
+            buildSectionedFeedUseCase = buildSectionedFeedUseCase
+        )
         composeRule.setContent {
-            val viewModel = FeedViewModel(feedRepository = feedRepository)
+            val viewModel = FeedViewModel(
+                dispatcher = Dispatchers.Main,
+                feedRepository = feedRepository,
+                getSectionedFeedUseCase = getSectionedFeedUseCase,
+                redecorateSectionedFeedUseCase = redecorateSectionedFeedUseCase
+            )
             FeedScreen(
                 viewModel = viewModel,
-                onPostClick = { lastClickedPost = it }
+                feedItemDateFormatter = { ms -> FeedItemDateFormat.format(ms) },
+                feedSectionDateFormatter = { ms -> FeedSectionDateFormat.format(ms) },
+                onFeedItemClick = { lastClickedItem = it }
             )
         }
-        composeRule.feed(block)
+        composeRule.feed(testBlock)
     }
 }
 
+private const val Post1Section = "This week"
 private const val Post1Title = "Post 1 Title"
-private const val Post1Author = "steve"
-private const val Post1Body = "This is a sample post 1 body"
-private const val Post2Title = "Post 2 Title"
-private const val Post2Author = "amy"
-private const val Post2Body =
-    "This is a sample post 2 body that may be longer and even go on multiple lines"
+private const val Post1Date = "21/02/2022"
+private const val Post2Section = "Last week"
+private const val Post2Title =
+    "This is a sample post 2 title that may be longer and even go on multiple lines"
+private const val Post2Date = "13/02/2022"
+private const val Post3Section = "This month"
 private const val Post3Title = "Post 3 Title"
-private const val Post3Author = "sarah"
-private const val Post3Body = "This is a sample post 3 body"
+private const val Post3Date = "01/02/2022"
+private const val Post4Section = "Jan, 2022"
+private const val Post4Title = "Post 4 Title"
+private const val Post4Date = "01/01/2022"
+
+private val FeedItemDateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+private val FeedSectionDateFormat = SimpleDateFormat("MMM, yyyy", Locale.getDefault())

@@ -1,7 +1,7 @@
 import com.gchristov.newsfeed.kmmgradleplugins.Deps
 
 plugins {
-    id("kmm-common-module-plugin")
+    id("kmm-platform-plugin")
 }
 
 kotlin {

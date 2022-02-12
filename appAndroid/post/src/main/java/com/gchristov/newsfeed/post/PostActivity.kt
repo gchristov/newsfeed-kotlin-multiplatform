@@ -2,6 +2,8 @@ package com.gchristov.newsfeed.post
 
 import android.content.Intent
 import androidx.activity.viewModels
+import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -12,18 +14,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.gchristov.newsfeed.commoncompose.CommonComposeActivity
 import com.gchristov.newsfeed.commoncompose.elements.*
 import com.gchristov.newsfeed.commoncompose.elements.avatar.AppAvatar
 import com.gchristov.newsfeed.commoncompose.theme.Theme
 import com.gchristov.newsfeed.kmmcommonmvvm.createViewModelFactory
-import com.gchristov.newsfeed.kmmfeeddata.Post
-import com.gchristov.newsfeed.kmmfeeddata.model.DecoratedPost
 import com.gchristov.newsfeed.kmmpost.PostModule
 import com.gchristov.newsfeed.kmmpost.PostViewModel
+import com.gchristov.newsfeed.kmmpostdata.model.DecoratedPost
 
 class PostActivity : CommonComposeActivity() {
     private val viewModel by viewModels<PostViewModel> {
@@ -73,57 +76,101 @@ private fun PostState(
 ) {
     val scrollState = rememberScrollState()
 
-    AppScreen(
-        topBar = {
-            AppBar(
-                showBack = true,
-                elevated = scrollState.value != 0,
-                actions = {
-                    val icon =
-                        if (post?.isFavourite() == true) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder
-                    val contentDescription =
-                        stringResource(if (post?.isFavourite() == true) R.string.post_remove_favourite else R.string.post_add_favourite)
-                    AppIconButton(
-                        onClick = onToggleFavourite,
-                        icon = icon,
-                        contentDescription = contentDescription,
-                    )
-                }
-            )
-        },
-    ) {
-        AppPullRefresh(
-            loading = loading,
-            onRefresh = onRefresh
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(scrollState)
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+    AppScreen {
+        Box {
+            AppPullRefresh(
+                loading = loading,
+                onRefresh = onRefresh
             ) {
-                post?.let { post ->
-                    PostHeader(post = post)
-                    post.post.body?.let { body ->
-                        AppText(
-                            modifier = Modifier.padding(top = 16.dp),
-                            text = body,
-                        )
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(scrollState),
+                ) {
+                    post?.let { post ->
+                        PostImage(post.raw.thumbnail)
+                        Column(
+                            modifier = Modifier.padding(16.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            PostHeader(post.raw.headline ?: "--")
+                            PostBody(post.raw.body ?: "--")
+                        }
                     }
                 }
             }
+            PostAppBar(
+                scrollState = scrollState,
+                allowFavourite = post != null,
+                isFavourite = post?.isFavourite() == true,
+                onToggleFavourite = onToggleFavourite
+            )
         }
     }
 }
 
 @Composable
-private fun PostHeader(post: DecoratedPost) {
+private fun PostAppBar(
+    scrollState: ScrollState,
+    allowFavourite: Boolean,
+    isFavourite: Boolean,
+    onToggleFavourite: () -> Unit,
+) {
+    val isScrolled = scrollState.value != 0
+
+    val appBarGradientColors = listOf(
+        Theme.backgrounds.surface.copy(alpha = 0.7f),
+        Color.Transparent
+    )
+    val appBarIcon = if (isFavourite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder
+    val appBarIconContentDescription =
+        stringResource(if (isFavourite) R.string.post_remove_favourite else R.string.post_add_favourite)
+
+    Box(
+        modifier = Modifier
+            .background(brush = Brush.verticalGradient(colors = appBarGradientColors))
+    ) {
+        AppBar(
+            showBack = true,
+            elevated = isScrolled,
+            actions = if (allowFavourite) {
+                {
+                    AppIconButton(
+                        onClick = onToggleFavourite,
+                        icon = appBarIcon,
+                        contentDescription = appBarIconContentDescription,
+                    )
+                }
+            } else null
+        )
+    }
+}
+
+@Composable
+private fun PostImage(url: String?) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(300.dp)
+            .background(Theme.backgrounds.surface)
+    ) {
+        url?.let {
+            AppImage(
+                modifier = Modifier.fillMaxSize(),
+                imageUrl = it,
+                contentScale = ContentScale.Crop
+            )
+        }
+    }
+}
+
+@Composable
+private fun PostHeader(header: String) {
     AppText(
-        text = post.post.title,
+        text = header,
         style = Theme.typography.title,
     )
-    PostAuthor(post.post.author)
+    PostAuthor("Anonymous")
 }
 
 @Composable
@@ -152,6 +199,14 @@ private fun PostAuthor(author: String) {
 }
 
 @Composable
+private fun PostBody(text: String) {
+    AppHtmlText(
+        modifier = Modifier.padding(top = 16.dp),
+        html = text
+    )
+}
+
+@Composable
 private fun ErrorState(
     blockingError: BlockingError,
     onRetry: () -> Unit
@@ -171,25 +226,6 @@ private fun ErrorState(
     }
 }
 
-@Preview
-@Composable
-private fun Preview() {
-    PostState(
-        loading = false,
-        post = DecoratedPost(
-            post = Post(
-                uid = "123",
-                author = "Author",
-                title = "Title",
-                body = "Body",
-                pageId = null,
-                nextPageId = null
-            ),
-            favouriteTimestamp = null
-        ),
-        onRefresh = {},
-        onToggleFavourite = {}
-    )
-}
+private fun DecoratedPost.isFavourite() = favouriteTimestamp != null
 
 private const val KeyPostId = "postId"

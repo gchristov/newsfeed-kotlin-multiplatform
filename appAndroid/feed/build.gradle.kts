@@ -1,5 +1,5 @@
 plugins {
-    id("common-feature-plugin")
+    id("android-feature-plugin")
 }
 
 android {

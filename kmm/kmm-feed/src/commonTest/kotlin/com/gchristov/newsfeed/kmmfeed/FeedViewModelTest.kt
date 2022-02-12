@@ -1,84 +1,190 @@
 package com.gchristov.newsfeed.kmmfeed
 
 import com.gchristov.newsfeed.kmmcommonmvvmtest.CommonViewModelTestClass
+import com.gchristov.newsfeed.kmmcommontest.FakeClock
+import com.gchristov.newsfeed.kmmcommontest.FakeCoroutineDispatcher
 import com.gchristov.newsfeed.kmmcommontest.FakeResponse
-import com.gchristov.newsfeed.kmmfeeddata.model.Feed
+import com.gchristov.newsfeed.kmmfeeddata.model.DecoratedFeedPage
+import com.gchristov.newsfeed.kmmfeeddata.model.SectionedFeed
+import com.gchristov.newsfeed.kmmfeeddata.usecase.*
 import com.gchristov.newsfeed.kmmfeedtestfixtures.FakeFeedRepository
 import com.gchristov.newsfeed.kmmfeedtestfixtures.FeedCreator
+import com.gchristov.newsfeed.kmmposttestfixtures.FakePostRepository
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
+import kotlinx.datetime.Instant
 import kotlin.test.*
 
 @ExperimentalCoroutinesApi
 class FeedViewModelTest : CommonViewModelTestClass() {
 
-    private lateinit var feedRepository: FakeFeedRepository
-
     @Test
-    fun initialLoadingSetsState() = runTest(feedResponse = FakeResponse.LoadsForever) { viewModel ->
-        assertTrue { viewModel.state.value.loading }
-        assertFalse { viewModel.state.value.loadingMore }
+    fun initialLoadingSetsState() {
+        // Given
+        val response = FakeResponse.LoadsForever
+        // When
+        runTest(feedResponse = response) { viewModel, _, _ ->
+            // Then
+            assertTrue { viewModel.state.value.loading }
+            assertFalse { viewModel.state.value.loadingMore }
+            assertFalse { viewModel.state.value.reachedEnd }
+            assertNull(viewModel.state.value.blockingError)
+            assertNull(viewModel.state.value.nonBlockingError)
+        }
     }
 
     @Test
-    fun redecoratingSetsContent() = runTest { viewModel ->
-        // Take a non-favourite post and mark as favourite through the repository
-        val post = viewModel.state.value.feed!!.posts.first().copy(favouriteTimestamp = null)
-        feedRepository.toggleFavourite(post.post.uid)
+    fun redecoratingSetsContent() = runTest { viewModel, _, postRepository ->
+        // Given
+        var post = viewModel.state.value.sectionedFeed!!.sections.first().feedItems.first()
+        val prevTimestamp = post.favouriteTimestamp
+        // When
+        postRepository.toggleFavourite(post.raw.itemId)
         viewModel.redecorateContent()
-
-        assertNotNull(viewModel.state.value.feed!!.posts.first().favouriteTimestamp)
+        // Then
+        post = viewModel.state.value.sectionedFeed!!.sections.first().feedItems.first()
+        assertTrue { post.favouriteTimestamp != prevTimestamp }
     }
 
     @Test
-    fun refreshingContentClearsCacheAndReloads() = runTest { viewModel ->
+    fun refreshingContentClearsCacheAndReloads() = runTest { viewModel, feedRepository, _ ->
+        // Given
         feedRepository.resetCurrentPage()
         feedRepository.feedResponse = FakeResponse.LoadsForever
+        // When
         viewModel.refreshContent()
-
+        // Then
         feedRepository.assertCacheCleared()
         assertTrue { viewModel.state.value.loading }
-    }
-
-    @Test
-    fun loadNextPageReachesEnd() = runTest { viewModel ->
-        viewModel.loadNextPage(startFromFirst = false)
-
-        assertTrue { viewModel.state.value.reachedEnd }
-    }
-
-    @Test
-    fun loadNextPageLoadsMore() = runTest(feed = FeedCreator.multiPageFeed()) { viewModel ->
-        feedRepository.feedLoadMoreResponse = FakeResponse.LoadsForever
-        viewModel.loadNextPage(startFromFirst = false)
-
-        assertFalse { viewModel.state.value.loading }
-        assertTrue { viewModel.state.value.loadingMore }
+        assertFalse { viewModel.state.value.loadingMore }
         assertFalse { viewModel.state.value.reachedEnd }
         assertNull(viewModel.state.value.blockingError)
         assertNull(viewModel.state.value.nonBlockingError)
     }
 
     @Test
-    fun onLoadSuccessSetsCorrectState() {
-        val feeds = FeedCreator.singlePageFeed()
-        val feed = feeds.first()
+    fun loadNextPageReachesEnd() {
+        // Given
+        val feed = FeedCreator.singlePageFeed()
+        runTest(feedPages = feed) { viewModel, _, _ ->
+            // When
+            viewModel.loadNextPage(startFromFirst = false)
+            // Then
+            assertTrue { viewModel.state.value.reachedEnd }
+        }
+    }
 
-        runTest(feed = feeds) { viewModel ->
+    @Test
+    fun loadNextPageLoadsMore() {
+        // Given
+        val feed = FeedCreator.multiPageFeed()
+        runTest(feedPages = feed) { viewModel, feedRepository, _ ->
+            feedRepository.feedLoadMoreResponse = FakeResponse.LoadsForever
+            // When
+            viewModel.loadNextPage(startFromFirst = false)
+            // Then
+            assertFalse { viewModel.state.value.loading }
+            assertTrue { viewModel.state.value.loadingMore }
+            assertFalse { viewModel.state.value.reachedEnd }
+            assertNull(viewModel.state.value.blockingError)
+            assertNull(viewModel.state.value.nonBlockingError)
+        }
+    }
+
+    @Test
+    fun onLoadSuccessSetsCache() {
+        // Given
+        val cache = FeedCreator.singlePageFeed().first()
+        val response = FakeResponse.LoadsForever
+        val expected = SectionedFeed(
+            pages = 1,
+            currentPage = 1,
+            sections = listOf(
+                SectionedFeed.Section(
+                    type = SectionedFeed.SectionType.ThisWeek,
+                    feedItems = cache.items.subList(0, 1)
+                ),
+                SectionedFeed.Section(
+                    type = SectionedFeed.SectionType.LastWeek,
+                    feedItems = cache.items.subList(1, 2)
+                ),
+                SectionedFeed.Section(
+                    type = SectionedFeed.SectionType.ThisMonth,
+                    feedItems = cache.items.subList(2, 3)
+                ),
+                SectionedFeed.Section(
+                    type = SectionedFeed.SectionType.Older(Instant.parse(FeedCreator.DateOtherMonth)),
+                    feedItems = cache.items.subList(3, 4)
+                )
+            )
+        )
+        // When
+        runTest(
+            feedPageCache = cache,
+            feedResponse = response
+        ) { viewModel, feedRepository, _ ->
+            // Then
+            feedRepository.assertCacheCleared()
+            assertTrue { viewModel.state.value.loading }
+            assertFalse { viewModel.state.value.loadingMore }
+            assertEquals(
+                expected = expected,
+                actual = viewModel.state.value.sectionedFeed
+            )
+            assertNull(viewModel.state.value.blockingError)
+            assertNull(viewModel.state.value.nonBlockingError)
+        }
+    }
+
+    @Test
+    fun onLoadSuccessSetsCorrectState() {
+        // Given
+        val feed = FeedCreator.singlePageFeed()
+        val expected = SectionedFeed(
+            pages = 1,
+            currentPage = 1,
+            sections = listOf(
+                SectionedFeed.Section(
+                    type = SectionedFeed.SectionType.ThisWeek,
+                    feedItems = feed.first().items.subList(0, 1)
+                ),
+                SectionedFeed.Section(
+                    type = SectionedFeed.SectionType.LastWeek,
+                    feedItems = feed.first().items.subList(1, 2)
+                ),
+                SectionedFeed.Section(
+                    type = SectionedFeed.SectionType.ThisMonth,
+                    feedItems = feed.first().items.subList(2, 3)
+                ),
+                SectionedFeed.Section(
+                    type = SectionedFeed.SectionType.Older(Instant.parse(FeedCreator.DateOtherMonth)),
+                    feedItems = feed.first().items.subList(3, 4)
+                )
+            )
+        )
+        // When
+        runTest(feedPages = feed) { viewModel, _, _ ->
+            // Then
             assertFalse { viewModel.state.value.loading }
             assertFalse { viewModel.state.value.loadingMore }
             assertEquals(
-                expected = feed,
-                actual = viewModel.state.value.feed
+                expected = expected,
+                actual = viewModel.state.value.sectionedFeed
             )
+            assertNull(viewModel.state.value.blockingError)
+            assertNull(viewModel.state.value.nonBlockingError)
         }
     }
 
     @Test
     fun onLoadErrorSetsCorrectState() {
+        // Given
         val errorMessage = "Error message"
         val response = FakeResponse.Error(errorMessage)
-
-        runTest(feedResponse = response) { viewModel ->
+        // When
+        runTest(feedResponse = response) { viewModel, _, _ ->
+            // Then
             assertFalse { viewModel.state.value.loading }
             assertFalse { viewModel.state.value.loadingMore }
             assertEquals(
@@ -91,13 +197,15 @@ class FeedViewModelTest : CommonViewModelTestClass() {
 
     @Test
     fun onLoadMoreErrorSetsCorrectState() {
+        // Given
+        val feed = FeedCreator.multiPageFeed()
         val errorMessage = "Error message"
         val response = FakeResponse.Error(errorMessage)
-
-        runTest(feed = FeedCreator.multiPageFeed()) { viewModel ->
+        runTest(feedPages = feed) { viewModel, feedRepository, _ ->
+            // When
             feedRepository.feedLoadMoreResponse = response
             viewModel.loadNextPage(startFromFirst = false)
-
+            // Then
             assertFalse { viewModel.state.value.loading }
             assertFalse { viewModel.state.value.loadingMore }
             assertNull(viewModel.state.value.blockingError)
@@ -110,12 +218,14 @@ class FeedViewModelTest : CommonViewModelTestClass() {
 
     @Test
     fun dismissingNonBlockingErrorHidesIt() {
+        // Given
+        val feed = FeedCreator.multiPageFeed()
         val response = FakeResponse.Error("Error message")
-
-        runTest(feed = FeedCreator.multiPageFeed()) { viewModel ->
+        runTest(feedPages = feed) { viewModel, feedRepository, _ ->
+            // When
             feedRepository.feedLoadMoreResponse = response
             viewModel.loadNextPage(startFromFirst = false)
-
+            // Then
             assertNotNull(viewModel.state.value.nonBlockingError)
             viewModel.dismissNonBlockingError()
             assertNull(viewModel.state.value.nonBlockingError)
@@ -123,16 +233,44 @@ class FeedViewModelTest : CommonViewModelTestClass() {
     }
 
     private fun runTest(
-        feed: List<Feed> = FeedCreator.singlePageFeed(),
+        feedPages: List<DecoratedFeedPage> = FeedCreator.singlePageFeed(),
+        feedPageCache: DecoratedFeedPage? = null,
         feedResponse: FakeResponse = FakeResponse.CompletesNormally,
         feedLoadMoreResponse: FakeResponse = FakeResponse.CompletesNormally,
-        block: (FeedViewModel) -> Unit
-    ) {
-        feedRepository = FakeFeedRepository(feed = feed).apply {
+        testBlock: suspend CoroutineScope.(FeedViewModel, FakeFeedRepository, FakePostRepository) -> Unit
+    ) = runBlocking {
+        // Setup test environment
+        val postRepository = FakePostRepository()
+        val feedRepository = FakeFeedRepository(
+            postRepository = postRepository,
+            feedPages = feedPages,
+            feedPageCache = feedPageCache,
+        ).apply {
             this.feedResponse = feedResponse
             this.feedLoadMoreResponse = feedLoadMoreResponse
         }
-        val viewModel = FeedViewModel(feedRepository = feedRepository)
-        block(viewModel)
+        val getSectionedFeedUseCase = GetSectionedFeedUseCase(
+            feedRepository = feedRepository,
+            buildSectionedFeedUseCase = BuildSectionedFeedUseCase(
+                dispatcher = FakeCoroutineDispatcher,
+                clock = FakeClock
+            ),
+            mergeSectionedFeedUseCase = MergeSectionedFeedUseCase(dispatcher = FakeCoroutineDispatcher)
+        )
+        val redecorateSectionedFeedUseCase = RedecorateSectionedFeedUseCase(
+            feedRepository = feedRepository,
+            flattenSectionedFeedUseCase = FlattenSectionedFeedUseCase(dispatcher = FakeCoroutineDispatcher),
+            buildSectionedFeedUseCase = BuildSectionedFeedUseCase(
+                dispatcher = FakeCoroutineDispatcher,
+                clock = FakeClock
+            )
+        )
+        val viewModel = FeedViewModel(
+            dispatcher = FakeCoroutineDispatcher,
+            feedRepository = feedRepository,
+            getSectionedFeedUseCase = getSectionedFeedUseCase,
+            redecorateSectionedFeedUseCase = redecorateSectionedFeedUseCase
+        )
+        testBlock(viewModel, feedRepository, postRepository)
     }
 }

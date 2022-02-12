@@ -8,7 +8,7 @@ public struct Backgrounds {
 
 func lightBackgrounds() -> Backgrounds {
     return Backgrounds(
-        primary: Color.appWhite,
+        primary: Color.appGray4,
         surface: Color.appWhite
     )
 }

@@ -9,9 +9,37 @@ class PostUiTest: XCTestCase {
     }
     
     func testLoadingIndicatorShown() throws {
-        runTest(postResponse: "loadForever") { robot in
+        // Given
+        let response = "loadForever"
+        // When
+        runTest(postResponse: response) { robot in
+            // Then
             robot.assertLoadingExists()
+            robot.assertAddToFavouritesButtonDoesNotExist()
+            robot.assertRemoveFromFavouritesButtonDoesNotExist()
             robot.assertPostDoesNotExist(
+                title: PostTitle,
+                author: PostAuthor,
+                readingTime: PostReadingTime,
+                body: PostBody
+            )
+            robot.assertBlockingErrorDoesNotExist()
+        }
+    }
+    
+    func testCacheShown() throws {
+        // Given
+        let cache = "notFavourite"
+        let response = "loadForever"
+        // When
+        runTest(
+            postCache: cache,
+            postResponse: response
+        ) { robot in
+            robot.assertLoadingExists()
+            robot.assertAddToFavouritesButtonExists()
+            robot.assertRemoveFromFavouritesButtonDoesNotExist()
+            robot.assertPostExists(
                 title: PostTitle,
                 author: PostAuthor,
                 readingTime: PostReadingTime,
@@ -24,6 +52,8 @@ class PostUiTest: XCTestCase {
     func testPostShown() throws {
         runTest { robot in
             robot.assertLoadingDoesNotExist()
+            robot.assertAddToFavouritesButtonExists()
+            robot.assertRemoveFromFavouritesButtonDoesNotExist()
             robot.assertPostExists(
                 title: PostTitle,
                 author: PostAuthor,
@@ -35,8 +65,14 @@ class PostUiTest: XCTestCase {
     }
     
     func testBlockingErrorShown() throws {
-        runTest(postResponse: "error") { robot in
+        // Given
+        let response = "error"
+        // When
+        runTest(postResponse: response) { robot in
+            // Then
             robot.assertLoadingDoesNotExist()
+            robot.assertAddToFavouritesButtonDoesNotExist()
+            robot.assertRemoveFromFavouritesButtonDoesNotExist()
             robot.assertPostDoesNotExist(
                 title: PostTitle,
                 author: PostAuthor,
@@ -48,20 +84,32 @@ class PostUiTest: XCTestCase {
     }
     
     func testToggleFavouriteAddsToFavourites() throws {
-        runTest(post: "notFavourite") { robot in
+        // Given
+        let post = "notFavourite"
+        // When
+        runTest(post: post) { robot in
+            // Then
             robot.assertAddToFavouritesButtonExists()
             robot.assertRemoveFromFavouritesButtonDoesNotExist()
+            // When
             robot.clickAddToFavouritesButton()
+            // Then
             robot.assertAddToFavouritesButtonDoesNotExist()
             robot.assertRemoveFromFavouritesButtonExists()
         }
     }
     
     func testToggleFavouriteRemovesFromFavourites() throws {
-        runTest(post: "favourite") { robot in
+        // Given
+        let post = "favourite"
+        // When
+        runTest(post: post) { robot in
+            // Then
             robot.assertAddToFavouritesButtonDoesNotExist()
             robot.assertRemoveFromFavouritesButtonExists()
+            // When
             robot.clickRemoveFromFavouritesButton()
+            // Then
             robot.assertAddToFavouritesButtonExists()
             robot.assertRemoveFromFavouritesButtonDoesNotExist()
         }
@@ -69,6 +117,7 @@ class PostUiTest: XCTestCase {
     
     private func runTest(
         post: String = "notFavourite",
+        postCache: String? = nil,
         postResponse: String = "success",
         block: (PostRobot) -> Void
     ) {
@@ -77,12 +126,15 @@ class PostUiTest: XCTestCase {
             "post": post,
             "postResponse": postResponse
         ]
+        if let postCache = postCache {
+            app.launchEnvironment["postCache"] = postCache
+        }
         app.launch()
         block(PostRobot(app: app))
     }
 }
 
 private let PostTitle = "Post Title"
-private let PostAuthor = "steve"
+private let PostAuthor = "Anonymous"
 private let PostReadingTime = "1 min read"
 private let PostBody = "This is a sample post body"

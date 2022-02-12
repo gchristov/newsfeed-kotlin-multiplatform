@@ -18,36 +18,48 @@ public class FeedRobot {
         XCTAssert(!app.activityIndicators[Loading].exists)
     }
     
+    public func assertEmptyStateExists() {
+        XCTAssert(app.staticTexts["No results found. Please\ntry another search term"].exists)
+    }
+    
+    public func assertEmptyStateDoesNotExist() {
+        XCTAssert(!app.staticTexts["No results found. Please\ntry another search term"].exists)
+    }
+    
+    public func assertSectionExists(header: String) {
+        XCTAssert(app.staticTexts[header].exists)
+    }
+    
+    public func assertSectionDoesNotExist(header: String) {
+        XCTAssert(!app.staticTexts[header].exists)
+    }
+    
     public func assertFeedItemExists(
         title: String,
-        author: String,
-        body: String
+        date: String
     ) {
         XCTAssert(app.staticTexts[title].exists)
-        XCTAssert(app.staticTexts[author].exists)
-        XCTAssert(app.staticTexts[body].exists)
+        XCTAssert(app.staticTexts[date].exists)
     }
     
     public func assertFeedItemDoesNotExist(
         title: String,
-        author: String,
-        body: String
+        date: String
     ) {
         XCTAssert(!app.staticTexts[title].exists)
-        XCTAssert(!app.staticTexts[author].exists)
-        XCTAssert(!app.staticTexts[body].exists)
+        XCTAssert(!app.staticTexts[date].exists)
     }
     
     public func assertFavouriteItemsShown(favouriteItems: Int) {
         XCTAssertEqual(app.images.matching(identifier: AddedToFavourites).count, favouriteItems)
     }
     
-    public func assertAddToFavouritesButtonExists() {
-        XCTAssert(app.buttons[AddToFavourite].exists)
+    public func assertBackButtonExists() {
+        XCTAssert(app.buttons["Newsfeed"].exists)
     }
     
-    public func assertAddToFavouritesButtonDoesNotExist() {
-        XCTAssert(!app.buttons[AddToFavourite].exists)
+    public func assertBackButtonDoesNotExist() {
+        XCTAssert(!app.buttons["Newsfeed"].exists)
     }
     
     public func assertBlockingErrorExists() {
@@ -81,7 +93,6 @@ public class FeedRobot {
 
 private let Loading = "Loading"
 
-private let AddToFavourite = "Add to favourites"
 private let AddedToFavourites = "Added to favourites"
 
 private let BlockingErrorTitle = "Oups!"

@@ -1,7 +1,7 @@
 import com.gchristov.newsfeed.kmmgradleplugins.Deps
 
 plugins {
-    id("kmm-common-module-plugin")
+    id("kmm-platform-plugin")
 }
 
 kotlin {
@@ -13,7 +13,8 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(Deps.Kotlin.coroutinesCore)
+                implementation(Deps.Kotlin.coroutinesCore) // Needed for FakeResponse
+                implementation(Deps.Kotlin.dateTime) // Needed for FakeClock
                 api(kotlin(Deps.Tests.testCommon))
                 api(kotlin(Deps.Tests.testCommonAnnotations))
             }

@@ -114,7 +114,7 @@ fun AppNonBlockingError(
                     modifier = Modifier.offset(x = 8.dp, y = (-8).dp),
                     icon = Icons.Filled.Clear,
                     onClick = onDismiss,
-                    iconTint = Theme.contentColors.action
+                    tint = Theme.contentColors.action
                 )
             }
         }

@@ -3,21 +3,25 @@ plugins {
 }
 
 gradlePlugin {
-    plugins.register("common-application-plugin") {
-        id = "common-application-plugin"
-        implementationClass = "com.gchristov.newsfeed.gradleplugins.CommonApplicationPlugin"
+    plugins.register("android-application-plugin") {
+        id = "android-application-plugin"
+        implementationClass = "com.gchristov.newsfeed.gradleplugins.AndroidApplicationPlugin"
     }
-    plugins.register("common-module-plugin") {
-        id = "common-module-plugin"
-        implementationClass = "com.gchristov.newsfeed.gradleplugins.CommonModulePlugin"
+    plugins.register("android-library-plugin") {
+        id = "android-library-plugin"
+        implementationClass = "com.gchristov.newsfeed.gradleplugins.AndroidLibraryPlugin"
     }
-    plugins.register("common-compose-plugin") {
-        id = "common-compose-plugin"
-        implementationClass = "com.gchristov.newsfeed.gradleplugins.CommonComposePlugin"
+    plugins.register("android-module-plugin") {
+        id = "android-module-plugin"
+        implementationClass = "com.gchristov.newsfeed.gradleplugins.AndroidModulePlugin"
     }
-    plugins.register("common-feature-plugin") {
-        id = "common-feature-plugin"
-        implementationClass = "com.gchristov.newsfeed.gradleplugins.CommonFeaturePlugin"
+    plugins.register("android-compose-plugin") {
+        id = "android-compose-plugin"
+        implementationClass = "com.gchristov.newsfeed.gradleplugins.AndroidComposePlugin"
+    }
+    plugins.register("android-feature-plugin") {
+        id = "android-feature-plugin"
+        implementationClass = "com.gchristov.newsfeed.gradleplugins.AndroidFeaturePlugin"
     }
 }
 
@@ -27,6 +31,6 @@ repositories {
 }
 
 dependencies {
-    implementation("com.android.tools.build:gradle:7.0.3")
+    implementation("com.android.tools.build:gradle:7.1.2")
     implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.10")
 }

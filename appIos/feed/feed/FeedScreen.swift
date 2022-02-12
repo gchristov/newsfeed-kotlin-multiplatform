@@ -24,18 +24,18 @@ public struct FeedScreenContent: View {
     
     public var body: some View {
         ZStack {
-            if state?.loading == true {
-                LoadingState()
-            } else if (state?.blockingError != nil) {
+            if (state?.blockingError != nil) {
                 ErrorState(blockingError: BlockingError()) {
                     viewModel.refreshContent()
                 }
             } else {
                 FeedState(
                     selectedPostId: $selectedPostId,
+                    feedItemDateFormatter: FeedItemDateFormatter,
+                    feedSectionDateFormatter: FeedSectionDateFormat,
                     loading: state?.loading == true,
                     reachedEnd: state?.reachedEnd == true,
-                    feed: state?.feed,
+                    feed: state?.sectionedFeed,
                     nonBlockingError: state?.nonBlockingError != nil ? NonBlockingError() : nil,
                     onNonBlockingErrorDismiss: { viewModel.dismissNonBlockingError() },
                     onRefresh: { viewModel.refreshContent() },
@@ -66,10 +66,13 @@ public struct FeedScreenContent: View {
 }
 
 private struct FeedState: View {
+    @EnvironmentObject var theme: Theme
     @Binding var selectedPostId: String?
+    let feedItemDateFormatter: DateFormatter
+    let feedSectionDateFormatter: DateFormatter
     let loading: Bool
     let reachedEnd: Bool
-    let feed: Feed?
+    let feed: SectionedFeed?
     let nonBlockingError: NonBlockingError?
     let onNonBlockingErrorDismiss: () -> ()
     let onRefresh: () -> ()
@@ -81,26 +84,18 @@ private struct FeedState: View {
             AppScreen {
                 ZStack {
                     if let feed = feed {
-                        if (selectedPostId != nil) {
-                            // Fake navigation link to handle programmatic selection of detail views
-                            NavigationLink(
-                                destination: PostScreen(postId: selectedPostId!),
-                                tag: selectedPostId!,
-                                selection: self.$selectedPostId
-                            ) {
-                                EmptyView()
-                            }
-                        }
-                        AppList(items: feed.posts) { decoratedPost, index in
-                            let canLoadMore = index == feed.posts.count - 1
-                            && !reachedEnd
-                            && nonBlockingError == nil
-                            PostRow(post: decoratedPost)
-                            if (canLoadMore) {
-                                LoadMoreRow().onAppear {
-                                    onLoadMore()
-                                }
-                            }
+                        if (!loading && feed.sections.isEmpty) {
+                            FeedEmpty()
+                        } else {
+                            FeedContent(
+                                selectedPostId: $selectedPostId,
+                                feedItemDateFormatter: FeedItemDateFormatter,
+                                feedSectionDateFormatter: FeedSectionDateFormat,
+                                reachedEnd: reachedEnd,
+                                feed: feed,
+                                nonBlockingError: nonBlockingError,
+                                onLoadMore: onLoadMore
+                            )
                         }
                     }
                     if nonBlockingError != nil {
@@ -118,11 +113,15 @@ private struct FeedState: View {
             .navigationTitle("Newsfeed")
             .toolbar {
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
-                    AppIconButton(
-                        imageName: "arrow.clockwise",
-                        contentDescription: "Reload"
-                    ) {
-                        onRefresh()
+                    if (loading) {
+                        AppCircularProgressIndicator(tint: theme.contentColors.primary)
+                    } else {
+                        AppIconButton(
+                            imageName: "arrow.clockwise",
+                            contentDescription: "Reload"
+                        ) {
+                            onRefresh()
+                        }
                     }
                 }
             }
@@ -132,97 +131,156 @@ private struct FeedState: View {
     }
 }
 
-private struct PostRow: View {
-    let post: DecoratedPost
+private struct FeedEmpty: View {
+    @EnvironmentObject var theme: Theme
+    
+    var body: some View {
+        AppText(
+            text: "No results found. Please\ntry another search term",
+            color: theme.contentColors.secondary.opacity(0.6),
+            textAlignment: .center
+        )
+    }
+}
+
+private struct FeedContent: View {
+    @Binding var selectedPostId: String?
+    let feedItemDateFormatter: DateFormatter
+    let feedSectionDateFormatter: DateFormatter
+    let reachedEnd: Bool
+    let feed: SectionedFeed
+    let nonBlockingError: NonBlockingError?
+    let onLoadMore: () -> ()
+    
+    var body: some View {
+        if (selectedPostId != nil) {
+            // Fake navigation link to handle programmatic selection of detail views
+            NavigationLink(
+                destination: PostScreen(postId: selectedPostId!),
+                tag: selectedPostId!,
+                selection: self.$selectedPostId
+            ) {
+                EmptyView()
+            }
+        }
+        AppGroupedList { scope in
+            ForEach(Array(feed.sections.enumerated()), id: \.offset) { index, section in
+                scope.group(header: section.type.toHeader(headerFormatter: feedSectionDateFormatter)) { groupScope in
+                    groupScope.items(items: section.feedItems) { index in
+                        FeedItemRow(
+                            item: section.feedItems[index],
+                            dateFormatter: feedItemDateFormatter
+                        )
+                    }
+                }
+                if (
+                    index == feed.sections.count - 1
+                    && !reachedEnd
+                    && nonBlockingError == nil
+                ) {
+                    scope.item {
+                        LoadMoreRow().onAppear {
+                            onLoadMore()
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+private struct FeedItemRow: View {
+    @EnvironmentObject var theme: Theme
+    let item: DecoratedFeedItem
+    let dateFormatter: DateFormatter
     
     var body: some View {
         AppNavigationListRow {
-            VStack(
-                alignment: .leading,
-                spacing: 8
+            HStack(
+                alignment: .top,
+                spacing: 16
             ) {
-                PostHeader(post: post)
-                if let body = post.post.body {
-                    AppText(
-                        text: body,
-                        lineLimit: 3
-                    ).padding(.top, 4)
+                FeedItemThumbnail(thumbnailUrl: item.raw.thumbnail)
+                VStack(
+                    alignment: .leading,
+                    spacing: 4
+                ) {
+                    FeedItemHeader(header: item.raw.headline ?? "--")
+                    FeedItemDate(
+                        timestamp: item.date.toEpochMilliseconds()/1000,
+                        dateFormatter: dateFormatter
+                    )
+                }
+                Spacer() // Ensure the content is pushed to the left, rather than centered
+                if (item.isFavourite()) {
+                    AppIcon(
+                        imageName: "heart.fill",
+                        tint: theme.contentColors.action,
+                        contentDescription: "Added to favourites"
+                    ).padding(.top, 2)
                 }
             }
         } destination: {
-            PostScreen(postId: post.post.uid)
-        }.modifier(RowPaddingStyle())
+            PostScreen(postId: item.raw.itemId)
+        }
     }
 }
 
-private struct PostHeader: View {
+private struct FeedItemThumbnail: View {
     @EnvironmentObject var theme: Theme
-    let post: DecoratedPost
+    let thumbnailUrl: String?
     
     var body: some View {
-        HStack(alignment: .top) {
-            AppText(
-                text: post.post.title,
-                font: theme.typography.title
-            )
-            Spacer()
-            if (post.isFavourite()) {
-                AppIcon(
-                    imageName: "heart.fill",
-                    tint: theme.contentColors.action,
-                    contentDescription: "Added to favourites"
-                ).padding(.top, 2)
+        // Placeholder container
+        ZStack {
+            if let thumbnailUrl = thumbnailUrl {
+                AppImage(
+                    imageUrl: thumbnailUrl,
+                    contentMode: .fill
+                )
             }
         }
-        PostAuthor(author: post.post.author)
+        .frame(width: 46, height: 46)
+        // This is within a surface so invert the background
+        .background(theme.backgrounds.primary)
+        .clipShape(Circle())
     }
 }
 
-private struct PostAuthor: View {
+private struct FeedItemHeader: View {
     @EnvironmentObject var theme: Theme
-    let author: String
+    let header: String
     
     var body: some View {
-        HStack(spacing: 6) {
-            AppAvatar(
-                name: author,
-                size: CGSize(width: 24, height: 24)
-            )
-            AppText(
-                text: author,
-                color: theme.contentColors.secondary,
-                font: theme.typography.subtitle
-            )
-        }
+        AppText(
+            text: header,
+            font: theme.typography.bodyBold
+        )
+    }
+}
+
+private struct FeedItemDate: View {
+    @EnvironmentObject var theme: Theme
+    let timestamp: Int64
+    let dateFormatter: DateFormatter
+    
+    var body: some View {
+        AppText(
+            text: dateFormatter.string(from: Date(timeIntervalSince1970: Double(timestamp))),
+            color: theme.contentColors.secondary,
+            font: theme.typography.subtitle
+        )
     }
 }
 
 private struct LoadMoreRow: View {
     var body: some View {
         AppListRow {
-            HStack(alignment: .center) {
+            HStack {
                 Spacer()
-                AppCircularProgressIndicator().padding(8)
+                AppCircularProgressIndicator()
                 Spacer()
             }
-        }.modifier(RowPaddingStyle())
-    }
-}
-
-private struct RowPaddingStyle: ViewModifier {
-    func body(content: Content) -> some View {
-        content
-            .padding(.leading, 16)
-            .padding(.trailing, 16)
-            .padding(.top, 8)
-            .padding(.bottom, 8)
-    }
-}
-
-private struct LoadingState: View {
-    var body: some View {
-        AppScreen {
-            AppCircularProgressIndicator()
         }
     }
 }
@@ -241,20 +299,31 @@ private struct ErrorState: View {
     }
 }
 
-struct FeedView_Previews: PreviewProvider {
-    static var post = DecoratedPost(
-        post: Post(
-            uid: "id",
-            author: "Georgi",
-            title: "Post title",
-            body: "Some longer post body that can go on multiple lines and hopefull wrap around",
-            pageId: nil,
-            nextPageId: nil),
-        favouriteTimestamp: nil)
-    
-    static var previews: some View {
-        FeedScreen()
-        //        PostRow(post: post)
-        //        LoadMoreRow()
+private extension SectionedFeed.SectionType {
+    func toHeader(headerFormatter: DateFormatter) -> String? {
+        if self is SectionedFeed.SectionTypeThisWeek { return "This week" }
+        if self is SectionedFeed.SectionTypeLastWeek { return "Last week" }
+        if self is SectionedFeed.SectionTypeThisMonth { return "This month" }
+        if let date = (self as? SectionedFeed.SectionTypeOlder)?.date.toEpochMilliseconds() {
+            return headerFormatter.string(from: Date(timeIntervalSince1970: (Double(date) / 1000.0)))
+        }
+        return nil
     }
 }
+
+private extension DecoratedFeedItem {
+    func isFavourite() -> Bool {
+        return favouriteTimestamp != nil
+    }
+}
+
+private var FeedItemDateFormatter: DateFormatter = {
+    let formatter = DateFormatter()
+    formatter.dateFormat = "dd/MM/yyyy"
+    return formatter
+}()
+private var FeedSectionDateFormat: DateFormatter = {
+    let formatter = DateFormatter()
+    formatter.dateFormat = "MMM, yyyy"
+    return formatter
+}()

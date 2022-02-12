@@ -10,7 +10,7 @@ import org.kodein.di.bindSingleton
 object CommonPersistenceModule : DiModule() {
     override fun name() = "kmm-common-persistence"
 
-    override fun build(builder: DI.Builder) {
+    override fun bindLocalDependencies(builder: DI.Builder) {
         builder.apply {
             bindFactory { properties: SqlDriverProperties -> provideSqlDriver(properties) }
             bindSingleton { provideSharedPreferences() }

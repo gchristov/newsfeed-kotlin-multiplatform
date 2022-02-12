@@ -3,17 +3,21 @@ plugins {
 }
 
 gradlePlugin {
-    plugins.register("kmm-common-module-plugin") {
-        id = "kmm-common-module-plugin"
-        implementationClass = "com.gchristov.newsfeed.kmmgradleplugins.KmmCommonModulePlugin"
+    plugins.register("kmm-platform-plugin") {
+        id = "kmm-platform-plugin"
+        implementationClass = "com.gchristov.newsfeed.kmmgradleplugins.KmmPlatformPlugin"
     }
-    plugins.register("kmm-common-data-plugin") {
-        id = "kmm-common-data-plugin"
-        implementationClass = "com.gchristov.newsfeed.kmmgradleplugins.KmmCommonDataPlugin"
+    plugins.register("kmm-module-plugin") {
+        id = "kmm-module-plugin"
+        implementationClass = "com.gchristov.newsfeed.kmmgradleplugins.KmmModulePlugin"
     }
-    plugins.register("kmm-common-feature-plugin") {
-        id = "kmm-common-feature-plugin"
-        implementationClass = "com.gchristov.newsfeed.kmmgradleplugins.KmmCommonFeaturePlugin"
+    plugins.register("kmm-data-plugin") {
+        id = "kmm-data-plugin"
+        implementationClass = "com.gchristov.newsfeed.kmmgradleplugins.KmmDataPlugin"
+    }
+    plugins.register("kmm-feature-plugin") {
+        id = "kmm-feature-plugin"
+        implementationClass = "com.gchristov.newsfeed.kmmgradleplugins.KmmFeaturePlugin"
     }
 }
 
@@ -23,6 +27,6 @@ repositories {
 }
 
 dependencies {
-    implementation("com.android.tools.build:gradle:7.0.3")
+    implementation("com.android.tools.build:gradle:7.1.2")
     implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.10")
 }

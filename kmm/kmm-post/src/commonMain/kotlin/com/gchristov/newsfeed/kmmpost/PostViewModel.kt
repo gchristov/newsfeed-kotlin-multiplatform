@@ -1,16 +1,18 @@
 package com.gchristov.newsfeed.kmmpost
 
 import com.gchristov.newsfeed.kmmcommonmvvm.CommonViewModel
-import com.gchristov.newsfeed.kmmfeeddata.FeedRepository
-import com.gchristov.newsfeed.kmmfeeddata.model.DecoratedPost
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.gchristov.newsfeed.kmmpostdata.PostRepository
+import com.gchristov.newsfeed.kmmpostdata.model.DecoratedPost
+import kotlinx.coroutines.CoroutineDispatcher
 
 class PostViewModel(
+    dispatcher: CoroutineDispatcher,
     private var postId: String,
-    private val feedRepository: FeedRepository,
-) : CommonViewModel<PostViewModel.State>(State()) {
+    private val postRepository: PostRepository,
+) : CommonViewModel<PostViewModel.State>(
+    dispatcher = dispatcher,
+    initialState = State()
+) {
     init {
         loadContent()
     }
@@ -27,26 +29,29 @@ class PostViewModel(
                 blockingError = null
             )
         }
-        viewModelScope.launch {
+        launchUiCoroutine {
             try {
-                val post = feedRepository.post(postId)
-                withContext(Dispatchers.Main) {
+                postRepository.apply {
+                    // Always show cached post
+                    cachedPost(postId)?.let { post ->
+                        setState { copy(post = post) }
+                        clearCache(postId)
+                    }
+                    val newPost = postRepository.post(postId)
                     setState {
                         copy(
                             loading = false,
-                            post = post
+                            post = newPost
                         )
                     }
                 }
             } catch (error: Exception) {
                 error.printStackTrace()
-                withContext(Dispatchers.Main) {
-                    setState {
-                        copy(
-                            loading = false,
-                            blockingError = error
-                        )
-                    }
+                setState {
+                    copy(
+                        loading = false,
+                        blockingError = error
+                    )
                 }
             }
         }
@@ -54,13 +59,12 @@ class PostViewModel(
 
     fun onToggleFavourite() {
         state.value.post?.let { post ->
-            setState {
-                copy(
-                    post = DecoratedPost(
-                        post.post,
-                        feedRepository.toggleFavourite(postId)
-                    )
-                )
+            launchUiCoroutine {
+                postRepository.apply {
+                    toggleFavourite(postId)
+                    val redecoratedPost = redecoratePost(post)
+                    setState { copy(post = redecoratedPost) }
+                }
             }
         }
     }

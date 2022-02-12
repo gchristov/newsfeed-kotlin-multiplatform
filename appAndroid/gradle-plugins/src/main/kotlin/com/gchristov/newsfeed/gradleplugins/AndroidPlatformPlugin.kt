@@ -5,21 +5,21 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
 
-class CommonApplicationPlugin : CommonAndroidPlugin() {
+class AndroidApplicationPlugin : AndroidPlatformPlugin() {
     override fun apply(target: Project) {
         target.plugins.apply("com.android.application")
         super.apply(target)
     }
 }
 
-open class CommonModulePlugin : CommonAndroidPlugin() {
+open class AndroidLibraryPlugin : AndroidPlatformPlugin() {
     override fun apply(target: Project) {
         target.plugins.apply("com.android.library")
         super.apply(target)
     }
 }
 
-abstract class CommonAndroidPlugin : Plugin<Project> {
+abstract class AndroidPlatformPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         target.configureAndroid()
     }
@@ -27,6 +27,7 @@ abstract class CommonAndroidPlugin : Plugin<Project> {
 
 private fun Project.configureAndroid() {
     plugins.apply("kotlin-android")
+    plugins.apply("kotlin-parcelize")
     extensions.configure<BaseExtension> {
         compileSdkVersion(Deps.Android.compileSdk)
         defaultConfig {
@@ -76,6 +77,8 @@ class Deps : Plugin<Project> {
         const val materialIcons = "androidx.compose.material:material-icons-core:$composeVersion"
         const val uiTestJunit = "androidx.compose.ui:ui-test-junit4:$composeVersion"
         const val uiTestManifest = "androidx.compose.ui:ui-test-manifest:$composeVersion"
+        const val coil = "io.coil-kt:coil-compose:1.4.0"
+        const val html = "com.github.ireward:compose-html:1.0.1"
     }
 
     object Tests {

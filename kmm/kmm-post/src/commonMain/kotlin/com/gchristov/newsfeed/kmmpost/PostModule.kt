@@ -2,7 +2,8 @@ package com.gchristov.newsfeed.kmmpost
 
 import com.gchristov.newsfeed.kmmcommondi.DiModule
 import com.gchristov.newsfeed.kmmcommondi.inject
-import com.gchristov.newsfeed.kmmfeeddata.FeedDataModule
+import com.gchristov.newsfeed.kmmpostdata.PostDataModule
+import kotlinx.coroutines.Dispatchers
 import org.kodein.di.DI
 import org.kodein.di.bindFactory
 import org.kodein.di.instance
@@ -10,19 +11,22 @@ import org.kodein.di.instance
 object PostModule : DiModule() {
     override fun name() = "kmm-post"
 
-    override fun build(builder: DI.Builder) {
+    override fun bindLocalDependencies(builder: DI.Builder) {
         builder.apply {
             bindFactory { postId: String ->
                 PostViewModel(
+                    dispatcher = Dispatchers.Main,
                     postId = postId,
-                    feedRepository = instance(),
+                    postRepository = instance(),
                 )
             }
         }
     }
 
-    override fun dependencies(): List<DI.Module> {
-        return listOf(FeedDataModule.module)
+    override fun moduleDependencies(): List<DI.Module> {
+        return listOf(
+            PostDataModule.module
+        )
     }
 
     fun injectPostViewModel(postId: String): PostViewModel = inject(arg = postId)

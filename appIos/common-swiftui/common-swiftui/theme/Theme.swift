@@ -5,6 +5,7 @@ public class Theme: ObservableObject {
     public lazy var backgrounds: Backgrounds = type.backgrounds()
     public lazy var contentColors: ContentColors = type.contentColors()
     public lazy var typography: Typography = type.typography()
+    public lazy var shapes: Shapes = type.shapes()
     
     public init(type: ThemeType) {
         self.type = type
@@ -31,5 +32,9 @@ public enum ThemeType {
     
     func typography() -> Typography {
         return CommonSwiftUi.typography()
+    }
+    
+    func shapes() -> Shapes {
+        return CommonSwiftUi.shapes()
     }
 }

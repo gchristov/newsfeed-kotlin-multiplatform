@@ -1,5 +1,5 @@
 plugins {
-    id("common-module-plugin")
+    id("android-module-plugin")
 }
 
 dependencies {

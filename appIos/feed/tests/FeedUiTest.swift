@@ -8,13 +8,74 @@ class FeedUiTest: XCTestCase {
         continueAfterFailure = false
     }
     
-    func testLoadingIndicatorShown() throws {
-        runTest(feedResponse: "loadForever") { robot in
-            robot.assertLoadingExists()
+    func testEmptyStateShown() throws {
+        // Given
+        let feed = "empty"
+        // When
+        runTest(feedPages: feed) { robot in
+            // Then
+            robot.assertLoadingDoesNotExist()
+            robot.assertEmptyStateExists()
+            robot.assertSectionDoesNotExist(header: Post1Section)
             robot.assertFeedItemDoesNotExist(
                 title: Post1Title,
-                author: Post1Author,
-                body: Post1Body
+                date: Post1Date
+            )
+            robot.assertBlockingErrorDoesNotExist()
+            robot.assertNonBlockingErrorDoesNotExist()
+        }
+    }
+    
+    func testCacheShown() throws {
+        // Given
+        let cache = "singlePage"
+        let response = "loadForever"
+        // When
+        runTest(
+            feedPageCache: cache,
+            feedResponse: response
+        ) { robot in
+            // Then
+            robot.assertLoadingExists()
+            robot.assertEmptyStateDoesNotExist()
+            robot.assertSectionExists(header: Post1Section)
+            robot.assertFeedItemExists(
+                title: Post1Title,
+                date: Post1Date
+            )
+            robot.assertSectionExists(header: Post2Section)
+            robot.assertFeedItemExists(
+                title: Post2Title,
+                date: Post2Date
+            )
+            robot.assertSectionExists(header: Post3Section)
+            robot.assertFeedItemExists(
+                title: Post3Title,
+                date: Post3Date
+            )
+            robot.assertSectionExists(header: Post4Section)
+            robot.assertFeedItemExists(
+                title: Post4Title,
+                date: Post4Date
+            )
+            robot.assertFavouriteItemsShown(favouriteItems: 2)
+            robot.assertBlockingErrorDoesNotExist()
+            robot.assertNonBlockingErrorDoesNotExist()
+        }
+    }
+    
+    func testSinglePageFeedLoadingIndicatorShown() throws {
+        // Given
+        let response = "loadForever"
+        // When
+        runTest(feedResponse: response) { robot in
+            // Then
+            robot.assertLoadingExists()
+            robot.assertEmptyStateDoesNotExist()
+            robot.assertSectionDoesNotExist(header: Post1Section)
+            robot.assertFeedItemDoesNotExist(
+                title: Post1Title,
+                date: Post1Date
             )
             robot.assertBlockingErrorDoesNotExist()
             robot.assertNonBlockingErrorDoesNotExist()
@@ -24,32 +85,49 @@ class FeedUiTest: XCTestCase {
     func testSinglePageFeedShown() throws {
         runTest { robot in
             robot.assertLoadingDoesNotExist()
+            robot.assertEmptyStateDoesNotExist()
+            robot.assertSectionExists(header: Post1Section)
             robot.assertFeedItemExists(
                 title: Post1Title,
-                author: Post1Author,
-                body: Post1Body
+                date: Post1Date
             )
+            robot.assertSectionExists(header: Post2Section)
             robot.assertFeedItemExists(
                 title: Post2Title,
-                author: Post2Author,
-                body: Post2Body
+                date: Post2Date
             )
-            robot.assertFavouriteItemsShown(favouriteItems: 1)
+            robot.assertSectionExists(header: Post3Section)
+            robot.assertFeedItemExists(
+                title: Post3Title,
+                date: Post3Date
+            )
+            robot.assertSectionExists(header: Post4Section)
+            robot.assertFeedItemExists(
+                title: Post4Title,
+                date: Post4Date
+            )
+            robot.assertFavouriteItemsShown(favouriteItems: 2)
             robot.assertBlockingErrorDoesNotExist()
             robot.assertNonBlockingErrorDoesNotExist()
         }
     }
     
     func testMultiPageFeedLoadingIndicatorShown() throws {
+        // Given
+        let feed = "multiPage"
+        let response = "loadForever"
+        // When
         runTest(
-            feed: "multiPage",
-            feedLoadMoreResponse: "loadForever"
+            feedPages: feed,
+            feedLoadMoreResponse: response
         ) { robot in
+            // Then
             robot.assertLoadingExists()
+            robot.assertEmptyStateDoesNotExist()
+            robot.assertSectionExists(header: Post1Section)
             robot.assertFeedItemExists(
                 title: Post1Title,
-                author: Post1Author,
-                body: Post1Body
+                date: Post1Date
             )
             robot.assertBlockingErrorDoesNotExist()
             robot.assertNonBlockingErrorDoesNotExist()
@@ -57,22 +135,32 @@ class FeedUiTest: XCTestCase {
     }
     
     func testMultiPageFeedShown() throws {
-        runTest(feed: "multiPage") { robot in
+        // Given
+        let feed = "multiPage"
+        // When
+        runTest(feedPages: feed) { robot in
+            // Then
             robot.assertLoadingDoesNotExist()
+            robot.assertEmptyStateDoesNotExist()
+            robot.assertSectionExists(header: Post1Section)
             robot.assertFeedItemExists(
                 title: Post1Title,
-                author: Post1Author,
-                body: Post1Body
+                date: Post1Date
             )
+            robot.assertSectionExists(header: Post2Section)
             robot.assertFeedItemExists(
                 title: Post2Title,
-                author: Post2Author,
-                body: Post2Body
+                date: Post2Date
             )
+            robot.assertSectionExists(header: Post3Section)
             robot.assertFeedItemExists(
                 title: Post3Title,
-                author: Post3Author,
-                body: Post3Body
+                date: Post3Date
+            )
+            robot.assertSectionExists(header: Post4Section)
+            robot.assertFeedItemExists(
+                title: Post4Title,
+                date: Post4Date
             )
             robot.assertFavouriteItemsShown(favouriteItems: 2)
             robot.assertBlockingErrorDoesNotExist()
@@ -81,12 +169,17 @@ class FeedUiTest: XCTestCase {
     }
 
     func testBlockingErrorShown() throws {
-        runTest(feedResponse: "error") { robot in
+        // Given
+        let response = "error"
+        // When
+        runTest(feedResponse: response) { robot in
+            // Then
             robot.assertLoadingDoesNotExist()
+            robot.assertEmptyStateDoesNotExist()
+            robot.assertSectionDoesNotExist(header: Post1Section)
             robot.assertFeedItemDoesNotExist(
                 title: Post1Title,
-                author: Post1Author,
-                body: Post1Body
+                date: Post1Date
             )
             robot.assertBlockingErrorExists()
             robot.assertNonBlockingErrorDoesNotExist()
@@ -94,15 +187,21 @@ class FeedUiTest: XCTestCase {
     }
     
     func testNonBlockingErrorShown() throws {
+        // Given
+        let feed = "multiPage"
+        let response = "error"
+        // When
         runTest(
-            feed: "multiPage",
-            feedLoadMoreResponse: "error"
+            feedPages: feed,
+            feedLoadMoreResponse: response
         ) { robot in
+            // Then
             robot.assertLoadingDoesNotExist()
+            robot.assertEmptyStateDoesNotExist()
+            robot.assertSectionExists(header: Post1Section)
             robot.assertFeedItemExists(
                 title: Post1Title,
-                author: Post1Author,
-                body: Post1Body
+                date: Post1Date
             )
             robot.assertBlockingErrorDoesNotExist()
             robot.assertNonBlockingErrorExists()
@@ -110,36 +209,48 @@ class FeedUiTest: XCTestCase {
     }
 
     func testFeedItemClickOpensPost() throws {
+        // Given
+        let post = Post1Title
         runTest { robot in
-            robot.assertAddToFavouritesButtonDoesNotExist()
-            robot.clickPost(title: Post1Title)
-            robot.assertAddToFavouritesButtonExists()
+            // Then
+            robot.assertBackButtonDoesNotExist()
+            // When
+            robot.clickPost(title: post)
+            // Then
+            robot.assertBackButtonExists()
         }
     }
     
     private func runTest(
-        feed: String = "singlePage",
+        feedPages: String = "singlePage",
+        feedPageCache: String? = nil,
         feedResponse: String = "success",
         feedLoadMoreResponse: String = "success",
         block: (FeedRobot) -> Void
     ) {
         let app = XCUIApplication()
         app.launchEnvironment = [
-            "feed": feed,
+            "feedPages": feedPages,
             "feedResponse": feedResponse,
             "feedLoadMoreResponse": feedLoadMoreResponse
         ]
+        if let feedPageCache = feedPageCache {
+            app.launchEnvironment["feedPageCache"] = feedPageCache
+        }
         app.launch()
         block(FeedRobot(app: app))
     }
 }
 
+private let Post1Section = "THIS WEEK"
 private let Post1Title = "Post 1 Title"
-private let Post1Author = "steve"
-private let Post1Body = "This is a sample post 1 body"
-private let Post2Title = "Post 2 Title"
-private let Post2Author = "amy"
-private let Post2Body = "This is a sample post 2 body that may be longer and even go on multiple lines"
+private let Post1Date = "21/02/2022"
+private let Post2Section = "LAST WEEK"
+private let Post2Title = "This is a sample post 2 title that may be longer and even go on multiple lines"
+private let Post2Date = "13/02/2022"
+private let Post3Section = "THIS MONTH"
 private let Post3Title = "Post 3 Title"
-private let Post3Author = "sarah"
-private let Post3Body = "This is a sample post 3 body"
+private let Post3Date = "01/02/2022"
+private let Post4Section = "JAN, 2022"
+private let Post4Title = "Post 4 Title"
+private let Post4Date = "01/01/2022"

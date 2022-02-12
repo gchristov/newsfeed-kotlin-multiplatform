@@ -20,6 +20,7 @@ public extension Color {
     static let appGray = Color("gray", bundle: bundle)
     static let appGray2 = Color("gray_2", bundle: bundle)
     static let appGray3 = Color("gray_3", bundle: bundle)
+    static let appGray4 = Color("gray_4", bundle: bundle)
     
     static let appBlue = Color("blue", bundle: bundle)
     static let appBlue2 = Color("blue_2", bundle: bundle)

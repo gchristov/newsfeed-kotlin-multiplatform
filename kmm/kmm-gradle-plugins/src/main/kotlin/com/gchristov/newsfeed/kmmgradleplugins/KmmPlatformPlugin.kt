@@ -7,7 +7,12 @@ import org.gradle.kotlin.dsl.configure
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
-open class KmmCommonModulePlugin : Plugin<Project> {
+/**
+ * Plugin containing common setup for the KMM and Android Library plugins. Should be inherited by
+ * all other plugins and specifically applied to common modules exposed through [KmmModulePlugin],
+ * to avoid circular dependencies.
+ */
+open class KmmPlatformPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         target.configureLibrary()
         target.configureMultiplatform()
@@ -63,12 +68,12 @@ class Deps {
     }
 
     object Kodein {
-        const val di = "org.kodein.di:kodein-di:7.10.0"
+        const val di = "org.kodein.di:kodein-di:7.9.0"
     }
 
     object Kotlin {
-        // Without "native-mt" iOS throws an error
         private const val coroutinesVersion = "1.6.0"
+        // "-native-mt" is required here, otherwise iOS fails with runtime exception
         const val coroutinesCore =
             "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion-native-mt"
         const val coroutinesAndroid =
@@ -77,7 +82,7 @@ class Deps {
     }
 
     object Mvvm {
-        private const val mvvmVersion = "0.11.0"
+        private const val mvvmVersion = "0.12.0"
         const val liveData = "dev.icerock.moko:mvvm-livedata:$mvvmVersion"
         const val test = "dev.icerock.moko:mvvm-test:$mvvmVersion"
     }

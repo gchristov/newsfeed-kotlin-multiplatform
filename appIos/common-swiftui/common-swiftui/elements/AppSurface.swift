@@ -14,7 +14,7 @@ public struct AppSurface<Content>: View where Content: View {
         }
         .padding(16)
         .background(theme.backgrounds.surface)
-        .cornerRadius(10)
+        .clipShape(theme.shapes.surface)
         .shadow(radius: 2, x: 0.2, y: 0.5)
     }
 }

@@ -9,14 +9,16 @@ import KmmShared
 @main
 struct PostTestHostApp: App {
     private let post: DecoratedPost
-    private let repository: FakeFeedRepository
+    private let postCache: DecoratedPost?
+    private let repository: FakePostRepository
     
     init() {
         // Mock/fake necessary constructs based on launch environment
         self.post = PostType.obtainFromEnvironment()
-        self.repository = FakeFeedRepository(
-            feed: nil,
-            post: post
+        self.postCache = PostCacheType.obtainFromEnvironment()
+        self.repository = FakePostRepository(
+            post: post,
+            postCache: postCache
         )
         self.repository.postResponse = PostResponseType.obtainFromEnvironment()
     }
@@ -25,8 +27,9 @@ struct PostTestHostApp: App {
         WindowGroup {
             CustomSwiftUiTestRuleWrapper(embedWithinNavigation: true) {
                 PostScreenContent(viewModel: PostViewModel(
+                    dispatcher: Dispatchers.shared.Main,
                     postId: PostId,
-                    feedRepository: repository)
+                    postRepository: repository)
                 )
             }
         }
@@ -48,6 +51,26 @@ private enum PostType: String {
         default:
             return PostCreator.shared.post(favouriteTimestamp: nil)
         }
+    }
+}
+
+/*
+ Obtains a test cache from the launch environment to use during tests
+ */
+private enum PostCacheType: String {
+    case notFavourite = "notFavourite"
+    
+    static func obtainFromEnvironment() -> DecoratedPost? {
+        if let cacheType = ProcessInfo.processInfo.environment["postCache"] {
+            let type = PostType.init(rawValue: cacheType)
+            switch type {
+            case .notFavourite:
+                return PostCreator.shared.post(favouriteTimestamp: nil)
+            default:
+                return nil
+            }
+        }
+        return nil
     }
 }
 

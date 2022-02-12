@@ -1,0 +1,22 @@
+CREATE TABLE Post (
+    id TEXT NOT NULL PRIMARY KEY,
+    date TEXT NOT NULL,
+    headline TEXT,
+    body TEXT,
+    thumbnail TEXT
+);
+CREATE INDEX post_id ON Post(id);
+
+clearTable:
+DELETE
+FROM Post
+WHERE Post.id == ?;
+
+selectWithId:
+SELECT *
+FROM Post
+WHERE Post.id == ?;
+
+insert:
+INSERT OR REPLACE INTO Post(id, date, headline, body, thumbnail)
+VALUES (?, ?, ?, ?, ?);

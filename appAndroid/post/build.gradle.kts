@@ -1,8 +1,8 @@
 plugins {
-    id("common-feature-plugin")
+    id("android-feature-plugin")
 }
 
 dependencies {
-    api(projects.kmmPost)
+    implementation(projects.kmmPost)
     androidTestImplementation(projects.postTestFixtures)
 }

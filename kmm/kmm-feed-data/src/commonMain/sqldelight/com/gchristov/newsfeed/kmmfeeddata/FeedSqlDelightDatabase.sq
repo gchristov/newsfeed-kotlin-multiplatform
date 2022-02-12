@@ -1,29 +1,36 @@
-CREATE TABLE Post (
-    uid TEXT NOT NULL PRIMARY KEY,
-    author TEXT NOT NULL,
-    title TEXT NOT NULL,
-    body TEXT,
-    pageId TEXT,
-    nextPageId TEXT
+CREATE TABLE FeedPage (
+    pageId INTEGER AS Int NOT NULL PRIMARY KEY,
+    pages INTEGER AS Int NOT NULL
 );
-CREATE INDEX post_uid ON Post(uid);
-CREATE INDEX post_pageId ON Post(pageId);
-CREATE INDEX post_nextPageId ON Post(nextPageId);
+CREATE INDEX feed_page_id ON FeedPage(pageId);
 
-clearTable:
+clearFeedPages:
 DELETE
-FROM Post;
+FROM FeedPage;
 
-selectWithPageId:
-SELECT *
-FROM Post
-WHERE Post.pageId == ?;
+selectFeedPage:
+SELECT FeedPage.*, FeedItem.*
+FROM FeedPage
+INNER JOIN FeedItem ON FeedPage.pageId == FeedItem.pageId;
 
-selectWithId:
-SELECT *
-FROM Post
-WHERE Post.uid == ?;
+insertFeed:
+INSERT OR REPLACE INTO FeedPage(pageId, pages)
+VALUES (?, ?);
 
-insert:
-INSERT OR REPLACE INTO Post(uid, author, title, body, pageId, nextPageId)
+CREATE TABLE FeedItem (
+    itemId TEXT NOT NULL PRIMARY KEY,
+    pageId INTEGER AS Int NOT NULL,
+    apiUrl TEXT NOT NULL,
+    date TEXT NOT NULL,
+    headline TEXT,
+    thumbnail TEXT
+);
+CREATE INDEX feed_item_id ON FeedItem(itemId);
+
+clearFeedItems:
+DELETE
+FROM FeedItem;
+
+insertFeedItem:
+INSERT OR REPLACE INTO FeedItem(itemId, pageId, apiUrl, date, headline, thumbnail)
 VALUES (?, ?, ?, ?, ?, ?);

@@ -1,16 +1,16 @@
 package com.gchristov.newsfeed.kmmfeeddata
 
-import com.gchristov.newsfeed.kmmfeeddata.model.DecoratedPost
-import com.gchristov.newsfeed.kmmfeeddata.model.Feed
+import com.gchristov.newsfeed.kmmfeeddata.model.DecoratedFeedPage
 
 interface FeedRepository {
-    suspend fun feed(pageId: String? = null): Feed
+    suspend fun feedPage(
+        pageId: Int,
+        feedQuery: String,
+    ): DecoratedFeedPage
+
+    suspend fun redecorateFeedPage(feedPage: DecoratedFeedPage): DecoratedFeedPage
+
+    suspend fun cachedFeedPage(): DecoratedFeedPage?
 
     suspend fun clearCache()
-
-    suspend fun post(postId: String): DecoratedPost
-
-    fun favouriteTimestamp(postId: String): Long?
-
-    fun toggleFavourite(postId: String): Long?
 }

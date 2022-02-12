@@ -24,14 +24,17 @@ public struct PostScreenContent: View {
     
     public var body: some View {
         ZStack {
-            if state?.loading == true {
-                LoadingState()
-            } else if (state?.blockingError != nil) {
+            if (state?.blockingError != nil) {
                 ErrorState(blockingError: BlockingError()) {
                     viewModel.loadContent()
                 }
-            } else if let post = state?.post {
-                PostState(post: post)
+            } else {
+                PostState(
+                    loading: state?.loading == true,
+                    post: state?.post,
+                    onRefresh: { viewModel.loadContent() },
+                    onToggleFavourite: { viewModel.onToggleFavourite() }
+                )
             }
         }
         .onAppear {
@@ -39,23 +42,6 @@ public struct PostScreenContent: View {
         }
         .onDisappear {
             viewModel.onCleared()
-        }
-        .navigationBarTitle("", displayMode: .inline)
-        .toolbar {
-            ToolbarItemGroup(placement: .navigationBarTrailing) {
-                AppIconButton(
-                    imageName: "heart\(state?.post?.isFavourite() ?? false ? ".fill" : "")",
-                    contentDescription: state?.post?.isFavourite() ?? false ? "Remove from favourites" : "Add to favourites"
-                ) {
-                    viewModel.onToggleFavourite()
-                }
-                AppIconButton(
-                    imageName: "arrow.clockwise",
-                    contentDescription: "Reload"
-                ) {
-                    viewModel.loadContent()
-                }
-            }
         }
     }
     
@@ -67,36 +53,113 @@ public struct PostScreenContent: View {
 }
 
 private struct PostState: View {
-    let post: DecoratedPost
+    @EnvironmentObject var theme: Theme
+    let loading: Bool
+    let post: DecoratedPost?
+    let onRefresh: () -> ()
+    let onToggleFavourite: () -> ()
     
     var body: some View {
         AppScreen {
             ScrollView {
-                Spacer(minLength: 16)
-                VStack(
-                    alignment: .leading,
-                    spacing: 8
-                ) {
-                    PostHeader(post: post)
-                    if let body = post.post.body {
-                        AppText(text: body).padding(.top)
+                if let post = post {
+                    VStack {
+                        PostImage(url: post.raw.thumbnail)
+                        VStack(
+                            alignment: .leading,
+                            spacing: 8
+                        ) {
+                            PostHeader(header: post.raw.headline ?? "--")
+                            PostBody(text: post.raw.body ?? "--")
+                        }.padding(16)
                     }
-                }.padding(16)
+                }
+            }
+        }
+        .ignoresSafeArea(edges: .top) // Allow nav bar to overlay content
+        .navigationBarTitle("", displayMode: .inline)
+        .toolbar {
+            ToolbarItemGroup(placement: .navigationBarTrailing) {
+                PostNavigationActions(
+                    loading: loading,
+                    allowFavourite: post != nil,
+                    isFavourite: post?.isFavourite() == true,
+                    onRefresh: onRefresh,
+                    onToggleFavourite: onToggleFavourite
+                )
             }
         }
     }
 }
 
+private struct PostNavigationActions: View {
+    @EnvironmentObject var theme: Theme
+    let loading: Bool
+    let allowFavourite: Bool
+    let isFavourite: Bool
+    let onRefresh: () -> ()
+    let onToggleFavourite: () -> ()
+    
+    var body: some View {
+        if (allowFavourite) {
+            AppIconButton(
+                imageName: "heart\(isFavourite ? ".fill" : "")",
+                contentDescription: isFavourite ? "Remove from favourites" : "Add to favourites"
+            ) {
+                onToggleFavourite()
+            }
+        }
+        if (loading) {
+            AppCircularProgressIndicator(tint: theme.contentColors.primary)
+        } else {
+            AppIconButton(
+                imageName: "arrow.clockwise",
+                contentDescription: "Reload"
+            ) {
+                onRefresh()
+            }
+        }
+    }
+}
+
+private struct PostImage: View {
+    @EnvironmentObject var theme: Theme
+    let url: String?
+    
+    var body: some View {
+        ZStack(alignment: .top) {
+            if let url = url {
+                AppImage(
+                    imageUrl: url,
+                    contentMode: .fill
+                )
+            }
+            Rectangle()
+                .fill(LinearGradient(gradient: Gradient(colors: [theme.backgrounds.surface.opacity(0.7), .black.opacity(0)]), startPoint: .top, endPoint: .bottom))
+                .frame(height: 200)
+        }
+        .frame(
+            // Fill max available width
+            minWidth: 0,
+            maxWidth: .infinity,
+            minHeight: 340,
+            maxHeight: 340
+        )
+        .background(theme.backgrounds.surface)
+        .clipped()
+    }
+}
+
 private struct PostHeader: View {
     @EnvironmentObject var theme: Theme
-    let post: DecoratedPost
+    let header: String
     
     var body: some View {
         AppText(
-            text: post.post.title,
+            text: header,
             font: theme.typography.title
         )
-        PostAuthor(author: post.post.author)
+        PostAuthor(author: "Anonymous")
     }
 }
 
@@ -105,7 +168,7 @@ private struct PostAuthor: View {
     let author: String
     
     var body: some View {
-        HStack(spacing: 8) {
+        HStack(spacing: 6) {
             AppAvatar(
                 name: author,
                 size: CGSize(width: 36, height: 36)
@@ -126,11 +189,12 @@ private struct PostAuthor: View {
     }
 }
 
-private struct LoadingState: View {
+private struct PostBody: View {
+    @EnvironmentObject var theme: Theme
+    let text: String
+    
     var body: some View {
-        AppScreen {
-            AppCircularProgressIndicator()
-        }
+        AppText(text: text).padding(.top, 16)
     }
 }
 
@@ -148,18 +212,8 @@ private struct ErrorState: View {
     }
 }
 
-struct PostDetailsView_Previews: PreviewProvider {
-    private static var post = DecoratedPost(
-        post: Post(
-            uid: "id",
-            author: "Georgi",
-            title: "Post title",
-            body: "Some longer post body that can go on multiple lines",
-            pageId: nil,
-            nextPageId: nil),
-        favouriteTimestamp: nil)
-    
-    static var previews: some View {
-        PostState(post: post)
+private extension DecoratedPost {
+    func isFavourite() -> Bool {
+        return favouriteTimestamp != nil
     }
 }

@@ -1,7 +1,9 @@
+import com.gchristov.newsfeed.kmmgradleplugins.Deps
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
 plugins {
-    id("kmm-common-module-plugin")
+    // Normally, this would be kmm-module-plugin but since this is an umbrella module this is enough
+    id("kmm-platform-plugin")
 }
 
 kotlin {
@@ -11,12 +13,14 @@ kotlin {
      https://touchlab.co/multiple-kotlin-frameworks-in-application/
      */
     val exportedDependencies = listOf(
+        Deps.Kotlin.coroutinesCore, // Needed for coroutine dispatchers
+        projects.kmmCommonTest,
         projects.kmmFeed,
         projects.kmmFeedData,
-        projects.kmmPost,
-        // Allows Swift access to the test modules
-        projects.kmmCommonTest,
         projects.kmmFeedTestFixtures,
+        projects.kmmPost,
+        projects.kmmPostData,
+        projects.kmmPostTestFixtures,
     )
 
     val iosTarget: (String, KotlinNativeTarget.() -> Unit) -> KotlinNativeTarget = when {

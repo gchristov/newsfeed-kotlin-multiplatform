@@ -15,8 +15,6 @@ import com.gchristov.newsfeed.commoncompose.elements.AppText
 import com.gchristov.newsfeed.commoncompose.theme.Theme
 import com.gchristov.newsfeed.commondesign.R
 
-private val generator = ColorGenerator()
-
 @Composable
 fun AppAvatar(
     size: Dp,
@@ -27,7 +25,7 @@ fun AppAvatar(
         modifier = Modifier
             .size(size)
             .clip(CircleShape)
-            .background(generator.getColor()),
+            .background(colorGenerator.getColor()),
         contentAlignment = Alignment.Center
     ) {
         AppText(
@@ -37,3 +35,5 @@ fun AppAvatar(
         )
     }
 }
+
+private val colorGenerator = ColorGenerator()

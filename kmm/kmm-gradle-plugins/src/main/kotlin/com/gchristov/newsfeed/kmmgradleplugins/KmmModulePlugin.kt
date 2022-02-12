@@ -4,17 +4,16 @@ import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
-class KmmCommonFeaturePlugin : KmmCommonModulePlugin() {
+open class KmmModulePlugin : KmmPlatformPlugin() {
     override fun apply(target: Project) {
         super.apply(target)
         target.configureKotlin()
         target.configureDependencyInjection()
         target.configureTests()
-        target.configureMvvm()
     }
 }
 
-internal fun Project.configureKotlin() {
+private fun Project.configureKotlin() {
     extensions.configure<KotlinMultiplatformExtension> {
         sourceSets.maybeCreate("commonMain").dependencies {
             api(project(":kmm-common-kotlin"))
@@ -22,7 +21,7 @@ internal fun Project.configureKotlin() {
     }
 }
 
-internal fun Project.configureDependencyInjection() {
+private fun Project.configureDependencyInjection() {
     extensions.configure<KotlinMultiplatformExtension> {
         sourceSets.maybeCreate("commonMain").dependencies {
             api(project(":kmm-common-di"))
@@ -30,21 +29,10 @@ internal fun Project.configureDependencyInjection() {
     }
 }
 
-internal fun Project.configureTests() {
+private fun Project.configureTests() {
     extensions.configure<KotlinMultiplatformExtension> {
         sourceSets.maybeCreate("commonMain").dependencies {
             api(project(":kmm-common-test"))
-        }
-    }
-}
-
-private fun Project.configureMvvm() {
-    extensions.configure<KotlinMultiplatformExtension> {
-        sourceSets.maybeCreate("commonMain").dependencies {
-            api(project(":kmm-common-mvvm"))
-        }
-        sourceSets.maybeCreate("commonTest").dependencies {
-            implementation(project(":kmm-common-mvvm-test"))
         }
     }
 }

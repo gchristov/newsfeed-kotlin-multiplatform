@@ -1,13 +1,13 @@
 plugins {
-    id("kmm-common-feature-plugin")
+    id("kmm-feature-plugin")
 }
 
 kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                api(projects.kmmFeedData)
-                api(projects.kmmFeedTestFixtures)
+                api(projects.kmmPostData)
+                api(projects.kmmPostTestFixtures)
             }
         }
     }

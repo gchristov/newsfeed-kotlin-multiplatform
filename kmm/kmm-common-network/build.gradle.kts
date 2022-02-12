@@ -3,7 +3,7 @@ import com.gchristov.newsfeed.kmmgradleplugins.Deps
 val packageId = "com.gchristov.newsfeed.kmmcommonnetwork"
 
 plugins {
-    id("kmm-common-module-plugin")
+    id("kmm-module-plugin")
     id("com.codingfeline.buildkonfig")
 }
 
@@ -11,7 +11,6 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(projects.kmmCommonDi)
                 implementation(Deps.Ktor.clientCore)
                 api(Deps.Ktor.clientSerialization)
                 implementation(Deps.Ktor.clientLogging)
@@ -37,12 +36,17 @@ buildkonfig {
         buildConfigField(
             type = com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING,
             name = "API_KEY",
-            value = "Z2VvcmdpOnBhc3N3b3Jk"
+            value = "09658731-cb6d-4a84-9e3c-5f030389de4e"
         )
         buildConfigField(
             type = com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING,
             name = "API_URL",
-            value = "https://peanut-exercice-android.herokuapp.com"
+            value = "https://content.guardianapis.com"
+        )
+        buildConfigField(
+            type = com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING,
+            name = "API_AUTH_HEADER",
+            value = "api-key"
         )
     }
 }

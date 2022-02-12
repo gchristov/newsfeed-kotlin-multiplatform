@@ -4,12 +4,9 @@ import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
-class KmmCommonDataPlugin : KmmCommonModulePlugin() {
+class KmmDataPlugin : KmmModulePlugin() {
     override fun apply(target: Project) {
         super.apply(target)
-        target.configureKotlin()
-        target.configureDependencyInjection()
-        target.configureTests()
         target.configureNetwork()
         target.configurePersistence()
     }

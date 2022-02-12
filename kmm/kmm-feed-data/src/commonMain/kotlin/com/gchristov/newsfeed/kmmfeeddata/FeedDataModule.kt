@@ -1,56 +1,108 @@
 package com.gchristov.newsfeed.kmmfeeddata
 
-import com.gchristov.newsfeed.kmmcommondi.CommonDiModule
 import com.gchristov.newsfeed.kmmcommondi.DiModule
 import com.gchristov.newsfeed.kmmcommonnetwork.ApiClient
 import com.gchristov.newsfeed.kmmcommonnetwork.CommonNetworkModule
 import com.gchristov.newsfeed.kmmcommonpersistence.CommonPersistenceModule
 import com.gchristov.newsfeed.kmmcommonpersistence.SqlDriverProperties
-import com.russhwolf.settings.Settings
+import com.gchristov.newsfeed.kmmfeeddata.usecase.*
+import com.gchristov.newsfeed.kmmpostdata.PostDataModule
+import com.gchristov.newsfeed.kmmpostdata.PostRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.datetime.Clock
 import org.kodein.di.DI
+import org.kodein.di.bindProvider
 import org.kodein.di.bindSingleton
 import org.kodein.di.instance
 
 object FeedDataModule : DiModule() {
     override fun name() = "kmm-feed-data"
 
-    override fun build(builder: DI.Builder) {
+    override fun bindLocalDependencies(builder: DI.Builder) {
         builder.apply {
             bindSingleton { provideFeedApi(client = instance()) }
             bindSingleton {
                 provideFeedRepository(
                     api = instance(),
-                    sharedPreferences = instance(),
+                    postRepository = instance(),
                     database = FeedSqlDelightDatabase(
                         instance(
                             arg = SqlDriverProperties(
                                 schema = FeedSqlDelightDatabase.Schema,
-                                databaseName = "test.db"
+                                databaseName = "feed.db"
                             )
                         )
                     )
                 )
             }
+            bindProvider { provideBuildSectionedFeedUseCase() }
+            bindProvider { provideMergeSectionedFeedUseCase() }
+            bindProvider { provideFlattenSectionedFeedUseCase() }
+            bindProvider {
+                provideGetSectionedFeedUseCase(
+                    feedRepository = instance(),
+                    buildSectionedFeedUseCase = instance(),
+                    mergeSectionedFeedUseCase = instance()
+                )
+            }
+            bindProvider {
+                provideRedecorateSectionedFeedUseCase(
+                    feedRepository = instance(),
+                    flattenSectionedFeedUseCase = instance(),
+                    buildSectionedFeedUseCase = instance()
+                )
+            }
         }
     }
 
-    override fun dependencies(): List<DI.Module> {
+    override fun moduleDependencies(): List<DI.Module> {
         return listOf(
-            CommonDiModule.module,
             CommonNetworkModule.module,
-            CommonPersistenceModule.module
+            CommonPersistenceModule.module,
+            PostDataModule.module
         )
     }
 
     private fun provideFeedRepository(
         api: FeedApi,
-        sharedPreferences: Settings,
+        postRepository: PostRepository,
         database: FeedSqlDelightDatabase
     ): FeedRepository = RealFeedRepository(
+        dispatcher = Dispatchers.Default,
         apiService = api,
-        sharedPreferences = sharedPreferences,
+        postRepository = postRepository,
         database = database
     )
 
     private fun provideFeedApi(client: ApiClient) = FeedApi(client)
+
+    private fun provideBuildSectionedFeedUseCase() = BuildSectionedFeedUseCase(
+        dispatcher = Dispatchers.Default,
+        clock = Clock.System
+    )
+
+    private fun provideMergeSectionedFeedUseCase() = MergeSectionedFeedUseCase(Dispatchers.Default)
+
+    private fun provideFlattenSectionedFeedUseCase() =
+        FlattenSectionedFeedUseCase(Dispatchers.Default)
+
+    private fun provideGetSectionedFeedUseCase(
+        feedRepository: FeedRepository,
+        buildSectionedFeedUseCase: BuildSectionedFeedUseCase,
+        mergeSectionedFeedUseCase: MergeSectionedFeedUseCase
+    ) = GetSectionedFeedUseCase(
+        feedRepository = feedRepository,
+        buildSectionedFeedUseCase = buildSectionedFeedUseCase,
+        mergeSectionedFeedUseCase = mergeSectionedFeedUseCase
+    )
+
+    private fun provideRedecorateSectionedFeedUseCase(
+        feedRepository: FeedRepository,
+        flattenSectionedFeedUseCase: FlattenSectionedFeedUseCase,
+        buildSectionedFeedUseCase: BuildSectionedFeedUseCase
+    ) = RedecorateSectionedFeedUseCase(
+        feedRepository = feedRepository,
+        flattenSectionedFeedUseCase = flattenSectionedFeedUseCase,
+        buildSectionedFeedUseCase = buildSectionedFeedUseCase
+    )
 }

@@ -1,82 +1,106 @@
 package com.gchristov.newsfeed.kmmfeeddata
 
-import com.gchristov.newsfeed.kmmfeeddata.model.*
-import com.russhwolf.settings.Settings
-import com.russhwolf.settings.contains
-import com.russhwolf.settings.get
-import com.russhwolf.settings.set
-import kotlinx.datetime.Clock
+import com.gchristov.newsfeed.kmmfeeddata.model.DecoratedFeedItem
+import com.gchristov.newsfeed.kmmfeeddata.model.DecoratedFeedPage
+import com.gchristov.newsfeed.kmmfeeddata.model.toFeedPage
+import com.gchristov.newsfeed.kmmpostdata.PostRepository
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
+import kotlinx.datetime.Instant
 
 internal class RealFeedRepository(
+    private val dispatcher: CoroutineDispatcher,
     private val apiService: FeedApi,
-    private val sharedPreferences: Settings,
+    private val postRepository: PostRepository,
     database: FeedSqlDelightDatabase
 ) : FeedRepository {
     private val queries = database.feedSqlDelightDatabaseQueries
 
-    override suspend fun feed(pageId: String?): Feed {
-        val cache = cachedFeed(pageId)
-        if (cache.isNotEmpty()) {
-            return Feed(
-                posts = cache,
-                paging = PageCursor(cache.first().post.nextPageId ?: "")
-            )
-        }
-        val feed = apiService.feed(pageId).toFeed(repository = this)
-        cacheFeed(
-            feed = feed,
-            pageId = pageId
-        )
-        return feed
+    override suspend fun feedPage(
+        pageId: Int,
+        feedQuery: String,
+    ): DecoratedFeedPage = withContext(dispatcher) {
+        val feed = apiService.feed(
+            pageId = pageId,
+            feedQuery = feedQuery
+        ).toFeedPage { decorateFeedItem(feedItem = it) }
+        cacheFeedPage(feed)
+        feed
     }
 
-    override suspend fun clearCache() {
+    override suspend fun redecorateFeedPage(feedPage: DecoratedFeedPage): DecoratedFeedPage =
+        withContext(dispatcher) {
+            val redecoratedFeedItems = feedPage.items.map { decorateFeedItem(it.raw) }
+            feedPage.copy(items = redecoratedFeedItems)
+        }
+
+    /**
+     * Decorates a [feedItem]. Should be called from a background thread.
+     */
+    private suspend fun decorateFeedItem(feedItem: FeedItem) = DecoratedFeedItem(
+        raw = feedItem,
+        date = Instant.parse(feedItem.date),
+        favouriteTimestamp = postRepository.favouriteTimestamp(feedItem.itemId)
+    )
+
+    override suspend fun cachedFeedPage(): DecoratedFeedPage? =
+        withContext(dispatcher) {
+            val selectPage = queries.selectFeedPage().executeAsList()
+            if (selectPage.isEmpty()) {
+                return@withContext null
+            }
+            // We only cache the first feed page, so using the first result is fine here
+            val firstPage = selectPage.first()
+            val page = FeedPage(
+                pageId = firstPage.pageId,
+                pages = firstPage.pages,
+            )
+            val feedItems = selectPage.map {
+                decorateFeedItem(
+                    FeedItem(
+                        itemId = it.itemId,
+                        pageId = it.pageId,
+                        apiUrl = it.apiUrl,
+                        date = it.date,
+                        headline = it.headline,
+                        thumbnail = it.thumbnail
+                    )
+                )
+            }
+            DecoratedFeedPage(
+                raw = page,
+                items = feedItems
+            )
+        }
+
+    override suspend fun clearCache() =
+        withContext(dispatcher) {
+            queries.transaction {
+                queries.clearFeedPages()
+                queries.clearFeedItems()
+            }
+        }
+
+    /**
+     * Saves [feedPage] to local storage synchronously. Should be called from a background thread.
+     */
+    private fun cacheFeedPage(feedPage: DecoratedFeedPage) {
         queries.transaction {
-            queries.clearTable()
-        }
-    }
-
-    override suspend fun post(postId: String): DecoratedPost {
-        return queries.selectWithId(postId).executeAsOne().decorate(repository = this)
-    }
-
-    override fun favouriteTimestamp(postId: String): Long? {
-        if (sharedPreferences.contains(postId)) {
-            return sharedPreferences.getLong(postId, Clock.System.now().toEpochMilliseconds())
-        }
-        return null
-    }
-
-    override fun toggleFavourite(postId: String): Long? {
-        favouriteTimestamp(postId)?.let {
-            sharedPreferences.remove(postId)
-            return null
-        } ?: run {
-            // Keep track of when the item was favourited
-            sharedPreferences[postId] = Clock.System.now().toEpochMilliseconds()
-            return sharedPreferences[postId]
-        }
-    }
-
-    private fun cacheFeed(
-        feed: Feed,
-        pageId: String?
-    ) {
-        feed.posts.forEach { decoratedPost ->
-            val post = decoratedPost.post
-            queries.insert(
-                uid = post.uid,
-                author = post.author,
-                title = post.title,
-                body = post.body,
-                pageId = pageId,
-                nextPageId = feed.paging.next_cursor
+            queries.insertFeed(
+                pageId = feedPage.raw.pageId,
+                pages = feedPage.raw.pages,
             )
+            feedPage.items.forEach { feedItem ->
+                val post = feedItem.raw
+                queries.insertFeedItem(
+                    itemId = post.itemId,
+                    pageId = feedPage.raw.pageId,
+                    apiUrl = post.apiUrl,
+                    date = post.date,
+                    headline = post.headline,
+                    thumbnail = post.thumbnail,
+                )
+            }
         }
-    }
-
-    private fun cachedFeed(pageId: String?): List<DecoratedPost> {
-        return queries.selectWithPageId(pageId).executeAsList()
-            .map { it.decorate(repository = this) }
     }
 }

@@ -14,7 +14,7 @@ import org.kodein.di.bindSingleton
 object CommonNetworkModule : DiModule() {
     override fun name() = "kmm-network-module"
 
-    override fun build(builder: DI.Builder) {
+    override fun bindLocalDependencies(builder: DI.Builder) {
         builder.apply {
             bindSingleton { provideNetworkClient() }
             bindSingleton { provideApiClient() }
@@ -25,7 +25,7 @@ object CommonNetworkModule : DiModule() {
 
     private fun provideApiClient() = ApiClient(provideHttpClient().config {
         defaultRequest {
-            header("Authorization", "Basic ${BuildKonfig.API_KEY}")
+            header(BuildKonfig.API_AUTH_HEADER, BuildKonfig.API_KEY)
             url.takeFrom(URLBuilder().takeFrom(BuildKonfig.API_URL).apply {
                 encodedPath += url.encodedPath
             })

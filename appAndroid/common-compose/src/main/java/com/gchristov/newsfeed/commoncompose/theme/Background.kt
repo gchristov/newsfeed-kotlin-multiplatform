@@ -22,7 +22,7 @@ internal val LocalBackgrounds = staticCompositionLocalOf {
 
 @Composable
 internal fun lightBackgrounds() = Backgrounds(
-    primary = colorResource(R.color.white),
+    primary = colorResource(R.color.gray_4),
     surface = colorResource(R.color.white),
 )
 

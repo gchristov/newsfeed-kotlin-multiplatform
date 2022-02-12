@@ -1,7 +1,7 @@
 import com.gchristov.newsfeed.gradleplugins.Deps
 
 plugins {
-    id("common-module-plugin")
+    id("android-library-plugin")
 }
 
 /*

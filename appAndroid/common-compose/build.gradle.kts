@@ -1,8 +1,8 @@
 import com.gchristov.newsfeed.gradleplugins.Deps
 
 plugins {
-    id("common-module-plugin")
-    id("common-compose-plugin")
+    id("android-module-plugin")
+    id("android-compose-plugin")
 }
 
 dependencies {
@@ -14,6 +14,8 @@ dependencies {
     api(Deps.Compose.foundationLayout)
     api(Deps.Compose.materialIcons)
     implementation(Deps.Compose.material)
+    implementation(Deps.Compose.coil)
+    implementation(Deps.Compose.html)
     implementation(Deps.Accompanist.swipeRefresh)
     implementation(projects.commonDesign)
 }

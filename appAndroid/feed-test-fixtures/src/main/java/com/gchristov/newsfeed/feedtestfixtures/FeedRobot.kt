@@ -16,24 +16,37 @@ class FeedRobot internal constructor(private val provider: SemanticsNodeInteract
         provider.onIndeterminateProgress().assertDoesNotExist()
     }
 
+    fun assertEmptyStateExists() {
+        provider.onNodeWithText("No results found. Please\ntry another search term").assertExists()
+    }
+
+    fun assertEmptyStateDoesNotExist() {
+        provider.onNodeWithText("No results found. Please\ntry another search term")
+            .assertDoesNotExist()
+    }
+
+    fun assertSectionExists(header: String) {
+        provider.onNodeWithText(header).assertExists()
+    }
+
+    fun assertSectionDoesNotExist(header: String) {
+        provider.onNodeWithText(header).assertDoesNotExist()
+    }
+
     fun assertFeedItemExists(
         title: String,
-        author: String,
-        body: String,
+        date: String,
     ) {
         provider.onNodeWithText(title).assertExists()
-        provider.onNodeWithText(author).assertExists()
-        provider.onNodeWithText(body).assertExists()
+        provider.onNodeWithText(date).assertExists()
     }
 
     fun assertFeedItemDoesNotExist(
         title: String,
-        author: String,
-        body: String,
+        date: String,
     ) {
         provider.onNodeWithText(title).assertDoesNotExist()
-        provider.onNodeWithText(author).assertDoesNotExist()
-        provider.onNodeWithText(body).assertDoesNotExist()
+        provider.onNodeWithText(date).assertDoesNotExist()
     }
 
     fun assertFavouriteItemsShown(favouriteItems: Int) {

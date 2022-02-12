@@ -8,14 +8,18 @@ import org.kodein.di.instance
 abstract class DiModule {
     abstract fun name(): String
 
-    abstract fun build(builder: DI.Builder)
+    abstract fun bindLocalDependencies(builder: DI.Builder)
 
-    open fun dependencies(): List<DI.Module> = emptyList()
+    open fun moduleDependencies(): List<DI.Module> = emptyList()
 
     val module: DI.Module
         get() = DI.Module(name = name()) {
-            dependencies().forEach { importOnce(it) }
-            build(builder = this)
+            val dependencies = mutableListOf<DI.Module>().apply {
+                add(CommonDiModule.module)
+                addAll(moduleDependencies())
+            }
+            dependencies.forEach { importOnce(it) }
+            bindLocalDependencies(builder = this)
         }
 
     @PublishedApi

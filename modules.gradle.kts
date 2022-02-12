@@ -15,6 +15,8 @@ val projects = listOf(
     "kmm-feed-test-fixtures",
     "kmm-gradle-plugins",
     "kmm-post",
+    "kmm-post-data",
+    "kmm-post-test-fixtures",
     "kmm-umbrella",
     "appAndroid",
     "common-compose",

@@ -37,6 +37,9 @@ The project could also be used as a template for other multiplatform apps, provi
 4. Run `./new_app_setup.sh` and follow the instructions
 5. Once the script finishes you should follow the instructions above to setup the project with Android Studio
 
+#### API Key
+Note that you might need to replace the API key for this project if [this link](https://content.guardianapis.com/search?api-key=09658731-cb6d-4a84-9e3c-5f030389de4e) doesn't work. To get a new key, go to [this link](https://bonobo.capi.gutools.co.uk/register/developer) and register a developer account. Once you get the key, replace the `value` for `API_KEY` in `kmm/kmm-common-network/build.gradle.kts`.
+
 ## 🏬 Architecture
 The project is built using CLEAN multi-module architecture consisting of `feature`, `data` and `test-fixture` modules both for the shared KMM code and the individual client targets. Each module contains classes and resources only related to its functionality and some modules can be reused within other modules. Definitions of the module types can be found under each platform below.
 
@@ -56,9 +59,10 @@ Ths shared multiplatform code consists of 4 different module types:
 * `test-fixtures` - modules that contain test fake's for a particular feature module. We usually have one test fixtures module per app feature.
 
 To make creating new modules seamless, the KMM setup provides 3 dedicated Kotlin DSL Gradle plugins that should be applied to new modules depending on their type:
-* new `data` modules should apply the `id("kmm-common-data-plugin")` plugin;
-* new `feature` modules should apply the `id("kmm-common-feature-plugin")` plugin;
-* regular modules should apply the `id("kmm-common-module-plugin")` plugin;
+* new `common` modules should apply the `id("kmm-module-plugin")` plugin, unless they are meant to be exposed through `kmm-module-plugin` itself, in which case they should apply the `id("kmm-platform-plugin")` plugin to avoid circular dependencies;
+* new `data` modules should apply the `id("kmm-data-plugin")` plugin;
+* new `feature` modules should apply the `id("kmm-feature-plugin")` plugin;
+* all other modules should apply the `id("kmm-module-plugin")` plugin;
 
 #### Example: Adding New KMM Modules
 You can create new modules using Android Studio's `File` -> `New Module`. Keep 3 things in mind when adding new KMM modules:
@@ -73,8 +77,9 @@ The Android app is also using Gradle as a build system and consists of 3 differe
 * `test-fixtures` - modules that contain test robots for a particular feature module. We usually have one test fixtures module and robot per app feature.
 
 Similarly to KMM, to make creating new modules seamless, the Android setup provides 2 dedicated Kotlin DSL Gradle plugins that should be applied to new modules depending on their type:
-* new `feature` modules should apply the `id("common-feature-plugin")` plugin;
-* regular modules should apply the `id("common-module-plugin")` plugin;
+* new `common` modules should apply the `id("android-module-plugin")` plugin, unless they are meant to be exposed through `android-module-plugin` itself, in which case they should apply the `id("android-library-plugin")` plugin to avoid circular dependencies;
+* new `feature` modules should apply the `id("android-feature-plugin")` plugin;
+* all other modules should apply the `id("android-module-plugin")` plugin;
 
 #### Example: Adding New Android Modules
 You can create new modules using Android Studio's `File` -> `New Module`. Keep 3 things in mind when adding new Android modules:
@@ -91,7 +96,7 @@ The only real difference is around linking the KMM dependencies which are specif
 * `Framework Search Paths`
 
 #### KMM's [embedAndSignAppleFrameworkForXcode](https://blog.jetbrains.com/kotlin/2021/07/multiplatform-gradle-plugin-improved-for-connecting-kmm-modules/)
-This Gradle task is specifically designed to run as part of the Xcode build process and its core purpose is to compile the Kotlin source files into Swift, generate the `.framework` file, link and sign it with Xcode, as the name suggests. It should be invoked from a `Run Script` phase during every Xcode build to generate a `.framework` file for **one** Kotlin dependency module. For example, `./gradlew :kmm-umbrella:embedAndSignAppleFrameworkForXcode` will compile all code in the shared `kmm-umbrella` module only and generate its framework based on the specs in `kmm/kmm-umbrella/build.gradle`. This framework follows [Gradle's rules for exporting dependencies](https://kotlinlang.org/docs/mpp-build-native-binaries.html#export-dependencies-to-binaries) and all `api` dependencies will be visible to Swift. This includes all `api` submodules that `kmm-umbrella` depends on.
+This Gradle task is specifically designed to run as part of the Xcode build process and its core purpose is to compile the Kotlin source files into Swift, generate the `.framework` file, link and sign it with Xcode, as the name suggests. It should be invoked from a `Run Script` phase during every Xcode build to generate a `.framework` file for **one** Kotlin dependency module. For example, `./gradlew :kmm-umbrella:embedAndSignAppleFrameworkForXcode` will compile all code in the shared `kmm-umbrella` module only and generate its framework based on the specs in `kmm/kmm-umbrella/build.gradle.kts`. This framework follows [Gradle's rules for exporting dependencies](https://kotlinlang.org/docs/mpp-build-native-binaries.html#export-dependencies-to-binaries) and all `api` dependencies will be visible to Swift. This includes all `api` submodules that `kmm-umbrella` depends on.
 
 A caveat with submodule `api` dependencies is that if a module (`A`) declares a dependency on module (`B`), the generated Swift code will prefix the classes from `B` with its fully qualified module name when they are exposed through `A`. For example, a class `MyClass` defined in `B` but exposed through `A` will be available as `BMyClass` when the `A.framework` is used in Swift. In addition, because the individual modules are exported as separate `.framework`s, they do not share memory and resources, unlike Android, where they are all part of the same app memory model. 
 

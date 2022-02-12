@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="feed_favourite">Added to favourites</string>
+    <string name="feed_empty">No results found. Please\ntry another search term</string>
+    <string name="feed_this_week">This week</string>
+    <string name="feed_last_week">Last week</string>
+    <string name="feed_this_month">This month</string>
 </resources>

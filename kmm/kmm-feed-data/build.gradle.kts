@@ -1,7 +1,17 @@
 val packageId = "com.gchristov.newsfeed.kmmfeeddata"
 
 plugins {
-    id("kmm-common-data-plugin")
+    id("kmm-data-plugin")
+}
+
+kotlin {
+    sourceSets {
+        val commonMain by getting {
+            dependencies {
+                api(projects.kmmPostData) // Needed for knowing if post is favourite
+            }
+        }
+    }
 }
 
 sqldelight {

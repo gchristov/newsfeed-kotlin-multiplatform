@@ -12,6 +12,10 @@
 		460EA826276680BA00D5E384 /* AppText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 460EA825276680BA00D5E384 /* AppText.swift */; };
 		4624BE4C2756AF0400DCC43B /* Typography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4624BE4B2756AF0400DCC43B /* Typography.swift */; };
 		4630ECC4273197ED0019BB4F /* AppDeepLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4630ECC3273197ED0019BB4F /* AppDeepLink.swift */; };
+		464180F227D0F02C0070F9F7 /* AppGroupedList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464180F127D0F02C0070F9F7 /* AppGroupedList.swift */; };
+		464180F827D6769A0070F9F7 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 464180F727D6769A0070F9F7 /* SDWebImageSwiftUI */; };
+		464180FA27D677A40070F9F7 /* AppImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464180F927D677A40070F9F7 /* AppImage.swift */; };
+		464180FC27D6B6240070F9F7 /* Shape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464180FB27D6B6240070F9F7 /* Shape.swift */; };
 		4642A9ED27256AD2005B31ED /* AppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4642A9EC27256AD2005B31ED /* AppError.swift */; };
 		4642A9F7272D50D0005B31ED /* AppAvatar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4642A9F6272D50D0005B31ED /* AppAvatar.swift */; };
 		4642A9FA272D5175005B31ED /* LetterAvatarKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4642A9F9272D5175005B31ED /* LetterAvatarKit */; };
@@ -49,6 +53,9 @@
 		4624BE4B2756AF0400DCC43B /* Typography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Typography.swift; sourceTree = "<group>"; };
 		4630ECC3273197ED0019BB4F /* AppDeepLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDeepLink.swift; sourceTree = "<group>"; };
 		464126DD272318950094BF9B /* CommonSwiftUi.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CommonSwiftUi.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		464180F127D0F02C0070F9F7 /* AppGroupedList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppGroupedList.swift; sourceTree = "<group>"; };
+		464180F927D677A40070F9F7 /* AppImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppImage.swift; sourceTree = "<group>"; };
+		464180FB27D6B6240070F9F7 /* Shape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shape.swift; sourceTree = "<group>"; };
 		4642A9EC27256AD2005B31ED /* AppError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppError.swift; sourceTree = "<group>"; };
 		4642A9F6272D50D0005B31ED /* AppAvatar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppAvatar.swift; sourceTree = "<group>"; };
 		4642A9FB272D54DE005B31ED /* AppList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppList.swift; sourceTree = "<group>"; };
@@ -67,6 +74,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				464180F827D6769A0070F9F7 /* SDWebImageSwiftUI in Frameworks */,
 				4644B91B278529350067B224 /* CommonDesign.framework in Frameworks */,
 				4642A9FA272D5175005B31ED /* LetterAvatarKit in Frameworks */,
 				4644B8E527850ECB0067B224 /* Introspect in Frameworks */,
@@ -102,6 +110,15 @@
 			path = "common-swiftui";
 			sourceTree = "<group>";
 		};
+		464180F027D0F0050070F9F7 /* list */ = {
+			isa = PBXGroup;
+			children = (
+				464180F127D0F02C0070F9F7 /* AppGroupedList.swift */,
+				4642A9FB272D54DE005B31ED /* AppList.swift */,
+			);
+			path = list;
+			sourceTree = "<group>";
+		};
 		4642A9F52728C199005B31ED /* elements */ = {
 			isa = PBXGroup;
 			children = (
@@ -110,12 +127,13 @@
 				4630ECC3273197ED0019BB4F /* AppDeepLink.swift */,
 				4642A9EC27256AD2005B31ED /* AppError.swift */,
 				4644B924278675520067B224 /* AppIcon.swift */,
-				4642A9FB272D54DE005B31ED /* AppList.swift */,
+				464180F927D677A40070F9F7 /* AppImage.swift */,
 				4644B8DE276F4F780067B224 /* AppNavigation.swift */,
 				46C78D952787971F0026FE88 /* AppProgress.swift */,
 				4644B8DC276E4CD50067B224 /* AppScreen.swift */,
 				460EA82327657A1C00D5E384 /* AppSurface.swift */,
 				460EA825276680BA00D5E384 /* AppText.swift */,
+				464180F027D0F0050070F9F7 /* list */,
 			);
 			path = elements;
 			sourceTree = "<group>";
@@ -133,6 +151,7 @@
 			children = (
 				460EA8212765660900D5E384 /* Background.swift */,
 				46AA3CC42763EF0B00684D28 /* ContentColor.swift */,
+				464180FB27D6B6240070F9F7 /* Shape.swift */,
 				46AA3CC22763EE2300684D28 /* Theme.swift */,
 				4624BE4B2756AF0400DCC43B /* Typography.swift */,
 			);
@@ -170,6 +189,7 @@
 			packageProductDependencies = (
 				4642A9F9272D5175005B31ED /* LetterAvatarKit */,
 				4644B8E427850ECB0067B224 /* Introspect */,
+				464180F727D6769A0070F9F7 /* SDWebImageSwiftUI */,
 			);
 			productName = "common-uikit";
 			productReference = 464126DD272318950094BF9B /* CommonSwiftUi.framework */;
@@ -201,6 +221,7 @@
 			packageReferences = (
 				4642A9F8272D5175005B31ED /* XCRemoteSwiftPackageReference "LetterAvatarKit" */,
 				4644B8E327850ECB0067B224 /* XCRemoteSwiftPackageReference "SwiftUI-Introspect" */,
+				464180F627D6769A0070F9F7 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
 			);
 			productRefGroup = 464126DE272318950094BF9B /* Products */;
 			projectDirPath = "";
@@ -228,6 +249,7 @@
 			files = (
 				4642A9F7272D50D0005B31ED /* AppAvatar.swift in Sources */,
 				4624BE4C2756AF0400DCC43B /* Typography.swift in Sources */,
+				464180F227D0F02C0070F9F7 /* AppGroupedList.swift in Sources */,
 				46AA3CC52763EF0B00684D28 /* ContentColor.swift in Sources */,
 				4644B8DF276F4F780067B224 /* AppNavigation.swift in Sources */,
 				4644B925278675520067B224 /* AppIcon.swift in Sources */,
@@ -241,6 +263,8 @@
 				4642A9ED27256AD2005B31ED /* AppError.swift in Sources */,
 				460EA82427657A1C00D5E384 /* AppSurface.swift in Sources */,
 				4642A9FC272D54DE005B31ED /* AppList.swift in Sources */,
+				464180FC27D6B6240070F9F7 /* Shape.swift in Sources */,
+				464180FA27D677A40070F9F7 /* AppImage.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -453,6 +477,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		464180F627D6769A0070F9F7 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SDWebImage/SDWebImageSwiftUI";
+			requirement = {
+				kind = exactVersion;
+				version = 2.0.2;
+			};
+		};
 		4642A9F8272D5175005B31ED /* XCRemoteSwiftPackageReference "LetterAvatarKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/vpeschenkov/LetterAvatarKit";
@@ -472,6 +504,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		464180F727D6769A0070F9F7 /* SDWebImageSwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 464180F627D6769A0070F9F7 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */;
+			productName = SDWebImageSwiftUI;
+		};
 		4642A9F9272D5175005B31ED /* LetterAvatarKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 4642A9F8272D5175005B31ED /* XCRemoteSwiftPackageReference "LetterAvatarKit" */;

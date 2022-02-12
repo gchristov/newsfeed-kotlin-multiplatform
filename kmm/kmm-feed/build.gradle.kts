@@ -1,5 +1,5 @@
 plugins {
-    id("kmm-common-feature-plugin")
+    id("kmm-feature-plugin")
 }
 
 kotlin {
@@ -8,6 +8,7 @@ kotlin {
             dependencies {
                 api(projects.kmmFeedData)
                 api(projects.kmmFeedTestFixtures)
+                api(projects.kmmPostTestFixtures) // Needed for fake post repository
             }
         }
     }

@@ -4,19 +4,26 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ApiFeedResponse(
-    val posts: List<ApiPost>,
-    val paging: ApiPageCursor
-)
+    val response: ApiFeed,
+) {
+    @Serializable
+    data class ApiFeed(
+        val pages: Int,
+        val currentPage: Int,
+        val results: List<ApiFeedItem>
+    )
+}
 
 @Serializable
-data class ApiPost(
-    val uid: String,
-    val author: String,
-    val title: String,
-    val body: String? = null,
-    val pageId: String? = null,
-    val nextPageId: String? = null,
-)
-
-@Serializable
-data class ApiPageCursor(val next_cursor: String)
+data class ApiFeedItem(
+    val id: String,
+    val apiUrl: String,
+    val webPublicationDate: String,
+    val fields: ApiPostFields? = null,
+) {
+    @Serializable
+    data class ApiPostFields(
+        val headline: String? = null,
+        val thumbnail: String? = null,
+    )
+}

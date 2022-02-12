@@ -39,7 +39,7 @@ fun AppIconButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     icon: ImageVector,
-    iconTint: Color = Theme.contentColors.primary,
+    tint: Color = Theme.contentColors.primary,
     contentDescription: String? = null,
 ) {
     androidx.compose.material.IconButton(
@@ -49,7 +49,7 @@ fun AppIconButton(
     ) {
         AppIcon(
             imageVector = icon,
-            tint = iconTint,
+            tint = tint,
             contentDescription = contentDescription
         )
     }

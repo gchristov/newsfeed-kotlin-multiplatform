@@ -1,30 +1,41 @@
 package com.gchristov.newsfeed.kmmfeeddata.model
 
-import com.gchristov.newsfeed.kmmfeeddata.FeedRepository
-import com.gchristov.newsfeed.kmmfeeddata.Post
+import com.gchristov.newsfeed.kmmfeeddata.FeedItem
+import com.gchristov.newsfeed.kmmfeeddata.FeedPage
+import com.gchristov.newsfeed.kmmfeeddata.api.ApiFeedItem
 import com.gchristov.newsfeed.kmmfeeddata.api.ApiFeedResponse
-import com.gchristov.newsfeed.kmmfeeddata.api.ApiPageCursor
-import com.gchristov.newsfeed.kmmfeeddata.api.ApiPost
+import kotlinx.datetime.Instant
 
-data class Feed(
-    val posts: List<DecoratedPost>,
-    val paging: PageCursor
+data class DecoratedFeedPage(
+    val raw: FeedPage,
+    // Additional properties
+    val items: List<DecoratedFeedItem>
 )
 
-data class PageCursor(val next_cursor: String)
-
-internal fun ApiFeedResponse.toFeed(repository: FeedRepository) = Feed(
-    posts = posts.map { it.toPost().decorate(repository) },
-    paging = paging.toPageCursor()
+data class DecoratedFeedItem(
+    val raw: FeedItem,
+    // Additional properties
+    val date: Instant,
+    val favouriteTimestamp: Long?
 )
 
-private fun ApiPost.toPost() = Post(
-    uid = uid,
-    author = author,
-    title = title,
-    body = body,
+internal inline fun ApiFeedResponse.toFeedPage(itemDecorator: (FeedItem) -> DecoratedFeedItem): DecoratedFeedPage {
+    val page = FeedPage(
+        pageId = response.currentPage,
+        pages = response.pages,
+    )
+    val items = response.results.map { itemDecorator(it.toFeedItem(pageId = page.pageId)) }
+    return DecoratedFeedPage(
+        raw = page,
+        items = items
+    )
+}
+
+private fun ApiFeedItem.toFeedItem(pageId: Int): FeedItem = FeedItem(
+    itemId = id,
     pageId = pageId,
-    nextPageId = nextPageId
+    apiUrl = apiUrl,
+    date = webPublicationDate,
+    headline = fields?.headline,
+    thumbnail = fields?.thumbnail,
 )
-
-private fun ApiPageCursor.toPageCursor() = PageCursor(next_cursor = next_cursor)

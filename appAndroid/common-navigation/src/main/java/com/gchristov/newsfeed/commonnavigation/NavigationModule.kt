@@ -9,7 +9,7 @@ import org.kodein.di.bindFactory
 object NavigationModule : DiModule() {
     override fun name() = "common-navigation"
 
-    override fun build(builder: DI.Builder) {
+    override fun bindLocalDependencies(builder: DI.Builder) {
         builder.apply {
             bindFactory<Context, Navigator> { context: Context ->
                 RealNavigator(context = context)

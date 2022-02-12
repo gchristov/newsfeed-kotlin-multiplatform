@@ -2,49 +2,45 @@ package com.gchristov.newsfeed.kmmfeed
 
 import com.gchristov.newsfeed.kmmcommonmvvm.CommonViewModel
 import com.gchristov.newsfeed.kmmfeeddata.FeedRepository
-import com.gchristov.newsfeed.kmmfeeddata.model.Feed
-import com.gchristov.newsfeed.kmmfeeddata.model.decorate
-import com.gchristov.newsfeed.kmmfeeddata.model.merge
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.gchristov.newsfeed.kmmfeeddata.model.SectionedFeed
+import com.gchristov.newsfeed.kmmfeeddata.model.hasNextPage
+import com.gchristov.newsfeed.kmmfeeddata.usecase.GetSectionedFeedUseCase
+import com.gchristov.newsfeed.kmmfeeddata.usecase.RedecorateSectionedFeedUseCase
+import kotlinx.coroutines.CoroutineDispatcher
 
 class FeedViewModel(
-    private val feedRepository: FeedRepository
-) : CommonViewModel<FeedViewModel.State>(State()) {
+    dispatcher: CoroutineDispatcher,
+    private val feedRepository: FeedRepository,
+    private val getSectionedFeedUseCase: GetSectionedFeedUseCase,
+    private val redecorateSectionedFeedUseCase: RedecorateSectionedFeedUseCase
+) : CommonViewModel<FeedViewModel.State>(
+    dispatcher = dispatcher,
+    initialState = State()
+) {
     init {
         loadNextPage()
     }
 
     fun redecorateContent() {
-        state.value.feed?.let { feed ->
-            viewModelScope.launch {
-                val redecoratedFeed = feed.posts.map { it.post.decorate(feedRepository) }
-                withContext(Dispatchers.Main) {
-                    setState {
-                        copy(
-                            feed = Feed(
-                                posts = redecoratedFeed,
-                                paging = feed.paging
-                            ),
-                        )
-                    }
-                }
+        state.value.sectionedFeed?.let { sectionedFeed ->
+            launchUiCoroutine {
+                val redecorated = redecorateSectionedFeedUseCase(sectionedFeed)
+                setState { copy(sectionedFeed = redecorated) }
             }
         }
     }
 
     fun refreshContent() {
         // Clear cache when user explicitly requests a refresh
-        viewModelScope.launch { feedRepository.clearCache() }
+        launchUiCoroutine { feedRepository.clearCache() }
         loadNextPage()
     }
 
     fun loadNextPage(startFromFirst: Boolean = true) {
-        // The first page doesn't have a page key
-        val nextPageKey = if (startFromFirst) null else state.value.feed?.paging?.next_cursor
+        val nextPage = if (startFromFirst) 1 else state.value.sectionedFeed?.currentPage!!.plus(1)
+        val hasNextPage = if (startFromFirst) true else state.value.sectionedFeed?.hasNextPage()!!
         // Check if we have reached the end of the list
-        if (!startFromFirst && nextPageKey.isNullOrEmpty()) {
+        if (!hasNextPage) {
             setState { copy(reachedEnd = true) }
             return
         }
@@ -61,29 +57,36 @@ class FeedViewModel(
                 nonBlockingError = null,
             )
         }
-        viewModelScope.launch {
+        launchUiCoroutine {
             try {
-                val feed = feedRepository.feed(pageId = nextPageKey)
-                withContext(Dispatchers.Main) {
-                    setState {
-                        copy(
-                            loading = false,
-                            loadingMore = false,
-                            feed = if (startFromFirst) feed else state.value.feed?.merge(feed),
-                        )
-                    }
+                val feedUpdate = getSectionedFeedUseCase(
+                    pageId = nextPage,
+                    feedQuery = "brexit,fintech",
+                    currentFeed = state.value.sectionedFeed,
+                    // Only request cache if we're starting from the first page
+                    onCache = if (startFromFirst) { cache ->
+                        setState { copy(sectionedFeed = cache) }
+                        launchUiCoroutine { feedRepository.clearCache() }
+                    } else null
+                )
+                setState {
+                    copy(
+                        loading = false,
+                        loadingMore = false,
+                        sectionedFeed = feedUpdate,
+                    )
                 }
             } catch (error: Exception) {
                 error.printStackTrace()
-                withContext(Dispatchers.Main) {
-                    setState {
-                        copy(
-                            loading = false,
-                            loadingMore = false,
-                            blockingError = if (startFromFirst) error else null,
-                            nonBlockingError = if (startFromFirst) null else error
-                        )
-                    }
+                val blocking = if (state.value.sectionedFeed == null) error else null
+                val nonBlocking = if (blocking == null) error else null
+                setState {
+                    copy(
+                        loading = false,
+                        loadingMore = false,
+                        blockingError = blocking,
+                        nonBlockingError = nonBlocking
+                    )
                 }
             }
         }
@@ -99,6 +102,6 @@ class FeedViewModel(
         val reachedEnd: Boolean = false,
         val blockingError: Throwable? = null,
         val nonBlockingError: Throwable? = null,
-        val feed: Feed? = null
+        val sectionedFeed: SectionedFeed? = null,
     )
 }

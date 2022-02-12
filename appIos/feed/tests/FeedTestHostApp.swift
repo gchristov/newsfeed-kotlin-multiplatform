@@ -8,24 +8,51 @@ import KmmShared
  */
 @main
 struct FeedTestHostApp: App {
-    private let feed: [Feed]
+    private let feedPages: [DecoratedFeedPage]
+    private let feedPageCache: DecoratedFeedPage?
     private let repository: FakeFeedRepository
+    private let getSectionedFeedUseCase: GetSectionedFeedUseCase
+    private let redecorateSectionedFeedUseCase: RedecorateSectionedFeedUseCase
     
     init() {
         // Mock/fake necessary constructs based on launch environment
-        self.feed = FeedType.obtainFromEnvironment()
+        self.feedPages = FeedType.obtainFromEnvironment()
+        self.feedPageCache = FeedCacheType.obtainFromEnvironment()
         self.repository = FakeFeedRepository(
-            feed: feed,
-            post: nil
+            postRepository: FakePostRepository(
+                post: nil,
+                postCache: nil
+            ),
+            feedPages: feedPages,
+            feedPageCache: feedPageCache
         )
         self.repository.feedResponse = FeedResponseType.obtainFromEnvironment(key: "feedResponse")
         self.repository.feedLoadMoreResponse = FeedResponseType.obtainFromEnvironment(key: "feedLoadMoreResponse")
+        let buildSectionedFeedUseCase = BuildSectionedFeedUseCase(
+            dispatcher: Dispatchers.shared.Main,
+            clock: FakeClock.shared
+        )
+        self.getSectionedFeedUseCase = GetSectionedFeedUseCase(
+            feedRepository: repository,
+            buildSectionedFeedUseCase: buildSectionedFeedUseCase,
+            mergeSectionedFeedUseCase: MergeSectionedFeedUseCase(dispatcher: Dispatchers.shared.Main)
+        )
+        self.redecorateSectionedFeedUseCase = RedecorateSectionedFeedUseCase(
+            feedRepository: repository,
+            flattenSectionedFeedUseCase: FlattenSectionedFeedUseCase(dispatcher: Dispatchers.shared.Main),
+            buildSectionedFeedUseCase: buildSectionedFeedUseCase
+        )
     }
     
     var body: some Scene {
         WindowGroup {
             CustomSwiftUiTestRuleWrapper(embedWithinNavigation: false) {
-                FeedScreenContent(viewModel: FeedViewModel(feedRepository: repository))
+                FeedScreenContent(viewModel: FeedViewModel(
+                    dispatcher: Dispatchers.shared.Main,
+                    feedRepository: repository,
+                    getSectionedFeedUseCase: getSectionedFeedUseCase,
+                    redecorateSectionedFeedUseCase: redecorateSectionedFeedUseCase)
+                )
             }
         }
     }
@@ -35,17 +62,40 @@ struct FeedTestHostApp: App {
  Obtains a test post from the launch environment to use during tests
  */
 private enum FeedType: String {
+    case empty = "empty"
     case singlePage = "singlePage"
     case multiPage = "multiPage"
     
-    static func obtainFromEnvironment() -> [Feed] {
-        let type = FeedType.init(rawValue: ProcessInfo.processInfo.environment["feed"]!)
+    static func obtainFromEnvironment() -> [DecoratedFeedPage] {
+        let type = FeedType.init(rawValue: ProcessInfo.processInfo.environment["feedPages"]!)
         switch type {
+        case .empty:
+            return FeedCreator.shared.emptyFeed()
         case .singlePage:
             return FeedCreator.shared.singlePageFeed()
         default:
             return FeedCreator.shared.multiPageFeed()
         }
+    }
+}
+
+/*
+ Obtains a test cache from the launch environment to use during tests
+ */
+private enum FeedCacheType: String {
+    case singlePage = "singlePage"
+    
+    static func obtainFromEnvironment() -> DecoratedFeedPage? {
+        if let cacheType = ProcessInfo.processInfo.environment["feedPageCache"] {
+            let type = FeedType.init(rawValue: cacheType)
+            switch type {
+            case .singlePage:
+                return FeedCreator.shared.singlePageFeed().first
+            default:
+                return nil
+            }
+        }
+        return nil
     }
 }
 

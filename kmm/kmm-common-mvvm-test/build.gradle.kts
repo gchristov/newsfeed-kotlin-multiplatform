@@ -1,7 +1,7 @@
 import com.gchristov.newsfeed.kmmgradleplugins.Deps
 
 plugins {
-    id("kmm-common-module-plugin")
+    id("kmm-module-plugin")
 }
 
 kotlin {
@@ -13,7 +13,6 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(projects.kmmCommonTest)
                 api(Deps.Mvvm.test)
             }
         }
