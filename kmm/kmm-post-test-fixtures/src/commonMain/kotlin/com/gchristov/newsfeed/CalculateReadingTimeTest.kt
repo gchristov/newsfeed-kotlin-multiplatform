@@ -9,7 +9,7 @@ class CalculateReadingTimeTest {
     @Test
     fun calculatesReadingTimeWhenEmpty() {
         val totalWordCount = 0;
-        val readingTimeMinutes = ReadingTimeCalculator.calculateReadingTime(totalWordCount)
+        val readingTimeMinutes = ReadingTimeCalculator.calculateReadingTimeMinutes(totalWordCount)
         assertEquals(0, readingTimeMinutes)
     }
 }

@@ -6,7 +6,6 @@ import com.gchristov.newsfeed.kmmpostdata.api.ApiPostResponse
 import com.gchristov.newsfeed.kmmpostdata.util.ReadingTimeCalculator
 import kotlinx.coroutines.*
 import kotlinx.datetime.Instant
-import kotlin.math.truncate
 
 data class DecoratedPost(
     val raw: Post,
@@ -37,5 +36,5 @@ suspend fun Post.calculateReadingTime(): Int {
             bodyWordCount + headerWordCount
     }
 
-    return ReadingTimeCalculator.calculateReadingTime(wordCount)
+    return ReadingTimeCalculator.calculateReadingTimeMinutes(wordCount)
 }

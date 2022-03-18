@@ -4,7 +4,7 @@ import kotlin.math.truncate
 
 object ReadingTimeCalculator {
 
-    fun calculateReadingTime(totalWordCount: Int): Int {
+    fun calculateReadingTimeMinutes(totalWordCount: Int): Int {
         if (totalWordCount ==  0) {
             return 0
         }
