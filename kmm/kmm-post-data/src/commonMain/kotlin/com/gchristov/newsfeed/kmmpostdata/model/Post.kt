@@ -4,6 +4,7 @@ import com.gchristov.newsfeed.kmmpostdata.Post
 import com.gchristov.newsfeed.kmmpostdata.api.ApiPost
 import com.gchristov.newsfeed.kmmpostdata.api.ApiPostResponse
 import com.gchristov.newsfeed.kmmpostdata.util.ReadingTimeCalculator
+import kotlinx.coroutines.*
 import kotlinx.datetime.Instant
 import kotlin.math.truncate
 
@@ -25,11 +26,16 @@ fun ApiPost.toPost() = Post(
 
 internal fun ApiPostResponse.toPost() = response.content.toPost()
 
-fun Post.calculateReadingTime(): Int {
+internal fun Post.dispatcher() = Dispatchers.Default
 
-    val bodyWordCount = this.body?.split(" ")?.count() ?: 0
-    val headerWordCount = this.headline?.split(" ")?.count() ?: 0
-    val totalWordCount = bodyWordCount + headerWordCount
+suspend fun Post.calculateReadingTime(): Int {
+    val body = this.body
+    val headline = this.headline
+    val wordCount = withContext(this.dispatcher()) {
+            val bodyWordCount = body?.split(" ")?.count() ?: 0
+            val headerWordCount = headline?.split(" ")?.count() ?: 0
+            bodyWordCount + headerWordCount
+    }
 
-    return ReadingTimeCalculator.calculateReadingTime(totalWordCount)
+    return ReadingTimeCalculator.calculateReadingTime(wordCount)
 }
