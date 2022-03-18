@@ -1,6 +1,7 @@
 package com.gchristov.newsfeed.kmmpostdata
 
 import com.gchristov.newsfeed.kmmpostdata.model.DecoratedPost
+import com.gchristov.newsfeed.kmmpostdata.model.calculateReadingTime
 import com.gchristov.newsfeed.kmmpostdata.model.toPost
 import com.russhwolf.settings.Settings
 import com.russhwolf.settings.contains
@@ -37,7 +38,8 @@ internal class RealPostRepository(
     private suspend fun decoratePost(post: Post) = DecoratedPost(
         raw = post,
         date = Instant.parse(post.date),
-        favouriteTimestamp = favouriteTimestamp(post.id)
+        favouriteTimestamp = favouriteTimestamp(post.id),
+        readingTimeMinutes = post.calculateReadingTime()
     )
 
     override suspend fun cachedPost(postId: String): DecoratedPost? =
