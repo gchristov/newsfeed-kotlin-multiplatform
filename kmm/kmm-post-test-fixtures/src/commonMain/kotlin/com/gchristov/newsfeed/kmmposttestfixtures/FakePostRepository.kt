@@ -2,6 +2,7 @@ package com.gchristov.newsfeed.kmmposttestfixtures
 
 import com.gchristov.newsfeed.kmmcommontest.FakeResponse
 import com.gchristov.newsfeed.kmmcommontest.execute
+import com.gchristov.newsfeed.kmmpostdata.Post
 import com.gchristov.newsfeed.kmmpostdata.PostRepository
 import com.gchristov.newsfeed.kmmpostdata.model.DecoratedPost
 import kotlinx.datetime.Clock
@@ -46,6 +47,10 @@ class FakePostRepository(
             // Keep track of when the item was favourited
             _favouritePosts[postId] = Clock.System.now().toEpochMilliseconds()
         }
+    }
+
+    override suspend fun calculateReadingTimeMinutes(post: Post): Int {
+        return 1
     }
 
     fun assertCacheCleared() = _cacheCleared

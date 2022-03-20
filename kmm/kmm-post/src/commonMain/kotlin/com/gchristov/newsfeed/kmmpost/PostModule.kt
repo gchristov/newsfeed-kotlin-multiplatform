@@ -18,6 +18,9 @@ object PostModule : DiModule() {
                     dispatcher = Dispatchers.Main,
                     postId = postId,
                     postRepository = instance(),
+
+                    //TODO: This is here just as a filler to compile, not valid
+                    readingTimeCalculationUseCase = instance()
                 )
             }
         }

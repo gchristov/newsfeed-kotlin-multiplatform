@@ -1,8 +1,8 @@
 package com.gchristov.newsfeed.kmmpostdata
 
 import com.gchristov.newsfeed.kmmpostdata.model.DecoratedPost
-import com.gchristov.newsfeed.kmmpostdata.model.calculateReadingTime
 import com.gchristov.newsfeed.kmmpostdata.model.toPost
+import com.gchristov.newsfeed.kmmpostdata.util.ReadingTimeCalculator
 import com.russhwolf.settings.Settings
 import com.russhwolf.settings.contains
 import com.russhwolf.settings.set
@@ -39,7 +39,30 @@ internal class RealPostRepository(
         raw = post,
         date = Instant.parse(post.date),
         favouriteTimestamp = favouriteTimestamp(post.id),
-        readingTimeMinutes = post.calculateReadingTime()
+
+        // Option 1: similar to `favouriteTimestamp` do it here in the repository
+        // it is pragmatic, but it does not 'really' belong here
+        // (favouriteTimestamp is, as it's directly using cache/sharedPrefs)
+
+        // With current setup I cannot see a way of not doing this here.
+        // One option could be moving this decoration logic into an UseCase
+        // which would receive this repository and cache facilities via DI.
+        // In there, do the calculation and rebuild the decoratedPost.
+        // I see that you already using this Repository directly in the PostViewModel
+        // so it would there but wrapped in a UseCase
+        // (at least in DDD application-level it would be here)
+        readingTimeMinutes = calculateReadingTimeMinutes(post)
+    )
+
+    private suspend fun decoratePost2(post: Post) = DecoratedPost(
+        raw = post,
+        date = Instant.parse(post.date),
+        favouriteTimestamp = favouriteTimestamp(post.id),
+
+        // Option 2: not doing it here in the Repository, as it is something
+        // that belongs on decoration time use case
+        // readingTimeMinutes = calculateReadingTimeMinutes(post)
+        // see the follow-up comment in PostViewModel.kt
     )
 
     override suspend fun cachedPost(postId: String): DecoratedPost? =
@@ -85,5 +108,13 @@ internal class RealPostRepository(
                 // Keep track of when the item was favourited
                 sharedPreferences[postId] = Clock.System.now().toEpochMilliseconds()
             }
+        }
+
+    override suspend fun calculateReadingTimeMinutes(post: Post): Int =
+        withContext(dispatcher) {
+            val bodyWordCount = post.body?.split(" ")?.count() ?: 0
+            val headerWordCount = post.headline?.split(" ")?.count() ?: 0
+            val wordCount = bodyWordCount + headerWordCount
+            ReadingTimeCalculator.calculateReadingTimeMinutes(wordCount)
         }
 }

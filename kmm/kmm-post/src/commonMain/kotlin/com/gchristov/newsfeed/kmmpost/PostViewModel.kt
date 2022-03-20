@@ -3,12 +3,14 @@ package com.gchristov.newsfeed.kmmpost
 import com.gchristov.newsfeed.kmmcommonmvvm.CommonViewModel
 import com.gchristov.newsfeed.kmmpostdata.PostRepository
 import com.gchristov.newsfeed.kmmpostdata.model.DecoratedPost
+import com.gchristov.newsfeed.kmmpostdata.usecase.ReadingTimeCalculationUseCase
 import kotlinx.coroutines.CoroutineDispatcher
 
 class PostViewModel(
     dispatcher: CoroutineDispatcher,
     private var postId: String,
     private val postRepository: PostRepository,
+    private val readingTimeCalculationUseCase: ReadingTimeCalculationUseCase
 ) : CommonViewModel<PostViewModel.State>(
     dispatcher = dispatcher,
     initialState = State()
@@ -34,6 +36,21 @@ class PostViewModel(
                 postRepository.apply {
                     // Always show cached post
                     cachedPost(postId)?.let { post ->
+
+                        // Option 2: using a useCase for readingTimeCalculation
+
+                        // Cannot directly use the useCase here directly
+                        // to calculate reading time:
+                        // - all is immutable
+                        // - it cannot take advantage of cache
+
+                        // Looks like it needs to stay in the repository or
+                        // move the whole redecoration to an useCase and delegate
+                        // few things there instead of using the postRepository directly
+                        // there
+
+                        // post.readingTimeMinutes = calculateReadingTimeMinutes(post.raw)
+                        // readingTimeCalculationUseCase(post)
                         setState { copy(post = post) }
                         clearCache(postId)
                     }
