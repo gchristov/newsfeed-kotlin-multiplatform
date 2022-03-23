@@ -9,6 +9,7 @@ on:
 env:
   JAVA_VERSION: "11"
   XCODE_VERSION: "13.0"
+  XCODE_CACHE: "CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++"
   IOS_SIMULATOR: "platform=iOS Simulator,name=iPhone 11,OS=15.0"
   ANDROID_COMPILE_SDK: "31"
   ANDROID_EMULATOR_ARCHITECTURE: "x86_64"
@@ -49,10 +50,12 @@ jobs:
         run: sudo xcode-select -s /Applications/Xcode_${{ env.XCODE_VERSION }}.app
       - name: Gradle cache
         uses: gradle/gradle-build-action@v2
+      - name: Xcode cache
+        uses: mikehardy/buildcache-action@v1
       - name: Compile iOS app
         run: |
           cd appIos
-          set -o pipefail && xcodebuild -workspace appIos.xcworkspace -scheme "appIos" -sdk iphonesimulator -destination '${{ env.IOS_SIMULATOR }}' build | xcpretty
+          set -o pipefail && xcodebuild ${{ env.XCODE_CACHE }} -workspace appIos.xcworkspace -scheme "appIos" -sdk iphonesimulator -destination '${{ env.IOS_SIMULATOR }}' build | xcpretty
 
   iosTest:
     runs-on: macos-latest
@@ -71,10 +74,12 @@ jobs:
         run: sudo xcode-select -s /Applications/Xcode_${{ env.XCODE_VERSION }}.app
       - name: Gradle cache
         uses: gradle/gradle-build-action@v2
+      - name: Xcode cache
+        uses: mikehardy/buildcache-action@v1
       - name: iOS UI tests
         run: |
           cd appIos
-          set -o pipefail && xcodebuild -workspace appIos.xcworkspace -scheme "appIos" -sdk iphonesimulator -destination '${{ env.IOS_SIMULATOR }}' test | xcpretty
+          set -o pipefail && xcodebuild ${{ env.XCODE_CACHE }} -workspace appIos.xcworkspace -scheme "appIos" -sdk iphonesimulator -destination '${{ env.IOS_SIMULATOR }}' test | xcpretty
 
   androidBuild:
     runs-on: macos-latest
