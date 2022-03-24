@@ -1,7 +1,7 @@
 # Newsfeed
-| 🍎 iOS | 🤖 Android |
-| --- | --- |
-| ![iOS Demo](demo_ios.mov) | ![Android Demo](demo_android.mov) |
+🍎 iOS | 🤖 Android
+-|-
+<video src=https://user-images.githubusercontent.com/7644787/159919860-e205484f-c991-4584-af51-2e4ae4f97ff5.mp4/> | <video src=https://user-images.githubusercontent.com/7644787/159919897-6770f6ab-2a4b-4f8b-9675-21df6f346472.mp4/>
 
 ## 👀 Overview
 Newsfeed app with endless scrolling built for Kotlin Multiplatform (iOS + Android).
