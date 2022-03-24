@@ -1,0 +1,149 @@
+name: Check Build
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+env:
+  JAVA_VERSION: "11"
+  XCODE_VERSION: "13.0"
+  XCODE_CACHE: "CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++"
+  IOS_SIMULATOR: "platform=iOS Simulator,name=iPhone 11,OS=15.0"
+  ANDROID_COMPILE_SDK: "31"
+  ANDROID_EMULATOR_ARCHITECTURE: "x86_64"
+
+jobs:
+  kmmTest:
+    runs-on: macos-latest
+    concurrency:
+      group: ${{ github.ref }}_kmmTest
+      cancel-in-progress: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'zulu'
+          java-version: ${{ env.JAVA_VERSION }}
+      - name: Gradle cache
+        uses: gradle/gradle-build-action@v2
+      - name: KMM tests
+        run: set -o pipefail && ./gradlew --continue testDebugUnitTest
+      - name: Generate KMM test report
+        uses: mikepenz/action-junit-report@v3
+        if: always() # Always run even if the previous step fails to collect all reports
+        with:
+          report_paths: 'kmm/**/build/test-results/**/TEST-*.xml'
+          check_name: 'KMM Test Report'
+
+  iosBuild:
+    runs-on: macos-latest
+    concurrency:
+      group: ${{ github.ref }}_iosBuild
+      cancel-in-progress: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'zulu'
+          java-version: ${{ env.JAVA_VERSION }}
+      - name: Setup Xcode
+        run: sudo xcode-select -s /Applications/Xcode_${{ env.XCODE_VERSION }}.app
+      - name: Gradle cache
+        uses: gradle/gradle-build-action@v2
+      - name: Xcode cache
+        uses: mikehardy/buildcache-action@v1
+      - name: Compile iOS app
+        run: |
+          cd appIos
+          set -o pipefail && xcodebuild ${{ env.XCODE_CACHE }} -workspace appIos.xcworkspace -scheme "appIos" -sdk iphonesimulator -destination '${{ env.IOS_SIMULATOR }}' build | xcpretty
+
+  iosTest:
+    runs-on: macos-latest
+    concurrency:
+      group: ${{ github.ref }}_iosTest
+      cancel-in-progress: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'zulu'
+          java-version: ${{ env.JAVA_VERSION }}
+      - name: Setup Xcode
+        run: sudo xcode-select -s /Applications/Xcode_${{ env.XCODE_VERSION }}.app
+      - name: Gradle cache
+        uses: gradle/gradle-build-action@v2
+      - name: Xcode cache
+        uses: mikehardy/buildcache-action@v1
+      - name: iOS tests
+        run: |
+          cd appIos
+          set -o pipefail && xcodebuild ${{ env.XCODE_CACHE }} -workspace appIos.xcworkspace -scheme "appIos" -sdk iphonesimulator -destination '${{ env.IOS_SIMULATOR }}' test | xcpretty
+
+  androidBuild:
+    runs-on: macos-latest
+    concurrency:
+      group: ${{ github.ref }}_androidBuild
+      cancel-in-progress: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'zulu'
+          java-version: ${{ env.JAVA_VERSION }}
+      - name: Gradle cache
+        uses: gradle/gradle-build-action@v2
+      - name: Compile Android app
+        run: set -o pipefail && ./gradlew appAndroid:assembleDebug
+
+  androidTest:
+    runs-on: macos-latest
+    concurrency:
+      group: ${{ github.ref }}_androidTest
+      cancel-in-progress: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'zulu'
+          java-version: ${{ env.JAVA_VERSION }}
+      - name: Gradle cache
+        uses: gradle/gradle-build-action@v2
+      - name: AVD cache
+        uses: actions/cache@v2
+        id: avd-cache
+        with:
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+          key: avd-${{ env.ANDROID_COMPILE_SDK }}
+      - name: Generate AVD cache snapshot
+        if: steps.avd-cache.outputs.cache-hit != 'true'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ env.ANDROID_COMPILE_SDK }}
+          arch: ${{ env.ANDROID_EMULATOR_ARCHITECTURE }}
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: false
+          script: echo "Generated AVD cache snapshot"
+      - name: Android tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ env.ANDROID_COMPILE_SDK }}
+          arch: ${{ env.ANDROID_EMULATOR_ARCHITECTURE }}
+          force-avd-creation: false
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          script: set -o pipefail && ./gradlew connectedAndroidTest
