@@ -30,13 +30,14 @@ jobs:
           java-version: ${{ env.JAVA_VERSION }}
       - name: Gradle cache
         uses: gradle/gradle-build-action@v2
-      - name: KMM Unit tests
+      - name: KMM tests
         run: set -o pipefail && ./gradlew --continue testDebugUnitTest
-      - name: Publish Test Report
+      - name: Generate KMM test report
         uses: mikepenz/action-junit-report@v3
         if: always() # Always run even if the previous step fails to collect all reports
         with:
           report_paths: 'kmm/**/build/test-results/**/TEST-*.xml'
+          check_name: 'KMM Test Report'
 
   iosBuild:
     runs-on: macos-latest
@@ -81,7 +82,7 @@ jobs:
         uses: gradle/gradle-build-action@v2
       - name: Xcode cache
         uses: mikehardy/buildcache-action@v1
-      - name: iOS UI tests
+      - name: iOS tests
         run: |
           cd appIos
           set -o pipefail && xcodebuild ${{ env.XCODE_CACHE }} -workspace appIos.xcworkspace -scheme "appIos" -sdk iphonesimulator -destination '${{ env.IOS_SIMULATOR }}' test | xcpretty
@@ -137,7 +138,7 @@ jobs:
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: false
           script: echo "Generated AVD cache snapshot"
-      - name: Android UI tests
+      - name: Android tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: ${{ env.ANDROID_COMPILE_SDK }}
