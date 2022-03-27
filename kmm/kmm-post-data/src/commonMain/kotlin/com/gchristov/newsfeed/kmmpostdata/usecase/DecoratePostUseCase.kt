@@ -13,6 +13,18 @@ class DecoratePostUseCase(
     private val dispatcher: CoroutineDispatcher
 ) {
 
+//    suspend fun decoratedPost(
+//        postId: String
+//    ): DecoratedPost {
+//
+//        return postRepository.run {
+//            cachedPost(postId)?.let { post ->
+//                clearCache(postId)
+//                decoratePost(post)
+//            } ?: queryNewPost(postId)
+//        }
+//    }
+
     suspend fun decoratedPost(
         postId: String
     ): DecoratedPost {
@@ -24,6 +36,13 @@ class DecoratePostUseCase(
             } ?: queryNewPost(postId)
         }
     }
+
+    suspend fun cachedPost(postId: String): DecoratedPost? =
+        postRepository.cachedPost(postId)?.let { post ->
+            decoratePost(post)
+        }
+
+    suspend fun clearCache(postId: String) = postRepository.clearCache(postId)
 
     suspend fun redecoratePost(post: DecoratedPost): DecoratedPost = decoratePost(post.raw)
 
@@ -50,4 +69,5 @@ class DecoratePostUseCase(
             val wordCount = bodyWordCount + headerWordCount
             ReadingTimeCalculator.calculateReadingTimeMinutes(wordCount)
         }
+
 }

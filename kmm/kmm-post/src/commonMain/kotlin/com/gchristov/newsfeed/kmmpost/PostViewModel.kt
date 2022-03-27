@@ -38,12 +38,26 @@ class PostViewModel(
         launchUiCoroutine {
             try {
 
-                val newPost = decoratePostUseCase.decoratedPost(postId)
-                setState {
-                    copy(
-                        loading = false,
-                        post = newPost
-                    )
+//                val newPost = decoratePostUseCase.decoratedPost(postId)
+//                setState {
+//                    copy(
+//                        loading = false,
+//                        post = newPost
+//                    )
+//                }
+                decoratePostUseCase.apply {
+                    cachedPost(postId)?.let { post ->
+                        setState { copy(post = post) }
+                        clearCache(postId)
+                    }
+
+                    val newPost = decoratePostUseCase.decoratedPost(postId)
+                    setState {
+                        copy(
+                            loading = false,
+                            post = newPost
+                        )
+                    }
                 }
 
             } catch (error: Exception) {
