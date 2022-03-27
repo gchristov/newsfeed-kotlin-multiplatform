@@ -18,7 +18,7 @@ object PostCreator {
             ),
             date = Instant.parse(Date),
             favouriteTimestamp = favouriteTimestamp,
-            readingTimeMinutes = 1
+            readingTimeMinutes = 0
         )
     }
 }
