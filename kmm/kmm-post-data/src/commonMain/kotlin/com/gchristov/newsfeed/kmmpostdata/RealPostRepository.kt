@@ -2,14 +2,12 @@ package com.gchristov.newsfeed.kmmpostdata
 
 import com.gchristov.newsfeed.kmmpostdata.model.DecoratedPost
 import com.gchristov.newsfeed.kmmpostdata.model.toPost
-import com.gchristov.newsfeed.kmmpostdata.util.ReadingTimeCalculator
 import com.russhwolf.settings.Settings
 import com.russhwolf.settings.contains
 import com.russhwolf.settings.set
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
 
 internal class RealPostRepository(
     private val dispatcher: CoroutineDispatcher,
@@ -41,8 +39,6 @@ internal class RealPostRepository(
         }
 
     override suspend fun cachePost(decoratedPost: DecoratedPost) {
-
-        //TODO: shall we insert all the decorated computed values in the cache?
         val post = decoratedPost.raw
         queries.insert(
             id = post.id,
@@ -52,4 +48,25 @@ internal class RealPostRepository(
             thumbnail = post.thumbnail,
         )
     }
+
+    override suspend fun favouriteTimestamp(postId: String): Long? =
+        withContext(dispatcher) {
+            if (sharedPreferences.contains(postId)) {
+                return@withContext sharedPreferences.getLong(
+                    key = postId,
+                    defaultValue = Clock.System.now().toEpochMilliseconds()
+                )
+            }
+            null
+        }
+
+    override suspend fun toggleFavourite(postId: String) =
+        withContext(dispatcher) {
+            favouriteTimestamp(postId)?.let {
+                sharedPreferences.remove(postId)
+            } ?: run {
+                // Keep track of when the item was favourited
+                sharedPreferences[postId] = Clock.System.now().toEpochMilliseconds()
+            }
+        }
 }

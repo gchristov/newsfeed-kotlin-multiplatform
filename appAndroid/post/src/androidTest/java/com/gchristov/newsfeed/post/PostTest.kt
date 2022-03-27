@@ -1,13 +1,16 @@
 package com.gchristov.newsfeed.post
 
 import com.gchristov.newsfeed.commoncomposetest.CommonComposeTestClass
+import com.gchristov.newsfeed.kmmcommontest.FakeCoroutineDispatcher
 import com.gchristov.newsfeed.kmmcommontest.FakeResponse
 import com.gchristov.newsfeed.kmmpost.PostViewModel
 import com.gchristov.newsfeed.kmmpostdata.model.DecoratedPost
+import com.gchristov.newsfeed.kmmpostdata.usecase.DecoratePostUseCase
 import com.gchristov.newsfeed.kmmposttestfixtures.FakePostRepository
 import com.gchristov.newsfeed.kmmposttestfixtures.PostCreator
 import com.gchristov.newsfeed.posttestfixtures.PostRobot
 import com.gchristov.newsfeed.posttestfixtures.post
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Test
@@ -140,11 +143,18 @@ class PostTest : CommonComposeTestClass() {
         ).apply {
             this.postResponse = postResponse
         }
+
+        val decoratePostUseCase = DecoratePostUseCase(
+            postRepository = postRepository,
+            dispatcher = FakeCoroutineDispatcher
+        )
+
         composeRule.setContent {
             val viewModel = PostViewModel(
                 dispatcher = Dispatchers.Main,
                 postId = PostId,
-                postRepository = postRepository
+                postRepository = postRepository,
+                decoratePostUseCase = decoratePostUseCase
             )
             PostScreen(viewModel)
         }
