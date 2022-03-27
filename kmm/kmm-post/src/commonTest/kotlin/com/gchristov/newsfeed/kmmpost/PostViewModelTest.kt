@@ -4,6 +4,7 @@ import com.gchristov.newsfeed.kmmcommonmvvmtest.CommonViewModelTestClass
 import com.gchristov.newsfeed.kmmcommontest.FakeCoroutineDispatcher
 import com.gchristov.newsfeed.kmmcommontest.FakeResponse
 import com.gchristov.newsfeed.kmmpostdata.model.DecoratedPost
+import com.gchristov.newsfeed.kmmpostdata.usecase.DecoratePostUseCase
 import com.gchristov.newsfeed.kmmposttestfixtures.FakePostRepository
 import com.gchristov.newsfeed.kmmposttestfixtures.PostCreator
 import kotlinx.coroutines.CoroutineScope
@@ -130,7 +131,8 @@ class PostViewModelTest : CommonViewModelTestClass() {
         val viewModel = PostViewModel(
             dispatcher = FakeCoroutineDispatcher,
             postId = PostId,
-            postRepository = postRepository
+            postRepository = postRepository,
+            decoratePostUseCase = DecoratePostUseCase(postRepository, FakeCoroutineDispatcher)
         )
         testBlock(viewModel, postRepository)
     }
