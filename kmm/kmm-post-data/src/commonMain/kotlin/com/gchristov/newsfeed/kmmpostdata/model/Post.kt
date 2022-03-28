@@ -22,26 +22,3 @@ fun ApiPost.toPost() = Post(
 )
 
 internal fun ApiPostResponse.toPost() = response.content.toPost()
-
-//internal fun Post.dispatcher() = Dispatchers.Default
-
-//suspend fun Post.calculateReadingTime(dispatcher: CoroutineDispatcher): Int  {
-//    return calculateReadingTimeMinutes(this, dispatcher)
-//}
-
-//suspend fun calculateReadingTimeMinutes(post: Post, dispatcher: CoroutineDispatcher): Int = withContext(dispatcher) {
-//    val bodyWordCount = post.body?.split(" ")?.count() ?: 0
-//    val headerWordCount = post.headline?.split(" ")?.count() ?: 0
-//    val wordCount = bodyWordCount + headerWordCount
-//    ReadingTimeCalculator.calculateReadingTimeMinutes(wordCount)
-//}
-
-//    val body = this.body
-//    val headline = this.headline
-//    val wordCount = withContext(this.dispatcher()) {
-//            val bodyWordCount = body?.split(" ")?.count() ?: 0
-//            val headerWordCount = headline?.split(" ")?.count() ?: 0
-//            bodyWordCount + headerWordCount
-//    }
-//
-//    return ReadingTimeCalculator.calculateReadingTimeMinutes(wordCount)

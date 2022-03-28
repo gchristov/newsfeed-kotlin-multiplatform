@@ -15,7 +15,8 @@ object ReadingTimeCalculator {
         val decimalPart = minutesWithDecimals - fullMinutes
         val extraSeconds = (decimalPart * 0.60) * 100
         val extraMinutes = if (extraSeconds.toInt() > 40) 1 else 0
+        val totalMinutes = fullMinutes + extraMinutes
 
-        return fullMinutes + extraMinutes
+        return if (totalMinutes == 0) 1 else totalMinutes
     }
 }

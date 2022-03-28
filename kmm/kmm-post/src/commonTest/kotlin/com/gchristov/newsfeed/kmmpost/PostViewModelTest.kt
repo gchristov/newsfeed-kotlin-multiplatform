@@ -51,8 +51,7 @@ class PostViewModelTest : CommonViewModelTestClass() {
             // Then
             postRepository.assertCacheCleared()
 
-            //TODO: remove this due to flakiness?
-            // assertTrue { viewModel.state.value.loading }
+            assertTrue { viewModel.state.value.loading }
             assertEquals(
                 expected = cache,
                 actual = viewModel.state.value.post

@@ -30,10 +30,11 @@ class DecoratePostUseCase(
     ): DecoratedPost {
 
         return postRepository.run {
-            cachedPost(postId)?.let { post ->
-                clearCache(postId)
-                decoratePost(post)
-            } ?: queryNewPost(postId)
+//            cachedPost(postId)?.let { post ->
+//                clearCache(postId)
+//                decoratePost(post)
+//            } ?:
+            queryNewPost(postId)
         }
     }
 
