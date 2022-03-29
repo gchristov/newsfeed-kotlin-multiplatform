@@ -110,6 +110,11 @@ jobs:
         uses: gradle/gradle-build-action@v2
       - name: Compile Android app
         run: set -o pipefail && ./gradlew appAndroid:assembleDebug
+      - name: Save artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: Android build
+          path: 'appAndroid/appAndroid/build/intermediates/apk/**/*.apk'
 
   androidTest:
     runs-on: macos-latest
