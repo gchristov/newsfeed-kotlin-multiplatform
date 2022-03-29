@@ -11,9 +11,6 @@ import kotlinx.coroutines.delay
 class PostViewModel(
     dispatcher: CoroutineDispatcher,
     private var postId: String,
-
-    //TODO: passing the repository into the viewmodel seems jumping ahead, it should
-    // be always repository -> use case -> viewmodel?
     private val postRepository: PostRepository,
     private val decoratePostUseCase: DecoratePostUseCase
 ) : CommonViewModel<PostViewModel.State>(
@@ -39,35 +36,17 @@ class PostViewModel(
         launchUiCoroutine {
             try {
 
-
-                // This way should be enough as `decoratedPost` encapsulates the caching in the UseCase.
-                // But we may want to ensure the cached values show up early,
-                // so need to update the state with any cached value before new ones are loaded?
-
-//                val newPost = decoratePostUseCase.decoratedPost(postId)
-//                setState {
-//                    copy(
-//                        loading = false,
-//                        post = newPost
-//                    )
-//                }
-
-                // This way is similar to before, but exposing probably too much outside
-                // of the UseCase (cachedPost, clearCache operations). This may be the only
-                // way to do it, as we need to
-                // update the state early on.
-                // Still, it looks this should be encapsulated in UseCase
-                // and expose only whatever needed to get the state updated desired behaviour
+                // This may seem like too many exposed operations,
+                // but the reasoning behind it is we want to show
+                // the cached post while loading new one/s
                 decoratePostUseCase.apply {
+
+                    // always show cached post
                     cachedPost(postId)?.let { post ->
                         setState { copy(post = post) }
                         clearCache(postId)
                     }
 
-                    // STRANGE:
-                    // Adding this line here makes PostViewModelTest#onLoadSuccessSetsCache test pass
-                    // due to the  assertTrue { viewModel.state.value.loading }
-                    // delay(1000)
                     val newPost = decoratedPost(postId)
                     setState {
                         copy(

@@ -10,36 +10,15 @@ import kotlinx.datetime.Instant
 
 class DecoratePostUseCase(
     private val postRepository: PostRepository,
-    private val dispatcher: CoroutineDispatcher
-) {
-
-//    suspend fun decoratedPost(
-//        postId: String
-//    ): DecoratedPost {
-//
-//        return postRepository.run {
-//            cachedPost(postId)?.let { post ->
-//                clearCache(postId)
-//                decoratePost(post)
-//            } ?: queryNewPost(postId)
-//        }
-//    }
+    private val dispatcher: CoroutineDispatcher) {
 
     suspend fun decoratedPost(
         postId: String
-    ): DecoratedPost {
-
-        return postRepository.run {
-//            cachedPost(postId)?.let { post ->
-//                clearCache(postId)
-//                decoratePost(post)
-//            } ?:
-            queryNewPost(postId)
-        }
-    }
+    ): DecoratedPost = fetchDecoratedPost(postId)
 
     suspend fun cachedPost(postId: String): DecoratedPost? =
         postRepository.cachedPost(postId)?.let { post ->
+            clearCache(post.id)
             decoratePost(post)
         }
 
@@ -47,7 +26,7 @@ class DecoratePostUseCase(
 
     suspend fun redecoratePost(post: DecoratedPost): DecoratedPost = decoratePost(post.raw)
 
-    private suspend fun queryNewPost(postId: String): DecoratedPost =
+    private suspend fun fetchDecoratedPost(postId: String): DecoratedPost =
         postRepository.run {
             post(postId).let {
                 val decoratedPost = decoratePost(it)
