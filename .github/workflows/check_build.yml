@@ -114,7 +114,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: Android build
-          path: 'appAndroid/appAndroid/build/intermediates/apk/**/*.apk'
+          path: 'appAndroid/**/build/**/appAndroid-*.apk'
 
   androidTest:
     runs-on: macos-latest
