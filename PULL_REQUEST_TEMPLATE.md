@@ -6,7 +6,7 @@
 
 ## Demo
 
-Optional but helps to have a quick visual, if any.
+*Optional but helps to have a quick visual, if any.*
 
 Before|After
 -|-
@@ -14,7 +14,7 @@ Before|After
 
 ## Screenshots
 
-Optional but helps to have a quick visual, if any.
+*Optional but helps to have a quick visual, if any.*
 
 Before|After
 -|-
