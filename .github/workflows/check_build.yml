@@ -38,6 +38,12 @@ jobs:
         with:
           report_paths: 'kmm/**/build/test-results/**/TEST-*.xml'
           check_name: 'KMM Test Report'
+      - name: Saving artifacts
+        uses: actions/upload-artifact@v3
+        if: always() # Always run even if the previous step fails to collect all reports
+        with:
+          name: Test results
+          path: 'kmm/**/build/test-results/**/TEST-*.xml'
 
   iosBuild:
     runs-on: macos-latest
@@ -147,3 +153,9 @@ jobs:
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
           script: set -o pipefail && ./gradlew connectedAndroidTest
+      - name: Saving artifacts
+        uses: actions/upload-artifact@v3
+        if: always() # Always run even if the previous step fails to collect all reports
+        with:
+          name: Test results
+          path: 'appAndroid/**/build/outputs/androidTest-results/connected/**/test-result.pb'
