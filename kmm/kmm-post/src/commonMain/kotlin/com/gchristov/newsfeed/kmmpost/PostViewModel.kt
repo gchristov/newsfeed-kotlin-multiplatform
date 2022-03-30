@@ -36,24 +36,18 @@ class PostViewModel(
         launchUiCoroutine {
             try {
 
-                // This may seem like too many exposed operations,
-                // but the reasoning behind it is we want to show
-                // the cached post while loading new one/s
-                decoratePostUseCase.apply {
-
-                    // always show cached post
-                    cachedPost(postId)?.let { post ->
-                        setState { copy(post = post) }
-                        clearCache(postId)
+                val newPost = decoratePostUseCase.getPost(
+                    postId = postId,
+                    onCache = { cachedPost ->
+                        setState { copy(post = cachedPost) }
                     }
+                )
 
-                    val newPost = decoratedPost(postId)
-                    setState {
-                        copy(
-                            loading = false,
-                            post = newPost
-                        )
-                    }
+                setState {
+                    copy(
+                        loading = false,
+                        post = newPost
+                    )
                 }
 
             } catch (error: Exception) {

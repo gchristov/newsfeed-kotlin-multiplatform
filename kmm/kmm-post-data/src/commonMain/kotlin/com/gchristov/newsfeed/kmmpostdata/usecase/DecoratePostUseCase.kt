@@ -10,19 +10,49 @@ import kotlinx.datetime.Instant
 
 class DecoratePostUseCase(
     private val postRepository: PostRepository,
-    private val dispatcher: CoroutineDispatcher) {
+    private val dispatcher: CoroutineDispatcher
+) {
 
-    suspend fun decoratedPost(
-        postId: String
-    ): DecoratedPost = fetchDecoratedPost(postId)
 
-    suspend fun cachedPost(postId: String): DecoratedPost? =
-        postRepository.cachedPost(postId)?.let { post ->
-            clearCache(post.id)
-            decoratePost(post)
+    /**
+     * Obtain a new post from API/repository, decorate and
+     * cache it.
+     * Optionally provide a callback that eagerly retrieves/checks
+     * the posts cache
+     *
+     * @param postId the ID of the post to obtain
+     * @param onCache callback that pulls posts from cache if existing
+     */
+    suspend fun getPost(
+        postId: String,
+        // the whole callback is nullable/optional
+        onCache: ((DecoratedPost) -> Unit)?
+    ): DecoratedPost {
+
+        // We wouldn't even run this if the caller doesn't care about cache
+        onCache?.let { cacheCallback ->
+            cachedPost(postId)?.let { post ->
+
+                // this is normally to update the UI from cache while
+                // a new one loads
+                cacheCallback(post)
+            }
         }
 
-    suspend fun clearCache(postId: String) = postRepository.clearCache(postId)
+        return fetchDecoratedPost(postId)
+    }
+
+    /**
+     * This method is private to force callers to either handle cache or not explicitly
+     * via callback
+     */
+    private suspend fun cachedPost(postId: String): DecoratedPost? =
+        postRepository.run {
+            cachedPost(postId)?.let { post ->
+                clearCache(post.id)
+                decoratePost(post)
+            }
+        }
 
     suspend fun redecoratePost(post: DecoratedPost): DecoratedPost = decoratePost(post.raw)
 
@@ -49,5 +79,4 @@ class DecoratePostUseCase(
             val wordCount = bodyWordCount + headerWordCount
             ReadingTimeCalculator.calculateReadingTimeMinutes(wordCount)
         }
-
 }

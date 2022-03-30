@@ -43,6 +43,7 @@ class PostViewModelTest : CommonViewModelTestClass() {
         // Given
         val cache = PostCreator.post(favouriteTimestamp = null)
         val response = FakeResponse.LoadsForever
+
         // When
         runTest(
             postCache = cache,
@@ -50,7 +51,6 @@ class PostViewModelTest : CommonViewModelTestClass() {
         ) { viewModel, postRepository ->
             // Then
             postRepository.assertCacheCleared()
-
             assertTrue { viewModel.state.value.loading }
             assertEquals(
                 expected = cache,
