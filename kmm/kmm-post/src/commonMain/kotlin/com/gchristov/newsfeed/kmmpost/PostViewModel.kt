@@ -65,12 +65,9 @@ class PostViewModel(
     fun onToggleFavourite() {
         state.value.post?.let { post ->
             launchUiCoroutine {
-
-                decoratePostUseCase.apply {
-                    postRepository.toggleFavourite(postId)
-                    val redecoratedPost = redecoratePost(post)
-                    setState { copy(post = redecoratedPost) }
-                }
+                postRepository.toggleFavourite(post.raw.id)
+                val newPost = decoratePostUseCase.getPost(post.raw.id)
+                setState { copy(post = newPost) }
             }
         }
     }

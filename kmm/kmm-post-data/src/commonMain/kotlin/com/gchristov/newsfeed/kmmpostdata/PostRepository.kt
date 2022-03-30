@@ -8,9 +8,6 @@ interface PostRepository {
         postMetadataFields: String = "main,body,headline,thumbnail"
     ): Post
 
-    //TODO: It should return the decorated one?
-    // but SqlDelight has the raw post only and decoration
-    // has been moved to usecase
     suspend fun cachedPost(postId: String): Post?
 
     suspend fun clearCache(postId: String)

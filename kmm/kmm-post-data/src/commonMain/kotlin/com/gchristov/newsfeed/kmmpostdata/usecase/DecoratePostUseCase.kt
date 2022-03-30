@@ -26,7 +26,7 @@ class DecoratePostUseCase(
     suspend fun getPost(
         postId: String,
         // the whole callback is nullable/optional
-        onCache: ((DecoratedPost) -> Unit)?
+        onCache: ((DecoratedPost) -> Unit)? = null
     ): DecoratedPost {
 
         // We wouldn't even run this if the caller doesn't care about cache
@@ -53,8 +53,6 @@ class DecoratePostUseCase(
                 decoratePost(post)
             }
         }
-
-    suspend fun redecoratePost(post: DecoratedPost): DecoratedPost = decoratePost(post.raw)
 
     private suspend fun fetchDecoratedPost(postId: String): DecoratedPost =
         postRepository.run {
