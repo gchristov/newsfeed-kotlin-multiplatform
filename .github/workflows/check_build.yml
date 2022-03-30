@@ -35,6 +35,7 @@ jobs:
         id: kmm-cache
         with:
           path: '~/.konan/*'
+          key: konan
       - name: KMM tests
         run: set -o pipefail && ./gradlew --continue testDebugUnitTest
       - name: Generate KMM test report
