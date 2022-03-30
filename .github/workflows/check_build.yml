@@ -54,7 +54,7 @@ jobs:
           path: 'kmm/**/build/test-results/**/TEST-*.xml'
 
   iosBuild:
-    runs-on: macos-latest
+    runs-on: macos-11
     concurrency:
       group: ${{ github.ref }}_iosBuild
       cancel-in-progress: true
@@ -91,7 +91,7 @@ jobs:
             ~/Library/Developer/Xcode/DerivedData/**/Build/Products/**/appIos.app.dSYM
 
   iosTest:
-    runs-on: macos-latest
+    runs-on: macos-11
     concurrency:
       group: ${{ github.ref }}_iosTest
       cancel-in-progress: true
@@ -150,8 +150,8 @@ jobs:
           path: 'appAndroid/**/build/**/appAndroid-*.apk'
 
   androidTest:
-    # Needed because of hardware acceleration
-    runs-on: macos-latest
+    # Needed because of hardware acceleration for the emulator
+    runs-on: macos-11
     concurrency:
       group: ${{ github.ref }}_androidTest
       cancel-in-progress: true
