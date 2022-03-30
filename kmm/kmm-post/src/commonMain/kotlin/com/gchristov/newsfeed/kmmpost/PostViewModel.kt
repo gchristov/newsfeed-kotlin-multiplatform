@@ -4,9 +4,7 @@ import com.gchristov.newsfeed.kmmcommonmvvm.CommonViewModel
 import com.gchristov.newsfeed.kmmpostdata.PostRepository
 import com.gchristov.newsfeed.kmmpostdata.model.DecoratedPost
 import com.gchristov.newsfeed.kmmpostdata.usecase.DecoratePostUseCase
-import com.gchristov.newsfeed.kmmpostdata.usecase.ReadingTimeCalculationUseCase
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.delay
 
 class PostViewModel(
     dispatcher: CoroutineDispatcher,
