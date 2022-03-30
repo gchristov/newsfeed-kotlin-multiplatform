@@ -28,11 +28,6 @@ class FakePostRepository(
         return postCache?.raw
     }
 
-//TODO: Moved to usecase, may need it in a fake for tests?
-//    override suspend fun redecoratePost(post: DecoratedPost): DecoratedPost {
-//        return post.copy(favouriteTimestamp = favouriteTimestamp(post.raw.id))
-//    }
-
     override suspend fun clearCache(postId: String) {
         _cacheCleared = true
     }
