@@ -68,6 +68,11 @@ jobs:
         run: |
           cd appIos
           set -o pipefail && xcodebuild ${{ env.XCODE_CACHE }} -workspace appIos.xcworkspace -scheme "appIos" -sdk iphonesimulator -destination '${{ env.IOS_SIMULATOR }}' build | xcpretty
+      - name: Save artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: iOS build
+          path: '~/Library/Developer/Xcode/DerivedData/**/Build/Products/**/appIos.app'
 
   iosTest:
     runs-on: macos-latest
