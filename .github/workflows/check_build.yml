@@ -81,7 +81,7 @@ jobs:
       - name: Compile iOS app
         run: |
           cd appIos
-          set -o pipefail && xcodebuild ${{ env.XCODE_CACHE }} -workspace appIos.xcworkspace -scheme "appIos" -sdk iphonesimulator -destination '${{ env.IOS_SIMULATOR }}' build | xcpretty
+          set -o pipefail && xcodebuild ${{ env.XCODE_CACHE }} -workspace appIos.xcworkspace -scheme "appIos" -sdk iphonesimulator -destination '${{ env.IOS_SIMULATOR }}' build
       - name: Save artifacts
         uses: actions/upload-artifact@v3
         with:
