@@ -16,7 +16,7 @@ env:
 
 jobs:
   kmmTest:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     concurrency:
       group: ${{ github.ref }}_kmmTest
       cancel-in-progress: true
