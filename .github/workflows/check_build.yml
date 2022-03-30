@@ -150,7 +150,8 @@ jobs:
           path: 'appAndroid/**/build/**/appAndroid-*.apk'
 
   androidTest:
-    runs-on: ubuntu-latest
+    # Needed because of hardware acceleration
+    runs-on: macos-latest
     concurrency:
       group: ${{ github.ref }}_androidTest
       cancel-in-progress: true
