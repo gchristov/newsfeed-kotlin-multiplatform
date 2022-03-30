@@ -29,13 +29,14 @@ import com.gchristov.newsfeed.kmmpost.PostViewModel
 import com.gchristov.newsfeed.kmmpostdata.model.DecoratedPost
 
 class PostActivity : CommonComposeActivity() {
+
     private val viewModel by viewModels<PostViewModel> {
         createViewModelFactory {
             PostModule.injectPostViewModel(postId = postId)
         }
     }
+
     private val postId: String
-    // computed Property
         get() {
             return requireNotNull(intent.data?.getQueryParameter(KeyPostId))
         }

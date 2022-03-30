@@ -17,5 +17,4 @@ interface PostRepository {
     suspend fun favouriteTimestamp(postId: String): Long?
 
     suspend fun toggleFavourite(postId: String)
-
 }
