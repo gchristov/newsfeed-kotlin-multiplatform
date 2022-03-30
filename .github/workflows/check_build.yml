@@ -72,7 +72,9 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: iOS build
-          path: '~/Library/Developer/Xcode/DerivedData/**/Build/Products/**/appIos.app'
+          path: |
+            ~/Library/Developer/Xcode/DerivedData/**/Build/Products/**/appIos.app
+            ~/Library/Developer/Xcode/DerivedData/**/Build/Products/**/appIos.app.dSYM
 
   iosTest:
     runs-on: macos-latest
