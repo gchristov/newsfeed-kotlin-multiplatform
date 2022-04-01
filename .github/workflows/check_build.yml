@@ -16,7 +16,7 @@ env:
 
 jobs:
   kmmTest:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     concurrency:
       group: ${{ github.ref }}_kmmTest
       cancel-in-progress: true
@@ -44,7 +44,7 @@ jobs:
         if: always()
         with:
           report_paths: 'kmm/**/build/test-results/**/TEST-*.xml'
-          check_name: 'KMM Test Report'
+          check_name: 'kmmTestResults'
       # Always run this job even if the previous steps fail to collect all artifacts
       - name: Save artifacts
         uses: actions/upload-artifact@v3
@@ -81,12 +81,13 @@ jobs:
       - name: Compile iOS app
         run: |
           cd appIos
-          set -o pipefail && xcodebuild ${{ env.XCODE_CACHE }} -workspace appIos.xcworkspace -scheme "appIos" -sdk iphonesimulator -destination '${{ env.IOS_SIMULATOR }}' build
+          set -o pipefail && xcodebuild ${{ env.XCODE_CACHE }} -workspace appIos.xcworkspace -scheme "appIos" -sdk iphonesimulator -destination '${{ env.IOS_SIMULATOR }}' build | tee xcodebuild.log | xcpretty
       - name: Save artifacts
         uses: actions/upload-artifact@v3
         with:
           name: iOS build
           path: |
+            xcodebuild.log
             ~/Library/Developer/Xcode/DerivedData/**/Build/Products/**/appIos.app
             ~/Library/Developer/Xcode/DerivedData/**/Build/Products/**/appIos.app.dSYM
 
@@ -118,10 +119,16 @@ jobs:
       - name: iOS tests
         run: |
           cd appIos
-          set -o pipefail && xcodebuild ${{ env.XCODE_CACHE }} -workspace appIos.xcworkspace -scheme "appIos" -sdk iphonesimulator -destination '${{ env.IOS_SIMULATOR }}' test | xcpretty
+          set -o pipefail && xcodebuild ${{ env.XCODE_CACHE }} -workspace appIos.xcworkspace -scheme "appIos" -sdk iphonesimulator -destination '${{ env.IOS_SIMULATOR }}' test | tee xcodebuild.log | xcpretty
+      - name: Save artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: iOS test results
+          path: |
+            xcodebuild.log
 
   androidBuild:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     concurrency:
       group: ${{ github.ref }}_androidBuild
       cancel-in-progress: true
