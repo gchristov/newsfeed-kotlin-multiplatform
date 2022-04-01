@@ -32,10 +32,10 @@ jobs:
         uses: gradle/gradle-build-action@v2
       - name: KMM cache
         uses: actions/cache@v2
-        id: kmm-cache
+        id: konan-kmm
         with:
-          path: '~/.konan/*'
-          key: konan
+          path: '~/.konan/**'
+          key: konan-kmm
       - name: KMM tests
         run: set -o pipefail && ./gradlew --continue testDebugUnitTest
       # Always run this job even if the previous steps fail to collect all test reports
@@ -72,10 +72,10 @@ jobs:
         uses: gradle/gradle-build-action@v2
       - name: KMM cache
         uses: actions/cache@v2
-        id: kmm-cache
+        id: konan-ios
         with:
-          path: '~/.konan/*'
-          key: konan
+          path: '~/.konan/**'
+          key: konan-ios
       - name: Xcode cache
         uses: mikehardy/buildcache-action@v1
       - name: Compile iOS app
@@ -110,10 +110,10 @@ jobs:
         uses: gradle/gradle-build-action@v2
       - name: KMM cache
         uses: actions/cache@v2
-        id: kmm-cache
+        id: konan-ios-test
         with:
-          path: '~/.konan/*'
-          key: konan
+          path: '~/.konan/**'
+          key: konan-ios-test
       - name: Xcode cache
         uses: mikehardy/buildcache-action@v1
       - name: iOS tests
@@ -144,10 +144,10 @@ jobs:
         uses: gradle/gradle-build-action@v2
       - name: KMM cache
         uses: actions/cache@v2
-        id: kmm-cache
+        id: konan-android
         with:
-          path: '~/.konan/*'
-          key: konan
+          path: '~/.konan/**'
+          key: konan-android
       - name: Compile Android app
         run: set -o pipefail && ./gradlew appAndroid:assembleDebug
       - name: Save artifacts
@@ -174,10 +174,10 @@ jobs:
         uses: gradle/gradle-build-action@v2
       - name: KMM cache
         uses: actions/cache@v2
-        id: kmm-cache
+        id: konan-android-test
         with:
-          path: '~/.konan/*'
-          key: konan
+          path: '~/.konan/**'
+          key: konan-android-test
       - name: AVD cache
         uses: actions/cache@v2
         id: avd-cache
