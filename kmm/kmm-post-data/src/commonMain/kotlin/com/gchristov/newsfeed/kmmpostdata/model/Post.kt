@@ -10,7 +10,7 @@ data class DecoratedPost(
     // Additional properties
     val date: Instant,
     val favouriteTimestamp: Long? = null, // Will be set later if post has been added to favourites
-    val readingTimeMinutes: Int = 1
+    val readingTimeMinutes: Int? = null // calculated at decoration time
 )
 
 fun ApiPost.toPost() = Post(

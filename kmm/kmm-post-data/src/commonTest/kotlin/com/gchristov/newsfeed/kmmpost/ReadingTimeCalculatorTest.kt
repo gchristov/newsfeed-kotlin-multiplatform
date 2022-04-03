@@ -9,13 +9,13 @@ class ReadingTimeCalculatorTest {
     @Test
     fun returnsZeroMinutesWhenNoWords() {
         val totalWordCount = 0;
-        runTest(totalWordCount, 0)
+        runTest(totalWordCount = totalWordCount, expectedReadingTimeMinutes = 0)
     }
 
     @Test
     fun returnsZeroMinutesWhenNegativeWords() {
         val totalWordCount = -20;
-        runTest(totalWordCount, 0)
+        runTest(totalWordCount = totalWordCount, expectedReadingTimeMinutes = 0)
     }
 
     @Test
@@ -23,7 +23,7 @@ class ReadingTimeCalculatorTest {
         // given
         // 1 minute is 200 words
         val totalWordCount = 50;
-        runTest(totalWordCount, 1)
+        runTest(totalWordCount = totalWordCount, expectedReadingTimeMinutes = 1)
     }
 
     @Test
@@ -31,7 +31,7 @@ class ReadingTimeCalculatorTest {
         // given
         // 1 minute is 200 words
         val totalWordCount = 200;
-        runTest(totalWordCount, 1)
+        runTest(totalWordCount = totalWordCount, expectedReadingTimeMinutes = 1)
     }
 
     @Test
@@ -41,7 +41,7 @@ class ReadingTimeCalculatorTest {
         // the count would be rounded to the greatest minute once
         // it passes 1m 30s
         val totalWordCount = 320;
-        runTest(totalWordCount, 2)
+        runTest(totalWordCount = totalWordCount, expectedReadingTimeMinutes = 2)
     }
 
     private fun runTest(totalWordCount: Int, expectedReadingTimeMinutes: Int) {

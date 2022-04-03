@@ -95,7 +95,7 @@ private fun PostState(
                             modifier = Modifier.padding(16.dp),
                             verticalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
-                            PostHeader(post.raw.headline ?: "--", post.readingTimeMinutes)
+                            PostHeader(post.raw.headline ?: "--", post.readingTimeMinutes ?: 1)
                             PostBody(post.raw.body ?: "--")
                         }
                     }
@@ -192,7 +192,7 @@ private fun PostAuthor(author: String, readingTimeMinutes: Int) {
                 style = Theme.typography.subtitle,
             )
             AppText(
-                text = stringResource(R.string.post_read_time).replace("1", readingTimeMinutes.toString()),
+                text = stringResource(R.string.post_read_time, readingTimeMinutes),
                 style = Theme.typography.caption,
                 color = Theme.contentColors.secondary
             )

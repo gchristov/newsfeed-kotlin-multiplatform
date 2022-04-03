@@ -16,7 +16,6 @@ object PostModule : DiModule() {
 
     override fun bindLocalDependencies(builder: DI.Builder) {
         builder.apply {
-            //TODO: provider or singleton?
             bindProvider { provideDecoratePostUseCase(postRepository = instance()) }
             bindFactory { postId: String ->
                 PostViewModel(

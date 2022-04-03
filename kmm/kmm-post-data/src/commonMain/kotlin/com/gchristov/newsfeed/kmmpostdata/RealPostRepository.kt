@@ -20,10 +20,7 @@ internal class RealPostRepository(
     override suspend fun post(
         postId: String,
         postMetadataFields: String
-    ): Post =
-        withContext(dispatcher) {
-            apiService.post(postId, postMetadataFields).toPost()
-        }
+    ): Post = apiService.post(postId, postMetadataFields).toPost()
 
     override suspend fun cachedPost(postId: String): Post? =
         withContext(dispatcher) {

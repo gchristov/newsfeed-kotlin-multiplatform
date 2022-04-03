@@ -77,20 +77,6 @@ class PostTest : CommonComposeTestClass() {
     }
 
     @Test
-    fun largeTextPostShownMoreThanOneMinuteReadingTime() = runTest {
-        assertLoadingDoesNotExist()
-        assertAddToFavouritesButtonExists()
-        assertRemoveFromFavouritesButtonDoesNotExist()
-        assertPostExists(
-            title = PostTitle,
-            author = PostAuthor,
-            readingTime = LargeReadingPostTime,
-            body = LargePostBody
-        )
-        assertBlockingErrorDoesNotExist()
-    }
-
-    @Test
     fun blockingErrorShown() {
         // Given
         val response = FakeResponse.Error()
