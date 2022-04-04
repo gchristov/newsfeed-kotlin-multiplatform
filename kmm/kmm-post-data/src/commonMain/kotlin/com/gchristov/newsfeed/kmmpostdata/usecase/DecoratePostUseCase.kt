@@ -49,7 +49,6 @@ class DecoratePostUseCase(
     private suspend fun cachedPost(postId: String): DecoratedPost? =
         postRepository.run {
             cachedPost(postId)?.let { post ->
-                clearCache(post.id)
                 decoratePost(post)
             }
         }
@@ -57,6 +56,7 @@ class DecoratePostUseCase(
     private suspend fun fetchDecoratedPost(postId: String): DecoratedPost =
         postRepository.run {
             post(postId).let {
+                clearCache(postId)
                 val decoratedPost = decoratePost(it)
                 cachePost(decoratedPost)
                 decoratedPost

@@ -95,7 +95,7 @@ private fun PostState(
                             modifier = Modifier.padding(16.dp),
                             verticalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
-                            PostHeader(post.raw.headline ?: "--", post.readingTimeMinutes ?: 1)
+                            PostHeader(post.raw.headline ?: "--", post.readingTimeMinutes ?: 0)
                             PostBody(post.raw.body ?: "--")
                         }
                     }
