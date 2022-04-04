@@ -28,11 +28,9 @@ class DecoratePostUseCase(
         // the whole callback is nullable/optional
         onCache: ((DecoratedPost) -> Unit)? = null
     ): DecoratedPost {
-
         // We wouldn't even run this if the caller doesn't care about cache
         onCache?.let { cacheCallback ->
             cachedPost(postId)?.let { post ->
-
                 // this is normally to update the UI from cache while
                 // a new one loads
                 cacheCallback(post)
