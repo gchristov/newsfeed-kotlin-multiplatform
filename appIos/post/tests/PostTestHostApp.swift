@@ -11,6 +11,7 @@ struct PostTestHostApp: App {
     private let post: DecoratedPost
     private let postCache: DecoratedPost?
     private let repository: FakePostRepository
+    private let decoratePostUseCase: DecoratePostUseCase
     
     init() {
         // Mock/fake necessary constructs based on launch environment
@@ -21,15 +22,17 @@ struct PostTestHostApp: App {
             postCache: postCache
         )
         self.repository.postResponse = PostResponseType.obtainFromEnvironment()
+        self.decoratePostUseCase = DecoratePostUseCase(postRepository: self.repository, dispatcher: Dispatchers.shared.Main)
     }
     
     var body: some Scene {
         WindowGroup {
-            CustomSwiftUiTestRuleWrapper(embedWithinNavigation: true) {
+            CustomSwiftUiTestRuleWrapper<PostScreenContent>(embedWithinNavigation: true) {
                 PostScreenContent(viewModel: PostViewModel(
                     dispatcher: Dispatchers.shared.Main,
                     postId: PostId,
-                    postRepository: repository)
+                    postRepository: repository,
+                    decoratePostUseCase: decoratePostUseCase)
                 )
             }
         }

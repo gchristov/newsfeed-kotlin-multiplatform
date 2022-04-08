@@ -8,7 +8,6 @@ import com.russhwolf.settings.set
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
 
 internal class RealPostRepository(
     private val dispatcher: CoroutineDispatcher,
@@ -21,29 +20,12 @@ internal class RealPostRepository(
     override suspend fun post(
         postId: String,
         postMetadataFields: String
-    ): DecoratedPost =
-        withContext(dispatcher) {
-            val post = apiService.post(postId, postMetadataFields).toPost()
-            val decoratedPost = decoratePost(post)
-            cachePost(decoratedPost)
-            decoratedPost
-        }
+    ): Post = apiService.post(postId, postMetadataFields).toPost()
 
-    override suspend fun redecoratePost(post: DecoratedPost): DecoratedPost =
-        withContext(dispatcher) {
-            decoratePost(post.raw)
-        }
-
-    private suspend fun decoratePost(post: Post) = DecoratedPost(
-        raw = post,
-        date = Instant.parse(post.date),
-        favouriteTimestamp = favouriteTimestamp(post.id)
-    )
-
-    override suspend fun cachedPost(postId: String): DecoratedPost? =
+    override suspend fun cachedPost(postId: String): Post? =
         withContext(dispatcher) {
             val post = queries.selectWithId(postId).executeAsOneOrNull() ?: return@withContext null
-            decoratePost(post)
+            post
         }
 
     override suspend fun clearCache(postId: String) =
@@ -53,7 +35,7 @@ internal class RealPostRepository(
             }
         }
 
-    private fun cachePost(decoratedPost: DecoratedPost) {
+    override suspend fun cachePost(decoratedPost: DecoratedPost) {
         val post = decoratedPost.raw
         queries.insert(
             id = post.id,

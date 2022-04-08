@@ -46,7 +46,7 @@ struct FeedTestHostApp: App {
     
     var body: some Scene {
         WindowGroup {
-            CustomSwiftUiTestRuleWrapper(embedWithinNavigation: false) {
+            CustomSwiftUiTestRuleWrapper<FeedScreenContent>(embedWithinNavigation: false) {
                 FeedScreenContent(viewModel: FeedViewModel(
                     dispatcher: Dispatchers.shared.Main,
                     feedRepository: repository,

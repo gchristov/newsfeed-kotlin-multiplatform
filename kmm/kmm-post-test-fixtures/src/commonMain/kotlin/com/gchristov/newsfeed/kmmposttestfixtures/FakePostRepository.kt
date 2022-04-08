@@ -2,6 +2,7 @@ package com.gchristov.newsfeed.kmmposttestfixtures
 
 import com.gchristov.newsfeed.kmmcommontest.FakeResponse
 import com.gchristov.newsfeed.kmmcommontest.execute
+import com.gchristov.newsfeed.kmmpostdata.Post
 import com.gchristov.newsfeed.kmmpostdata.PostRepository
 import com.gchristov.newsfeed.kmmpostdata.model.DecoratedPost
 import kotlinx.datetime.Clock
@@ -19,20 +20,20 @@ class FakePostRepository(
         }
     }
 
-    override suspend fun post(postId: String, postMetadataFields: String): DecoratedPost {
-        return postResponse.execute(requireNotNull(post))
+    override suspend fun post(postId: String, postMetadataFields: String): Post {
+        return postResponse.execute(requireNotNull(post?.raw))
     }
 
-    override suspend fun redecoratePost(post: DecoratedPost): DecoratedPost {
-        return post.copy(favouriteTimestamp = favouriteTimestamp(post.raw.id))
-    }
-
-    override suspend fun cachedPost(postId: String): DecoratedPost? {
-        return postCache
+    override suspend fun cachedPost(postId: String): Post? {
+        return postCache?.raw
     }
 
     override suspend fun clearCache(postId: String) {
         _cacheCleared = true
+    }
+
+    override suspend fun cachePost(decoratedPost: DecoratedPost) {
+        postCache
     }
 
     override suspend fun favouriteTimestamp(postId: String): Long? {

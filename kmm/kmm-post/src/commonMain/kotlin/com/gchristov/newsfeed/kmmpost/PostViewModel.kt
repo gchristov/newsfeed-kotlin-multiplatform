@@ -3,12 +3,14 @@ package com.gchristov.newsfeed.kmmpost
 import com.gchristov.newsfeed.kmmcommonmvvm.CommonViewModel
 import com.gchristov.newsfeed.kmmpostdata.PostRepository
 import com.gchristov.newsfeed.kmmpostdata.model.DecoratedPost
+import com.gchristov.newsfeed.kmmpostdata.usecase.DecoratePostUseCase
 import kotlinx.coroutines.CoroutineDispatcher
 
 class PostViewModel(
     dispatcher: CoroutineDispatcher,
     private var postId: String,
     private val postRepository: PostRepository,
+    private val decoratePostUseCase: DecoratePostUseCase
 ) : CommonViewModel<PostViewModel.State>(
     dispatcher = dispatcher,
     initialState = State()
@@ -31,20 +33,21 @@ class PostViewModel(
         }
         launchUiCoroutine {
             try {
-                postRepository.apply {
-                    // Always show cached post
-                    cachedPost(postId)?.let { post ->
-                        setState { copy(post = post) }
-                        clearCache(postId)
+
+                val newPost = decoratePostUseCase.getPost(
+                    postId = postId,
+                    onCache = { cachedPost ->
+                        setState { copy(post = cachedPost) }
                     }
-                    val newPost = postRepository.post(postId)
-                    setState {
-                        copy(
-                            loading = false,
-                            post = newPost
-                        )
-                    }
+                )
+
+                setState {
+                    copy(
+                        loading = false,
+                        post = newPost
+                    )
                 }
+
             } catch (error: Exception) {
                 error.printStackTrace()
                 setState {
@@ -60,11 +63,9 @@ class PostViewModel(
     fun onToggleFavourite() {
         state.value.post?.let { post ->
             launchUiCoroutine {
-                postRepository.apply {
-                    toggleFavourite(postId)
-                    val redecoratedPost = redecoratePost(post)
-                    setState { copy(post = redecoratedPost) }
-                }
+                postRepository.toggleFavourite(post.raw.id)
+                val newPost = decoratePostUseCase.getPost(post.raw.id)
+                setState { copy(post = newPost) }
             }
         }
     }

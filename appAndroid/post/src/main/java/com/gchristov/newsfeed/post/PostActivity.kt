@@ -29,11 +29,13 @@ import com.gchristov.newsfeed.kmmpost.PostViewModel
 import com.gchristov.newsfeed.kmmpostdata.model.DecoratedPost
 
 class PostActivity : CommonComposeActivity() {
+
     private val viewModel by viewModels<PostViewModel> {
         createViewModelFactory {
             PostModule.injectPostViewModel(postId = postId)
         }
     }
+
     private val postId: String
         get() {
             return requireNotNull(intent.data?.getQueryParameter(KeyPostId))
@@ -93,7 +95,7 @@ private fun PostState(
                             modifier = Modifier.padding(16.dp),
                             verticalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
-                            PostHeader(post.raw.headline ?: "--")
+                            PostHeader(post.raw.headline ?: "--", post.readingTimeMinutes ?: 0)
                             PostBody(post.raw.body ?: "--")
                         }
                     }
@@ -165,16 +167,16 @@ private fun PostImage(url: String?) {
 }
 
 @Composable
-private fun PostHeader(header: String) {
+private fun PostHeader(header: String, readingTimeMinutes: Int) {
     AppText(
         text = header,
         style = Theme.typography.title,
     )
-    PostAuthor("Anonymous")
+    PostAuthor("Anonymous", readingTimeMinutes)
 }
 
 @Composable
-private fun PostAuthor(author: String) {
+private fun PostAuthor(author: String, readingTimeMinutes: Int) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(6.dp)
@@ -190,7 +192,7 @@ private fun PostAuthor(author: String) {
                 style = Theme.typography.subtitle,
             )
             AppText(
-                text = stringResource(R.string.post_read_time),
+                text = stringResource(R.string.post_read_time, readingTimeMinutes),
                 style = Theme.typography.caption,
                 color = Theme.contentColors.secondary
             )
