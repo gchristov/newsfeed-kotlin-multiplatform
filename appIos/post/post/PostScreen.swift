@@ -71,7 +71,7 @@ private struct PostState: View {
                         ) {
                             PostHeader(
                                 header: post.raw.headline ?? "--",
-                                readingTimeMinutes: post.readingTimeMinutes as! Int)
+                                readingTimeMinutes: post.readingTimeMinutes as? Int ?? 0)
                             PostBody(text: post.raw.body ?? "--")
                         }.padding(16)
                     }
