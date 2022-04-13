@@ -69,7 +69,9 @@ private struct PostState: View {
                             alignment: .leading,
                             spacing: 8
                         ) {
-                            PostHeader(header: post.raw.headline ?? "--")
+                            PostHeader(
+                                header: post.raw.headline ?? "--",
+                                readingTimeMinutes: post.readingTimeMinutes as? Int ?? 0)
                             PostBody(text: post.raw.body ?? "--")
                         }.padding(16)
                     }
@@ -153,19 +155,21 @@ private struct PostImage: View {
 private struct PostHeader: View {
     @EnvironmentObject var theme: Theme
     let header: String
+    let readingTimeMinutes: Int
     
     var body: some View {
         AppText(
             text: header,
             font: theme.typography.title
         )
-        PostAuthor(author: "Anonymous")
+        PostAuthor(author: "Anonymous", readingTimeMinutes: readingTimeMinutes)
     }
 }
 
 private struct PostAuthor: View {
     @EnvironmentObject var theme: Theme
     let author: String
+    let readingTimeMinutes: Int
     
     var body: some View {
         HStack(spacing: 6) {
@@ -179,7 +183,7 @@ private struct PostAuthor: View {
                     font: theme.typography.subtitle
                 )
                 AppText(
-                    text: "1 min read",
+                    text: String(format: "%d min read", readingTimeMinutes),
                     color: theme.contentColors.secondary,
                     font: theme.typography.caption
                 )
