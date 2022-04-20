@@ -36,6 +36,10 @@ class FeedViewModel(
         loadNextPage()
     }
 
+    fun onSearchTextChanged(searchQuery: String)  {
+        println("SearchQuery: $searchQuery")
+    }
+
     fun loadNextPage(startFromFirst: Boolean = true) {
         val nextPage = if (startFromFirst) 1 else state.value.sectionedFeed?.currentPage!!.plus(1)
         val hasNextPage = if (startFromFirst) true else state.value.sectionedFeed?.hasNextPage()!!

@@ -16,6 +16,7 @@ public struct FeedScreen: View {
 public struct FeedScreenContent: View {
     @State private var state: FeedViewModel.State?
     @State private var selectedPostId: String?
+    @State private var searchQuery = ""
     private let viewModel: FeedViewModel
     
     public init(viewModel: FeedViewModel) {
@@ -31,6 +32,7 @@ public struct FeedScreenContent: View {
             } else {
                 FeedState(
                     selectedPostId: $selectedPostId,
+                    searchQuery: $searchQuery,
                     feedItemDateFormatter: FeedItemDateFormatter,
                     feedSectionDateFormatter: FeedSectionDateFormat,
                     loading: state?.loading == true,
@@ -44,6 +46,10 @@ public struct FeedScreenContent: View {
                 )
             }
         }
+        .onChange(of: searchQuery) { _ in
+            viewModel.onSearchTextChanged(searchQuery: searchQuery)
+        }
+        .searchable(text: $searchQuery, prompt: "Search Feed")
         .onAppear {
             setupViewModel()
         }
@@ -68,6 +74,7 @@ public struct FeedScreenContent: View {
 private struct FeedState: View {
     @EnvironmentObject var theme: Theme
     @Binding var selectedPostId: String?
+    @Binding var searchQuery: String
     let feedItemDateFormatter: DateFormatter
     let feedSectionDateFormatter: DateFormatter
     let loading: Bool
