@@ -7,6 +7,9 @@ import com.gchristov.newsfeed.kmmfeeddata.model.hasNextPage
 import com.gchristov.newsfeed.kmmfeeddata.usecase.GetSectionedFeedUseCase
 import com.gchristov.newsfeed.kmmfeeddata.usecase.RedecorateSectionedFeedUseCase
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.flow
 
 class FeedViewModel(
     dispatcher: CoroutineDispatcher,
@@ -37,7 +40,9 @@ class FeedViewModel(
     }
 
     fun onSearchTextChanged(searchQuery: String)  {
-        println("SearchQuery: $searchQuery")
+            callbackFlow<String> {
+                println("SearchQuery: $searchQuery")
+            }.debounce(1000)
     }
 
     fun loadNextPage(startFromFirst: Boolean = true) {
