@@ -46,7 +46,7 @@ public struct FeedScreenContent: View {
             }
         }
         .onChange(of: searchQuery) { _ in
-            viewModel.onSearchTextChanged(searchQuery: searchQuery)
+            viewModel.onSearchTextChanged(newQuery: searchQuery)
         }
         .searchable(text: $searchQuery, prompt: "Search articles...")
         .onAppear {

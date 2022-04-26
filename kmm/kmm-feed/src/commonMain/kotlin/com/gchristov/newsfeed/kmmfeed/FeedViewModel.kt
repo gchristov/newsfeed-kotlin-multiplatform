@@ -7,9 +7,9 @@ import com.gchristov.newsfeed.kmmfeeddata.model.hasNextPage
 import com.gchristov.newsfeed.kmmfeeddata.usecase.GetSectionedFeedUseCase
 import com.gchristov.newsfeed.kmmfeeddata.usecase.RedecorateSectionedFeedUseCase
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.filter
 
 class FeedViewModel(
     dispatcher: CoroutineDispatcher,
@@ -20,8 +20,34 @@ class FeedViewModel(
     dispatcher = dispatcher,
     initialState = State()
 ) {
+    private val searchQueryFlow = MutableStateFlow("")
+
     init {
         loadNextPage()
+        observeSearchQuery()
+    }
+
+    /**
+     * Observer function placed on the search text being updated from the UI.
+     *
+     * The MutableStateFlow, representing the sequence of keystrokes being emitted
+     * by the user, is debounced every 500ms so that downstream services (API,
+     * repository...) are not hit an unnecessary number of times and only when relevant
+     * results can be returned
+     */
+    private fun observeSearchQuery() {
+        launchUiCoroutine {
+            searchQueryFlow
+                .debounce(500)
+                .filter { text -> text.isNotEmpty() }
+                .collect { debouncedText ->
+                    setState { copy(searchQuery = debouncedText) }
+                }
+        }
+    }
+
+    fun onSearchTextChanged(newQuery: String) {
+        searchQueryFlow.value = newQuery
     }
 
     fun redecorateContent() {
@@ -37,12 +63,6 @@ class FeedViewModel(
         // Clear cache when user explicitly requests a refresh
         launchUiCoroutine { feedRepository.clearCache() }
         loadNextPage()
-    }
-
-    fun onSearchTextChanged(searchQuery: String)  {
-            callbackFlow<String> {
-                println("SearchQuery: $searchQuery")
-            }.debounce(1000)
     }
 
     fun loadNextPage(startFromFirst: Boolean = true) {
@@ -112,5 +132,6 @@ class FeedViewModel(
         val blockingError: Throwable? = null,
         val nonBlockingError: Throwable? = null,
         val sectionedFeed: SectionedFeed? = null,
+        val searchQuery: String = ""
     )
 }
