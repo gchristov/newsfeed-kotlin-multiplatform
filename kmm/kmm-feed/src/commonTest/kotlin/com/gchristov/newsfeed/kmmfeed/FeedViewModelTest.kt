@@ -11,15 +11,12 @@ import com.gchristov.newsfeed.kmmfeedtestfixtures.FakeFeedRepository
 import com.gchristov.newsfeed.kmmfeedtestfixtures.FeedCreator
 import com.gchristov.newsfeed.kmmposttestfixtures.FakePostRepository
 import kotlinx.coroutines.*
-import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlin.test.*
-import kotlin.time.TestTimeSource
 
 @ExperimentalCoroutinesApi
 class FeedViewModelTest : CommonViewModelTestClass() {
 
-    // https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/debounce.html
     @Test
     fun searchQueryIsDebouncedOnExpectedInterval()  {
         runTest { viewModel, _, _ ->

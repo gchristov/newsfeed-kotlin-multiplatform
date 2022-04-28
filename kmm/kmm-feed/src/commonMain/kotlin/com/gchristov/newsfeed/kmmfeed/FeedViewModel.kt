@@ -7,6 +7,7 @@ import com.gchristov.newsfeed.kmmfeeddata.model.hasNextPage
 import com.gchristov.newsfeed.kmmfeeddata.usecase.GetSectionedFeedUseCase
 import com.gchristov.newsfeed.kmmfeeddata.usecase.RedecorateSectionedFeedUseCase
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.filter
@@ -35,10 +36,11 @@ class FeedViewModel(
      * repository...) are not hit an unnecessary number of times and only when relevant
      * results can be returned
      */
+    @OptIn(FlowPreview::class)
     private fun observeSearchQuery() {
         launchUiCoroutine {
             searchQueryFlow
-                .debounce(500)
+                .debounce(DEBOUNCE_INTERVAL_MS)
                 .filter { text -> text.isNotEmpty() }
                 .collect { debouncedText ->
                     setState { copy(searchQuery = debouncedText) }
@@ -132,6 +134,8 @@ class FeedViewModel(
         val blockingError: Throwable? = null,
         val nonBlockingError: Throwable? = null,
         val sectionedFeed: SectionedFeed? = null,
-        val searchQuery: String = ""
+        val searchQuery: String? = null
     )
 }
+
+private const val DEBOUNCE_INTERVAL_MS = 500L
