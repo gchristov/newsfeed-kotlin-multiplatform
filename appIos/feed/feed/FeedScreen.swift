@@ -16,6 +16,7 @@ public struct FeedScreen: View {
 public struct FeedScreenContent: View {
     @State private var state: FeedViewModel.State?
     @State private var selectedPostId: String?
+    @State private var searchQuery = ""
     private let viewModel: FeedViewModel
     
     public init(viewModel: FeedViewModel) {
@@ -44,6 +45,10 @@ public struct FeedScreenContent: View {
                 )
             }
         }
+        .onChange(of: searchQuery) { _ in
+            viewModel.onSearchTextChanged(newQuery: searchQuery)
+        }
+        .searchable(text: $searchQuery, prompt: "Search articles...")
         .onAppear {
             setupViewModel()
         }

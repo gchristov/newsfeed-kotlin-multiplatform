@@ -10,14 +10,28 @@ import com.gchristov.newsfeed.kmmfeeddata.usecase.*
 import com.gchristov.newsfeed.kmmfeedtestfixtures.FakeFeedRepository
 import com.gchristov.newsfeed.kmmfeedtestfixtures.FeedCreator
 import com.gchristov.newsfeed.kmmposttestfixtures.FakePostRepository
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 import kotlinx.datetime.Instant
 import kotlin.test.*
 
 @ExperimentalCoroutinesApi
 class FeedViewModelTest : CommonViewModelTestClass() {
+
+    @Test
+    fun searchQueryIsDebouncedOnExpectedInterval()  {
+        runTest { viewModel, _, _ ->
+            viewModel.onSearchTextChanged("te")
+            delay(100)
+            assertTrue { viewModel.state.value.searchQuery == null }
+
+            viewModel.onSearchTextChanged("text")
+            delay(200)
+            assertTrue { viewModel.state.value.searchQuery == null }
+
+            delay(301)
+            assertTrue { viewModel.state.value.searchQuery == "text" }
+        }
+    }
 
     @Test
     fun initialLoadingSetsState() {
