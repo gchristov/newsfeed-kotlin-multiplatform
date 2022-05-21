@@ -92,7 +92,7 @@ class FeedViewModel(
             try {
                 val feedUpdate = getSectionedFeedUseCase(
                     pageId = nextPage,
-                    feedQuery = state.value.searchQuery ?: "brexit,fintech",
+                    feedQuery = state.value.searchQuery,
                     currentFeed = state.value.sectionedFeed,
                     // Only request cache if we're starting from the first page
                     onCache = if (startFromFirst) { cache ->
@@ -134,7 +134,7 @@ class FeedViewModel(
         val blockingError: Throwable? = null,
         val nonBlockingError: Throwable? = null,
         val sectionedFeed: SectionedFeed? = null,
-        val searchQuery: String? = null
+        val searchQuery: String = "brexit,fintech"
     )
 }
 
