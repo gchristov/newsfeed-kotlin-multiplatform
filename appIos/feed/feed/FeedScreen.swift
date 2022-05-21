@@ -48,7 +48,7 @@ public struct FeedScreenContent: View {
         .onChange(of: searchQuery) { _ in
             viewModel.onSearchTextChanged(newQuery: searchQuery)
         }
-        .searchable(text: $searchQuery, prompt: "Search \(state?.searchQuery?.lowercased() ?? "" )")
+        .searchable(text: $searchQuery, prompt: "Search \(state?.searchQuery.lowercased() ?? "" )")
         .onAppear {
             setupViewModel()
         }
