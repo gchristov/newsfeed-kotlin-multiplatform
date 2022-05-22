@@ -22,11 +22,11 @@ class FeedViewModelTest : CommonViewModelTestClass() {
         runTest { viewModel, _, _ ->
             viewModel.onSearchTextChanged("te")
             delay(100)
-            assertTrue { viewModel.state.value.searchQuery == null }
+            assertTrue { viewModel.state.value.searchQuery == "brexit,fintech" }
 
             viewModel.onSearchTextChanged("text")
             delay(200)
-            assertTrue { viewModel.state.value.searchQuery == null }
+            assertTrue { viewModel.state.value.searchQuery == "brexit,fintech" }
 
             delay(301)
             assertTrue { viewModel.state.value.searchQuery == "text" }
