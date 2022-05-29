@@ -3,6 +3,9 @@ import KmmShared
 import Post
 import CommonSwiftUi
 
+/**
+ This is the actual screen that is pushed on the navigation stack when app starts
+ */
 public struct FeedScreen: View {
     public init() {
         // No-op
@@ -13,10 +16,13 @@ public struct FeedScreen: View {
     }
 }
 
+/**
+ This is a wrapper view for the different Feed States: ErrorState and FeedState. It also holds and sets up the FeedViewModel.
+ All interactions with ViewModel are implemented here, but called on each specific state via callbacks.
+ */
 public struct FeedScreenContent: View {
     @State private var state: FeedViewModel.State?
     @State private var selectedPostId: String?
-    @State private var searchQuery = ""
     private let viewModel: FeedViewModel
     
     public init(viewModel: FeedViewModel) {
@@ -41,14 +47,11 @@ public struct FeedScreenContent: View {
                     onNonBlockingErrorDismiss: { viewModel.dismissNonBlockingError() },
                     onRefresh: { viewModel.refreshContent() },
                     onLoadMore: { viewModel.loadNextPage(startFromFirst: false) },
-                    onAppear: { viewModel.redecorateContent() }
+                    onAppear: { viewModel.redecorateContent() },
+                    onSearchChanged: { query in viewModel.onSearchTextChanged(newQuery: query) }
                 )
             }
         }
-        .onChange(of: searchQuery) { _ in
-            viewModel.onSearchTextChanged(newQuery: searchQuery)
-        }
-        .searchable(text: $searchQuery, prompt: "Search \(state?.searchQuery.lowercased() ?? "" )")
         .onAppear {
             setupViewModel()
         }
@@ -70,9 +73,13 @@ public struct FeedScreenContent: View {
     }
 }
 
+/**
+ This is the 'normal' state the Feed view can be into
+ */
 private struct FeedState: View {
     @EnvironmentObject var theme: Theme
     @Binding var selectedPostId: String?
+    @State private var searchQuery = ""
     let feedItemDateFormatter: DateFormatter
     let feedSectionDateFormatter: DateFormatter
     let loading: Bool
@@ -83,6 +90,7 @@ private struct FeedState: View {
     let onRefresh: () -> ()
     let onLoadMore: () -> ()
     let onAppear: () -> ()
+    let onSearchChanged: (String) -> ()
     
     var body: some View {
         AppNavigationView {
@@ -112,6 +120,10 @@ private struct FeedState: View {
                     }
                 }
             }
+            .onChange(of: searchQuery) { _ in
+                onSearchChanged(searchQuery)
+            }
+            .searchable(text: $searchQuery, prompt: "Search \(searchQuery.lowercased())")
             .onAppear {
                 onAppear()
             }
