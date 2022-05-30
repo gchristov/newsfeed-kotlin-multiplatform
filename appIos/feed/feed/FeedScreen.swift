@@ -49,7 +49,7 @@ public struct FeedScreenContent: View {
                     onLoadMore: { viewModel.loadNextPage(startFromFirst: false) },
                     onAppear: { viewModel.redecorateContent() },
                     onSearchChanged: { query in viewModel.onSearchTextChanged(newQuery: query) },
-                    currentSearchQuery: state?.searchQuery
+                    currentSearchQuery: state?.searchQuery ?? ""
                 )
             }
         }
@@ -125,7 +125,7 @@ private struct FeedState: View {
             .onChange(of: searchQuery) { _ in
                 onSearchChanged(searchQuery)
             }
-            .searchable(text: $searchQuery, prompt: "Search \"\(searchQuery.lowercased())\"")
+            .searchable(text: $searchQuery, prompt: "Search \"\(currentSearchQuery.lowercased())\"")
             .onAppear {
                 onAppear()
             }
