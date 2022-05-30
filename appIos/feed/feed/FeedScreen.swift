@@ -123,7 +123,7 @@ private struct FeedState: View {
             .onChange(of: searchQuery) { _ in
                 onSearchChanged(searchQuery)
             }
-            .searchable(text: $searchQuery, prompt: "Search \"\(searchQuery.lowercased())\"")
+            .searchable(text: $searchQuery, prompt: "Search \(searchQuery.lowercased())")
             .onAppear {
                 onAppear()
             }
