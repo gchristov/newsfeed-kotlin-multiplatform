@@ -48,7 +48,8 @@ public struct FeedScreenContent: View {
                     onRefresh: { viewModel.refreshContent() },
                     onLoadMore: { viewModel.loadNextPage(startFromFirst: false) },
                     onAppear: { viewModel.redecorateContent() },
-                    onSearchChanged: { query in viewModel.onSearchTextChanged(newQuery: query) }
+                    onSearchChanged: { query in viewModel.onSearchTextChanged(newQuery: query) },
+                    currentSearchQuery: state?.searchQuery
                 )
             }
         }
@@ -91,6 +92,7 @@ private struct FeedState: View {
     let onLoadMore: () -> ()
     let onAppear: () -> ()
     let onSearchChanged: (String) -> ()
+    let currentSearchQuery: String
     
     var body: some View {
         AppNavigationView {
