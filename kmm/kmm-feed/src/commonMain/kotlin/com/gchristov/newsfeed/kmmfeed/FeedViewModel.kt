@@ -26,6 +26,14 @@ class FeedViewModel(
     init {
         loadNextPage()
         observeSearchQuery()
+        populatedSavedSearchQuery()
+    }
+
+    private fun populatedSavedSearchQuery() {
+        launchUiCoroutine {
+            val savedSearchQuery = feedRepository.searchQuery() ?: "brexit,fintech"
+            setState { copy(searchQuery = savedSearchQuery) }
+        }
     }
 
     /**

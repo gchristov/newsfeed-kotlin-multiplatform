@@ -8,6 +8,7 @@ import com.gchristov.newsfeed.kmmcommonpersistence.SqlDriverProperties
 import com.gchristov.newsfeed.kmmfeeddata.usecase.*
 import com.gchristov.newsfeed.kmmpostdata.PostDataModule
 import com.gchristov.newsfeed.kmmpostdata.PostRepository
+import com.russhwolf.settings.Settings
 import kotlinx.coroutines.Dispatchers
 import kotlinx.datetime.Clock
 import org.kodein.di.DI
@@ -32,7 +33,8 @@ object FeedDataModule : DiModule() {
                                 databaseName = "feed.db"
                             )
                         )
-                    )
+                    ),
+                    sharedPreferences = instance()
                 )
             }
             bindProvider { provideBuildSectionedFeedUseCase() }
@@ -66,12 +68,14 @@ object FeedDataModule : DiModule() {
     private fun provideFeedRepository(
         api: FeedApi,
         postRepository: PostRepository,
-        database: FeedSqlDelightDatabase
+        database: FeedSqlDelightDatabase,
+        sharedPreferences: Settings
     ): FeedRepository = RealFeedRepository(
         dispatcher = Dispatchers.Default,
         apiService = api,
         postRepository = postRepository,
-        database = database
+        database = database,
+        sharedPreferences = sharedPreferences
     )
 
     private fun provideFeedApi(client: ApiClient) = FeedApi(client)

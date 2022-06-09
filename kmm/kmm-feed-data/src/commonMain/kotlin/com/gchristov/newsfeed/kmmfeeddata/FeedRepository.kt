@@ -13,4 +13,8 @@ interface FeedRepository {
     suspend fun cachedFeedPage(): DecoratedFeedPage?
 
     suspend fun clearCache()
+
+    suspend fun saveSearchQuery(searchQuery: String)
+
+    suspend fun searchQuery(): String?
 }

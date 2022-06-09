@@ -16,6 +16,7 @@ class FakeFeedRepository(
 
     private var _cacheCleared = false
     private var _pageIndex = 0
+    private var _lastSearchQuery = mutableMapOf<String, String>()
 
     override suspend fun feedPage(
         pageId: Int,
@@ -27,6 +28,7 @@ class FakeFeedRepository(
             // Errors should retry loading the same page so do not advance the current index
             _pageIndex++
         }
+
         return fakeResponse.execute(requireNotNull(feedPages)[indexToLoad])
     }
 
@@ -44,9 +46,18 @@ class FakeFeedRepository(
         _cacheCleared = true
     }
 
+    override suspend fun saveSearchQuery(searchQuery: String) {
+        _lastSearchQuery["searchQuery"] = searchQuery
+    }
+
+    override suspend fun searchQuery(): String? {
+        return _lastSearchQuery["searchQuery"]
+    }
+
     fun resetCurrentPage() {
         _pageIndex = 0
     }
 
     fun assertCacheCleared() = _cacheCleared
 }
+
