@@ -28,7 +28,6 @@ class FakeFeedRepository(
             // Errors should retry loading the same page so do not advance the current index
             _pageIndex++
         }
-
         return fakeResponse.execute(requireNotNull(feedPages)[indexToLoad])
     }
 
@@ -60,4 +59,3 @@ class FakeFeedRepository(
 
     fun assertCacheCleared() = _cacheCleared
 }
-
