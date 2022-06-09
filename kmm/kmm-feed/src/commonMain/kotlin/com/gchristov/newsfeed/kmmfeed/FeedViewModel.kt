@@ -44,7 +44,6 @@ class FeedViewModel(
                 .filter { text -> text.isNotEmpty() }
                 .collect { debouncedText ->
                     setState { copy(searchQuery = debouncedText) }
-                    println("About to reload with ${state.value.searchQuery}")
                     loadNextPage(startFromFirst = true)
                 }
         }
