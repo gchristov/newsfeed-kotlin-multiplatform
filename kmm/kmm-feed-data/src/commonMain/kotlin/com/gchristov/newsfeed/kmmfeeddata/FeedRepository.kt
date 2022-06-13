@@ -16,5 +16,5 @@ interface FeedRepository {
 
     suspend fun saveSearchQuery(searchQuery: String)
 
-    suspend fun searchQuery(): String?
+    suspend fun searchQuery(): String
 }

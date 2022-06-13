@@ -24,15 +24,15 @@ class FeedViewModel(
     private val searchQueryFlow = MutableStateFlow("")
 
     init {
-        loadNextPage()
+        loadFeedWithStoredSearchQuery()
         observeSearchQuery()
-        populateSavedSearchQuery()
     }
 
-    private fun populateSavedSearchQuery() {
+    private fun loadFeedWithStoredSearchQuery() {
         launchUiCoroutine {
-            val savedSearchQuery = feedRepository.searchQuery() ?: "brexit,fintech"
+            val savedSearchQuery = feedRepository.searchQuery()
             setState { copy(searchQuery = savedSearchQuery) }
+            loadNextPage()
         }
     }
 
@@ -53,6 +53,7 @@ class FeedViewModel(
                 .collect { debouncedText ->
                     setState { copy(searchQuery = debouncedText) }
                     loadNextPage(startFromFirst = true)
+                    feedRepository.saveSearchQuery(debouncedText)
                 }
         }
     }

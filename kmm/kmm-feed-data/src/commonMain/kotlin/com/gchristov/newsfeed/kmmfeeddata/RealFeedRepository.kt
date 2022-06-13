@@ -109,21 +109,21 @@ internal class RealFeedRepository(
         }
     }
 
-    override suspend fun searchQuery(): String? =
+    override suspend fun searchQuery(): String =
         withContext(dispatcher) {
-            if (sharedPreferences.contains(SEARCH_QUERY_PREFERENCES_KEY)) {
-                return@withContext sharedPreferences.getString(
-                    key = SEARCH_QUERY_PREFERENCES_KEY,
-                    defaultValue = "brexit,fintech"
-                )
-            }
-            null
+            return@withContext sharedPreferences.getString(
+                key = SEARCH_QUERY_PREFERENCES_KEY,
+                defaultValue = "brexit,fintech"
+            )
         }
 
     override suspend fun saveSearchQuery(searchQuery: String) =
         withContext(dispatcher) {
-            sharedPreferences[SEARCH_QUERY_PREFERENCES_KEY] = searchQuery
+            if (searchQuery.length >= MINIMUM_SEARCH_QUERY_LENGTH) {
+                sharedPreferences[SEARCH_QUERY_PREFERENCES_KEY] = searchQuery
+            }
         }
 }
 
 private const val SEARCH_QUERY_PREFERENCES_KEY = "searchQuery"
+private const val MINIMUM_SEARCH_QUERY_LENGTH = 3
