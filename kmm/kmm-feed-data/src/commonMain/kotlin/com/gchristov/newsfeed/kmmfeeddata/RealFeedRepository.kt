@@ -4,15 +4,20 @@ import com.gchristov.newsfeed.kmmfeeddata.model.DecoratedFeedItem
 import com.gchristov.newsfeed.kmmfeeddata.model.DecoratedFeedPage
 import com.gchristov.newsfeed.kmmfeeddata.model.toFeedPage
 import com.gchristov.newsfeed.kmmpostdata.PostRepository
+import com.russhwolf.settings.Settings
+import com.russhwolf.settings.contains
+import com.russhwolf.settings.set
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
+import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 
 internal class RealFeedRepository(
     private val dispatcher: CoroutineDispatcher,
     private val apiService: FeedApi,
     private val postRepository: PostRepository,
-    database: FeedSqlDelightDatabase
+    database: FeedSqlDelightDatabase,
+    private val sharedPreferences: Settings
 ) : FeedRepository {
     private val queries = database.feedSqlDelightDatabaseQueries
 
@@ -103,4 +108,22 @@ internal class RealFeedRepository(
             }
         }
     }
+
+    override suspend fun searchQuery(): String =
+        withContext(dispatcher) {
+            return@withContext sharedPreferences.getString(
+                key = SEARCH_QUERY_PREFERENCES_KEY,
+                defaultValue = "brexit,fintech"
+            )
+        }
+
+    override suspend fun saveSearchQuery(searchQuery: String) =
+        withContext(dispatcher) {
+            if (searchQuery.length >= MINIMUM_SEARCH_QUERY_LENGTH) {
+                sharedPreferences[SEARCH_QUERY_PREFERENCES_KEY] = searchQuery
+            }
+        }
 }
+
+private const val SEARCH_QUERY_PREFERENCES_KEY = "searchQuery"
+private const val MINIMUM_SEARCH_QUERY_LENGTH = 3
