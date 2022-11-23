@@ -1,6 +1,8 @@
 package com.gchristov.newsfeed.feed
 
+import SearchAppBar
 import android.content.Intent
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -24,11 +26,13 @@ import com.gchristov.newsfeed.commoncompose.elements.*
 import com.gchristov.newsfeed.commoncompose.elements.list.AppGroupedList
 import com.gchristov.newsfeed.commoncompose.elements.list.AppListRow
 import com.gchristov.newsfeed.commoncompose.elements.list.items
+import com.gchristov.newsfeed.commoncompose.elements.search.SearchIconButton
 import com.gchristov.newsfeed.commoncompose.theme.Theme
 import com.gchristov.newsfeed.commonnavigation.NavigationModule
 import com.gchristov.newsfeed.kmmcommonmvvm.createViewModelFactory
 import com.gchristov.newsfeed.kmmfeed.FeedModule
 import com.gchristov.newsfeed.kmmfeed.FeedViewModel
+import com.gchristov.newsfeed.kmmfeed.SearchWidgetState
 import com.gchristov.newsfeed.kmmfeeddata.model.DecoratedFeedItem
 import com.gchristov.newsfeed.kmmfeeddata.model.SectionedFeed
 import java.text.SimpleDateFormat
@@ -87,7 +91,13 @@ internal fun FeedScreen(
             onNonBlockingErrorDismiss = viewModel::dismissNonBlockingError,
             onRefresh = viewModel::refreshContent,
             onLoadMore = { viewModel.loadNextPage(startFromFirst = false) },
-            onFeedItemClick = onFeedItemClick
+            onFeedItemClick = onFeedItemClick,
+
+            // Need a clean way to pass this here,
+            // or it seems like a delegation to viewModel should happen
+            // based off the state
+            searchWidgetState = state?.searchWidgetState!!,
+            searchTextState = state?.searchTextState!!
         )
     }
 }
@@ -103,11 +113,33 @@ private fun FeedState(
     onNonBlockingErrorDismiss: () -> Unit,
     onRefresh: () -> Unit,
     onLoadMore: () -> Unit,
-    onFeedItemClick: (feedItem: DecoratedFeedItem) -> Unit
+    onFeedItemClick: (feedItem: DecoratedFeedItem) -> Unit,
+    searchWidgetState: SearchWidgetState,
+    searchTextState: String
 ) {
     AppScreen(
         topBar = {
-            AppBar(title = stringResource(R.string.app_name))
+
+           // AppBar(title = stringResource(R.string.app_name))
+
+            MainAppBar(
+                searchWidgetState = searchWidgetState,
+                searchTextState = searchTextState,
+                onTextChange = {
+                    // mainViewModel.updateSearchTextState(newValue = it)
+                },
+                onCloseClicked = {
+                    Log.d("close", "Close Clicked")
+                    // mainViewModel.updateSearchWidgetState(newValue = SearchWidgetState.CLOSED)
+                },
+                onSearchClicked = {
+                    Log.d("open", "Searched Text: $it")
+                },
+                onSearchTriggered = {
+                    //mainViewModel.updateSearchWidgetState(newValue = SearchWidgetState.OPENED)
+                    Log.d("trigger", "Searched Triggered")
+                }
+            )
         },
     ) {
         AppPullRefresh(
@@ -138,6 +170,35 @@ private fun FeedState(
                     )
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun MainAppBar(
+    searchWidgetState: SearchWidgetState,
+    searchTextState: String,
+    onTextChange: (String) -> Unit,
+    onCloseClicked: () -> Unit,
+    onSearchClicked: (String) -> Unit,
+    onSearchTriggered: () -> Unit
+) {
+    when (searchWidgetState) {
+        SearchWidgetState.CLOSED -> {
+            AppBar(
+                title = stringResource(R.string.app_name),
+                actions = {
+                    SearchIconButton(onClick = onSearchTriggered)
+                }
+            )
+        }
+        SearchWidgetState.OPENED -> {
+            SearchAppBar(
+                text = searchTextState,
+                onTextChange = onTextChange,
+                onCloseClicked = onCloseClicked,
+                onSearchClicked = onSearchClicked
+            )
         }
     }
 }
@@ -290,7 +351,9 @@ private fun ErrorState(
 ) {
     AppScreen(
         topBar = {
-            AppBar(title = stringResource(R.string.app_name))
+            AppBar(
+                title = stringResource(R.string.app_name)
+            )
         },
     ) {
         AppBlockingError(
@@ -298,6 +361,11 @@ private fun ErrorState(
             onRetry = onRetry
         )
     }
+}
+
+@Composable
+fun SearchBar() {
+
 }
 
 @Composable

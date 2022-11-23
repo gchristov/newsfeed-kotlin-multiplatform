@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.filter
 
+
 class FeedViewModel(
     dispatcher: CoroutineDispatcher,
     private val feedRepository: FeedRepository,
@@ -22,6 +23,11 @@ class FeedViewModel(
     initialState = State()
 ) {
     private val searchQueryFlow = MutableStateFlow("")
+
+    // Added to existing state instead of creating new variables?
+    // ----
+    // mutableStateOf("") for search
+    // mutableStateOf(value = SearchWidgetState.CLOSED) for widget state
 
     init {
         loadFeedWithStoredSearchQuery()
@@ -144,7 +150,11 @@ class FeedViewModel(
         val blockingError: Throwable? = null,
         val nonBlockingError: Throwable? = null,
         val sectionedFeed: SectionedFeed? = null,
-        val searchQuery: String = "brexit,fintech"
+        val searchQuery: String = "brexit,fintech",
+
+        // Separate or here?
+        val searchWidgetState: SearchWidgetState = SearchWidgetState.CLOSED,
+        val searchTextState: String = ""
     )
 }
 
