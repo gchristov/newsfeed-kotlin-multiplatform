@@ -66,6 +66,15 @@ class FeedViewModel(
 
     fun onSearchTextChanged(newQuery: String) {
         searchQueryFlow.value = newQuery
+        setState{ copy(searchQuery = newQuery) }
+    }
+
+    fun onSearchStateChanged(newSearchState: SearchWidgetState) {
+        setState {
+            copy(
+                searchWidgetState = newSearchState
+            )
+        }
     }
 
     fun redecorateContent() {

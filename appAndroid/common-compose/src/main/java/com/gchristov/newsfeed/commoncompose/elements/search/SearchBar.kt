@@ -1,5 +1,7 @@
+import android.util.Log
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -23,11 +25,30 @@ fun SearchAppBar(
 	onCloseClicked: () -> Unit,
 	onSearchClicked: (String) -> Unit,
 ) {
-	AppSurface(
-		modifier = Modifier.fillMaxWidth()
-			.height(56.dp),
-		elevation = AppBarDefaults.TopAppBarElevation,
-	) {
+	//TODO: appsurface is clashing with text view at the moment
+//	AppSurface(
+//		modifier = Modifier
+//			.fillMaxWidth()
+//			.height(56.dp),
+//		elevation = AppBarDefaults.TopAppBarElevation,
+//	) {
+		//TODO: https://stackoverflow.com/questions/65780722/jetpack-compose-how-to-remove-edittext-textfield-underline-and-keep-cursor
+//		OutlinedTextField(
+//			onValueChange =  {
+//							onTextChange(it)
+//			},
+//			placeholder = {
+//				Text(
+//					text = "Search here...",
+//					color = Color.Black
+//				)
+//			},
+//			value = text,
+//			modifier = Modifier
+//			.fillMaxWidth(),
+//			textStyle = TextStyle(color = Color.DarkGray)
+//		)
+
 		TextField(modifier = Modifier
 			.fillMaxWidth(),
 			value = text,
@@ -37,14 +58,13 @@ fun SearchAppBar(
 			placeholder = {
 				Text(
 					modifier = Modifier
-					.alpha(ContentAlpha.medium),
+						.alpha(ContentAlpha.medium),
 					text = "Search here...",
-					color = Color.Black
+					color = Color.Gray
 				)
 			},
 			textStyle = TextStyle(
-				fontSize = MaterialTheme.typography.subtitle1.fontSize,
-				color = Color.Green
+				fontSize = MaterialTheme.typography.subtitle1.fontSize
 			),
 			singleLine = true,
 			leadingIcon = {
@@ -86,19 +106,82 @@ fun SearchAppBar(
 				}
 			),
 			colors = TextFieldDefaults.textFieldColors(
-				backgroundColor = Color.Transparent,
-				cursorColor = Color.Black.copy(alpha = ContentAlpha.medium)
+				backgroundColor = Color.White,
+				cursorColor = Color.Gray.copy(alpha = ContentAlpha.medium)
 			))
 	}
-}
 
-@Composable
-@Preview
-fun SearchAppBarPreview() {
-	SearchAppBar(
-		text = "Search articles...",
-		onTextChange = {},
-		onCloseClicked = {},
-		onSearchClicked = {}
-	)
-}
+
+//			placeholder = {
+//				Text(
+//					modifier = Modifier
+//					.alpha(ContentAlpha.medium),
+//					text = "Search here...",
+//					color = Color.Gray
+//				)
+//			},
+//			textStyle = TextStyle(
+//				fontSize = MaterialTheme.typography.subtitle1.fontSize,
+//				color = Color.Black
+//			),
+//			singleLine = true,
+//			leadingIcon = {
+//				IconButton(
+//					modifier = Modifier
+//						.alpha(ContentAlpha.medium),
+//					onClick = {}
+//				) {
+//					Icon(
+//						imageVector = Icons.Default.Search,
+//						contentDescription = "Search Icon",
+//						tint = Color.Black
+//					)
+//				}
+//			},
+//			trailingIcon = {
+//				IconButton(
+//					onClick = {
+//						if (text.isNotEmpty()) {
+//							onTextChange("")
+//						} else {
+//							onCloseClicked()
+//						}
+//					}
+//				) {
+//					Icon(
+//						imageVector = Icons.Default.Close,
+//						contentDescription = "Close Icon",
+//						tint = Color.Black
+//					)
+//				}
+//			},
+//			keyboardOptions = KeyboardOptions(
+//				imeAction = ImeAction.Search
+//			),
+//			keyboardActions = KeyboardActions(
+//				onSearch = {
+//					onSearchClicked(text)
+//				}
+//			),
+//			colors = TextFieldDefaults.textFieldColors(
+//				textColor = Color.Black,
+//				disabledTextColor = Color.Gray,
+//				backgroundColor = Color.White,
+//				focusedIndicatorColor = Color.Transparent,
+//				unfocusedIndicatorColor = Color.Transparent,
+//				disabledIndicatorColor = Color.Transparent,
+//				cursorColor = Color.Black
+//			))
+//	}
+//}
+
+	@Composable
+//@Preview
+	fun SearchAppBarPreview() {
+		SearchAppBar(
+			text = "Search articles...",
+			onTextChange = {},
+			onCloseClicked = {},
+			onSearchClicked = {}
+		)
+	}

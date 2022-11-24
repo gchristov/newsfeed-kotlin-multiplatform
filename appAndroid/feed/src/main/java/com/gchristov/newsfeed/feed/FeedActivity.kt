@@ -93,11 +93,14 @@ internal fun FeedScreen(
             onLoadMore = { viewModel.loadNextPage(startFromFirst = false) },
             onFeedItemClick = onFeedItemClick,
 
-            // Need a clean way to pass this here,
-            // or it seems like a delegation to viewModel should happen
-            // based off the state
-            searchWidgetState = state?.searchWidgetState!!,
-            searchTextState = state?.searchTextState!!
+            searchWidgetState = state?.searchWidgetState ?: SearchWidgetState.CLOSED,
+            onSearchClick = {
+                            viewModel.onSearchStateChanged(it)
+            },
+            searchTextState = state?.searchQuery ?: "",
+            onSearchTextChange = {
+                viewModel.onSearchTextChanged(it)
+            }
         )
     }
 }
@@ -115,29 +118,24 @@ private fun FeedState(
     onLoadMore: () -> Unit,
     onFeedItemClick: (feedItem: DecoratedFeedItem) -> Unit,
     searchWidgetState: SearchWidgetState,
-    searchTextState: String
+    onSearchClick: (searchState: SearchWidgetState) -> Unit,
+    searchTextState: String,
+    onSearchTextChange: (String) -> Unit
 ) {
     AppScreen(
         topBar = {
-
-           // AppBar(title = stringResource(R.string.app_name))
-
             MainAppBar(
                 searchWidgetState = searchWidgetState,
                 searchTextState = searchTextState,
-                onTextChange = {
-                    // mainViewModel.updateSearchTextState(newValue = it)
-                },
+                onTextChange = onSearchTextChange,
                 onCloseClicked = {
-                    Log.d("close", "Close Clicked")
-                    // mainViewModel.updateSearchWidgetState(newValue = SearchWidgetState.CLOSED)
+                    onSearchClick(SearchWidgetState.CLOSED)
                 },
                 onSearchClicked = {
                     Log.d("open", "Searched Text: $it")
                 },
                 onSearchTriggered = {
-                    //mainViewModel.updateSearchWidgetState(newValue = SearchWidgetState.OPENED)
-                    Log.d("trigger", "Searched Triggered")
+                    onSearchClick(SearchWidgetState.OPENED)
                 }
             )
         },
