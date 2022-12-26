@@ -26,29 +26,8 @@ fun SearchAppBar(
 	onSearchClicked: (String) -> Unit,
 ) {
 	//TODO: appsurface is clashing with text view at the moment
-//	AppSurface(
-//		modifier = Modifier
-//			.fillMaxWidth()
-//			.height(56.dp),
-//		elevation = AppBarDefaults.TopAppBarElevation,
-//	) {
-		//TODO: https://stackoverflow.com/questions/65780722/jetpack-compose-how-to-remove-edittext-textfield-underline-and-keep-cursor
-//		OutlinedTextField(
-//			onValueChange =  {
-//							onTextChange(it)
-//			},
-//			placeholder = {
-//				Text(
-//					text = "Search here...",
-//					color = Color.Black
-//				)
-//			},
-//			value = text,
-//			modifier = Modifier
-//			.fillMaxWidth(),
-//			textStyle = TextStyle(color = Color.DarkGray)
-//		)
 
+		//TODO: https://stackoverflow.com/questions/65780722/jetpack-compose-how-to-remove-edittext-textfield-underline-and-keep-cursor
 		TextField(modifier = Modifier
 			.fillMaxWidth(),
 			value = text,
@@ -107,9 +86,15 @@ fun SearchAppBar(
 			),
 			colors = TextFieldDefaults.textFieldColors(
 				backgroundColor = Color.White,
-				cursorColor = Color.Gray.copy(alpha = ContentAlpha.medium)
+				cursorColor = Color.Gray.copy(alpha = ContentAlpha.medium),
+				focusedIndicatorColor = Color.Transparent,
+				unfocusedIndicatorColor = Color.Transparent,
+				disabledIndicatorColor = Color.Transparent,
+				textColor = Color.Black
+
 			))
 	}
+}
 
 
 //			placeholder = {
