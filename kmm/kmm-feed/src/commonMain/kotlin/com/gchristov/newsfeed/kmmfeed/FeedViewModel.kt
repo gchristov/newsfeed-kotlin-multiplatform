@@ -8,6 +8,7 @@ import com.gchristov.newsfeed.kmmfeeddata.usecase.GetSectionedFeedUseCase
 import com.gchristov.newsfeed.kmmfeeddata.usecase.RedecorateSectionedFeedUseCase
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.filter
@@ -30,15 +31,23 @@ class FeedViewModel(
     // mutableStateOf(value = SearchWidgetState.CLOSED) for widget state
 
     init {
-        loadFeedWithStoredSearchQuery()
         observeSearchQuery()
+    }
+
+    fun onScreenVisible() {
+        loadFeedWithStoredSearchQuery()
     }
 
     private fun loadFeedWithStoredSearchQuery() {
         launchUiCoroutine {
             val savedSearchQuery = feedRepository.searchQuery()
+            println("Saved query from DB $savedSearchQuery")
+
             setState { copy(searchQuery = savedSearchQuery) }
+            println("State after load from DB ${state.value.searchQuery}")
             loadNextPage()
+
+
         }
     }
 
@@ -114,10 +123,11 @@ class FeedViewModel(
             )
         }
         launchUiCoroutine {
+            println("State before feed update from DB ${state.value.searchQuery}")
             try {
                 val feedUpdate = getSectionedFeedUseCase(
                     pageId = nextPage,
-                    feedQuery = state.value.searchQuery,
+                    feedQuery = state.value.searchQuery ?: "test",
                     currentFeed = state.value.sectionedFeed,
                     // Only request cache if we're starting from the first page
                     onCache = if (startFromFirst) { cache ->
@@ -159,11 +169,10 @@ class FeedViewModel(
         val blockingError: Throwable? = null,
         val nonBlockingError: Throwable? = null,
         val sectionedFeed: SectionedFeed? = null,
-        val searchQuery: String = "brexit,fintech",
+        val searchQuery: String? = null,
 
         // Separate or here?
         val searchWidgetState: SearchWidgetState = SearchWidgetState.CLOSED,
-        val searchTextState: String = ""
     )
 }
 

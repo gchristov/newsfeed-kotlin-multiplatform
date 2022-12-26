@@ -2,6 +2,7 @@ package com.gchristov.newsfeed.feed
 
 import SearchAppBar
 import android.content.Intent
+import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
@@ -44,6 +45,11 @@ class FeedActivity : CommonComposeActivity() {
 
     private val feedItemDateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
     private val feedSectionDateFormat = SimpleDateFormat("MMM, yyyy", Locale.getDefault())
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel.onScreenVisible()
+    }
 
     @Composable
     override fun Content() = FeedScreen(
