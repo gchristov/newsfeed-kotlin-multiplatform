@@ -1,8 +1,6 @@
 package com.gchristov.newsfeed.feed
 
-import SearchAppBar
 import android.content.Intent
-import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
@@ -12,6 +10,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
@@ -27,7 +26,7 @@ import com.gchristov.newsfeed.commoncompose.elements.*
 import com.gchristov.newsfeed.commoncompose.elements.list.AppGroupedList
 import com.gchristov.newsfeed.commoncompose.elements.list.AppListRow
 import com.gchristov.newsfeed.commoncompose.elements.list.items
-import com.gchristov.newsfeed.commoncompose.elements.search.SearchIconButton
+import com.gchristov.newsfeed.commoncompose.elements.search.AppSearchBar
 import com.gchristov.newsfeed.commoncompose.theme.Theme
 import com.gchristov.newsfeed.commonnavigation.NavigationModule
 import com.gchristov.newsfeed.kmmcommonmvvm.createViewModelFactory
@@ -45,11 +44,6 @@ class FeedActivity : CommonComposeActivity() {
 
     private val feedItemDateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
     private val feedSectionDateFormat = SimpleDateFormat("MMM, yyyy", Locale.getDefault())
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel.onScreenVisible()
-    }
 
     @Composable
     override fun Content() = FeedScreen(
@@ -98,10 +92,9 @@ internal fun FeedScreen(
             onRefresh = viewModel::refreshContent,
             onLoadMore = { viewModel.loadNextPage(startFromFirst = false) },
             onFeedItemClick = onFeedItemClick,
-
             searchWidgetState = state?.searchWidgetState ?: SearchWidgetState.CLOSED,
             onSearchClick = {
-                            viewModel.onSearchStateChanged(it)
+                viewModel.onSearchStateChanged(it)
             },
             searchTextState = state?.searchQuery ?: "",
             onSearchTextChange = {
@@ -179,7 +172,7 @@ private fun FeedState(
 }
 
 @Composable
-fun MainAppBar(
+private fun MainAppBar(
     searchWidgetState: SearchWidgetState,
     searchTextState: String,
     onTextChange: (String) -> Unit,
@@ -192,12 +185,16 @@ fun MainAppBar(
             AppBar(
                 title = stringResource(R.string.app_name),
                 actions = {
-                    SearchIconButton(onClick = onSearchTriggered)
+                    AppIconButton(
+                        onClick = onSearchTriggered,
+                        icon = Icons.Filled.Search,
+                        contentDescription = "Search"
+                    )
                 }
             )
         }
         SearchWidgetState.OPENED -> {
-            SearchAppBar(
+            AppSearchBar(
                 text = searchTextState,
                 onTextChange = onTextChange,
                 onCloseClicked = onCloseClicked,
@@ -365,11 +362,6 @@ private fun ErrorState(
             onRetry = onRetry
         )
     }
-}
-
-@Composable
-fun SearchBar() {
-
 }
 
 @Composable

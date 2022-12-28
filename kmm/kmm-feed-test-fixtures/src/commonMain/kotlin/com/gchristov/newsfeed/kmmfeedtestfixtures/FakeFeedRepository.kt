@@ -16,7 +16,7 @@ class FakeFeedRepository(
 
     private var _cacheCleared = false
     private var _pageIndex = 0
-    private var _lastSearchQuery = "brexit,fintech"
+    private var _lastSearchQuery: String? = null
 
     override suspend fun feedPage(
         pageId: Int,
@@ -49,7 +49,7 @@ class FakeFeedRepository(
         _lastSearchQuery = searchQuery
     }
 
-    override suspend fun searchQuery(): String {
+    override suspend fun searchQuery(): String? {
         return _lastSearchQuery
     }
 

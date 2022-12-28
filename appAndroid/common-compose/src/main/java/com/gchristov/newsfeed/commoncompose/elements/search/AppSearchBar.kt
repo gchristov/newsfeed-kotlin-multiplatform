@@ -1,7 +1,6 @@
-import android.util.Log
+package com.gchristov.newsfeed.commoncompose.elements.search
+
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -11,23 +10,26 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.unit.dp
-import com.gchristov.newsfeed.commoncompose.elements.AppSurface
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
-fun SearchAppBar(
+fun AppSearchBar(
     text: String,
     onTextChange: (String) -> Unit,
     onCloseClicked: () -> Unit,
     onSearchClicked: (String) -> Unit,
 ) {
-
-    TextField(modifier = Modifier
-        .fillMaxWidth(),
+    // Right now this search bar is just a text field. However, in the future we may have many more
+    // screens which need searching, so it would be great if AppSearchBar abstracts away the logic
+    // of switching the app bars based on the state internally so that the top-level screens don't
+    // have to know about it and just use it out-of-the-box.
+    //
+    // This implementation can then expose the properties or provide defaults as appropriate.
+    //
+    // TODO: Make this search bar a bit ore flexible
+    TextField(modifier = Modifier.fillMaxWidth(),
         value = text,
         onValueChange = {
             onTextChange(it)
@@ -46,8 +48,7 @@ fun SearchAppBar(
         singleLine = true,
         leadingIcon = {
             IconButton(
-                modifier = Modifier
-                    .alpha(ContentAlpha.medium),
+                modifier = Modifier.alpha(ContentAlpha.medium),
                 onClick = {}
             ) {
                 Icon(
@@ -90,5 +91,6 @@ fun SearchAppBar(
             disabledIndicatorColor = Color.Transparent,
             textColor = Color.Black
 
-        ))
+        )
+    )
 }

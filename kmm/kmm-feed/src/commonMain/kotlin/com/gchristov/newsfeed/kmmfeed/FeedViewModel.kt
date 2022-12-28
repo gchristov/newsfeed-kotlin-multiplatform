@@ -8,10 +8,9 @@ import com.gchristov.newsfeed.kmmfeeddata.usecase.GetSectionedFeedUseCase
 import com.gchristov.newsfeed.kmmfeeddata.usecase.RedecorateSectionedFeedUseCase
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.filterNotNull
 
 
 class FeedViewModel(
@@ -23,32 +22,11 @@ class FeedViewModel(
     dispatcher = dispatcher,
     initialState = State()
 ) {
-    private val searchQueryFlow = MutableStateFlow("")
-
-    // Added to existing state instead of creating new variables?
-    // ----
-    // mutableStateOf("") for search
-    // mutableStateOf(value = SearchWidgetState.CLOSED) for widget state
+    private val searchQueryFlow: MutableStateFlow<String?> = MutableStateFlow(null)
 
     init {
         observeSearchQuery()
-    }
-
-    fun onScreenVisible() {
-        loadFeedWithStoredSearchQuery()
-    }
-
-    private fun loadFeedWithStoredSearchQuery() {
-        launchUiCoroutine {
-            val savedSearchQuery = feedRepository.searchQuery()
-            println("Saved query from DB $savedSearchQuery")
-
-            setState { copy(searchQuery = savedSearchQuery) }
-            println("State after load from DB ${state.value.searchQuery}")
-            loadNextPage()
-
-
-        }
+        loadNextPage()
     }
 
     /**
@@ -64,26 +42,21 @@ class FeedViewModel(
         launchUiCoroutine {
             searchQueryFlow
                 .debounce(DEBOUNCE_INTERVAL_MS)
-                .filter { text -> text.isNotEmpty() }
+                .filterNotNull()
                 .collect { debouncedText ->
-                    setState { copy(searchQuery = debouncedText) }
-                    loadNextPage(startFromFirst = true)
                     feedRepository.saveSearchQuery(debouncedText)
+                    loadNextPage()
                 }
         }
     }
 
     fun onSearchTextChanged(newQuery: String) {
+        setState { copy(searchQuery = newQuery) }
         searchQueryFlow.value = newQuery
-        setState{ copy(searchQuery = newQuery) }
     }
 
     fun onSearchStateChanged(newSearchState: SearchWidgetState) {
-        setState {
-            copy(
-                searchWidgetState = newSearchState
-            )
-        }
+        setState { copy(searchWidgetState = newSearchState) }
     }
 
     fun redecorateContent() {
@@ -113,21 +86,23 @@ class FeedViewModel(
         if (state.value.loadingMore) {
             return
         }
-        setState {
-            copy(
-                loading = startFromFirst,
-                loadingMore = !startFromFirst,
-                reachedEnd = false,
-                blockingError = null,
-                nonBlockingError = null,
-            )
-        }
         launchUiCoroutine {
-            println("State before feed update from DB ${state.value.searchQuery}")
             try {
+                val searchQuery = feedRepository.searchQuery() ?: DEFAULT_SEARCH_QUERY
+                setState {
+                    copy(
+                        loading = startFromFirst,
+                        loadingMore = !startFromFirst,
+                        reachedEnd = false,
+                        blockingError = null,
+                        nonBlockingError = null,
+                        searchQuery = searchQuery,
+                    )
+                }
+
                 val feedUpdate = getSectionedFeedUseCase(
                     pageId = nextPage,
-                    feedQuery = state.value.searchQuery ?: "test",
+                    feedQuery = searchQuery,
                     currentFeed = state.value.sectionedFeed,
                     // Only request cache if we're starting from the first page
                     onCache = if (startFromFirst) { cache ->
@@ -169,11 +144,10 @@ class FeedViewModel(
         val blockingError: Throwable? = null,
         val nonBlockingError: Throwable? = null,
         val sectionedFeed: SectionedFeed? = null,
-        val searchQuery: String? = null,
-
-        // Separate or here?
+        val searchQuery: String = DEFAULT_SEARCH_QUERY,
         val searchWidgetState: SearchWidgetState = SearchWidgetState.CLOSED,
     )
 }
 
 private const val DEBOUNCE_INTERVAL_MS = 500L
+private const val DEFAULT_SEARCH_QUERY = "brexit,fintech"
