@@ -54,7 +54,7 @@ jobs:
           path: 'kmm/**/build/test-results/**/TEST-*.xml'
 
   iosBuild:
-    runs-on: macos-13
+    runs-on: macos-11
     concurrency:
       group: ${{ github.ref }}_iosBuild
       cancel-in-progress: true
@@ -77,7 +77,7 @@ jobs:
           path: '~/.konan/**'
           key: konan-ios
       - name: Xcode cache
-        uses: mikehardy/buildcache-action@v1
+        uses: mikehardy/buildcache-action@v2
       - name: Compile iOS app
         run: |
           cd appIos
@@ -92,7 +92,7 @@ jobs:
             ~/Library/Developer/Xcode/DerivedData/**/Build/Products/**/appIos.app.dSYM
 
   iosTest:
-    runs-on: macos-13
+    runs-on: macos-11
     concurrency:
       group: ${{ github.ref }}_iosTest
       cancel-in-progress: true
@@ -115,7 +115,7 @@ jobs:
           path: '~/.konan/**'
           key: konan-ios-test
       - name: Xcode cache
-        uses: mikehardy/buildcache-action@v1
+        uses: mikehardy/buildcache-action@v2
       - name: iOS tests
         run: |
           cd appIos
