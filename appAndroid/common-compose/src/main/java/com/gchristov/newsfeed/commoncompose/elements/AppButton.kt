@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -42,7 +43,7 @@ fun AppIconButton(
     tint: Color = Theme.contentColors.primary,
     contentDescription: String? = null,
 ) {
-    androidx.compose.material.IconButton(
+    IconButton(
         onClick = onClick,
         modifier = modifier,
         interactionSource = remember { MutableInteractionSource() },

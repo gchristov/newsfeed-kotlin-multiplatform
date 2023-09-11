@@ -1,6 +1,7 @@
 package com.gchristov.newsfeed.feed
 
 import android.content.Intent
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
@@ -24,11 +26,13 @@ import com.gchristov.newsfeed.commoncompose.elements.*
 import com.gchristov.newsfeed.commoncompose.elements.list.AppGroupedList
 import com.gchristov.newsfeed.commoncompose.elements.list.AppListRow
 import com.gchristov.newsfeed.commoncompose.elements.list.items
+import com.gchristov.newsfeed.commoncompose.elements.search.AppSearchBar
 import com.gchristov.newsfeed.commoncompose.theme.Theme
 import com.gchristov.newsfeed.commonnavigation.NavigationModule
 import com.gchristov.newsfeed.kmmcommonmvvm.createViewModelFactory
 import com.gchristov.newsfeed.kmmfeed.FeedModule
 import com.gchristov.newsfeed.kmmfeed.FeedViewModel
+import com.gchristov.newsfeed.kmmfeed.SearchWidgetState
 import com.gchristov.newsfeed.kmmfeeddata.model.DecoratedFeedItem
 import com.gchristov.newsfeed.kmmfeeddata.model.SectionedFeed
 import java.text.SimpleDateFormat
@@ -87,7 +91,15 @@ internal fun FeedScreen(
             onNonBlockingErrorDismiss = viewModel::dismissNonBlockingError,
             onRefresh = viewModel::refreshContent,
             onLoadMore = { viewModel.loadNextPage(startFromFirst = false) },
-            onFeedItemClick = onFeedItemClick
+            onFeedItemClick = onFeedItemClick,
+            searchWidgetState = state?.searchWidgetState ?: SearchWidgetState.CLOSED,
+            onSearchClick = {
+                viewModel.onSearchStateChanged(it)
+            },
+            searchTextState = state?.searchQuery ?: "",
+            onSearchTextChange = {
+                viewModel.onSearchTextChanged(it)
+            }
         )
     }
 }
@@ -103,11 +115,28 @@ private fun FeedState(
     onNonBlockingErrorDismiss: () -> Unit,
     onRefresh: () -> Unit,
     onLoadMore: () -> Unit,
-    onFeedItemClick: (feedItem: DecoratedFeedItem) -> Unit
+    onFeedItemClick: (feedItem: DecoratedFeedItem) -> Unit,
+    searchWidgetState: SearchWidgetState,
+    onSearchClick: (searchState: SearchWidgetState) -> Unit,
+    searchTextState: String,
+    onSearchTextChange: (String) -> Unit
 ) {
     AppScreen(
         topBar = {
-            AppBar(title = stringResource(R.string.app_name))
+            MainAppBar(
+                searchWidgetState = searchWidgetState,
+                searchTextState = searchTextState,
+                onTextChange = onSearchTextChange,
+                onCloseClicked = {
+                    onSearchClick(SearchWidgetState.CLOSED)
+                },
+                onSearchClicked = {
+                    Log.d("open", "Searched Text: $it")
+                },
+                onSearchTriggered = {
+                    onSearchClick(SearchWidgetState.OPENED)
+                }
+            )
         },
     ) {
         AppPullRefresh(
@@ -138,6 +167,39 @@ private fun FeedState(
                     )
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun MainAppBar(
+    searchWidgetState: SearchWidgetState,
+    searchTextState: String,
+    onTextChange: (String) -> Unit,
+    onCloseClicked: () -> Unit,
+    onSearchClicked: (String) -> Unit,
+    onSearchTriggered: () -> Unit
+) {
+    when (searchWidgetState) {
+        SearchWidgetState.CLOSED -> {
+            AppBar(
+                title = stringResource(R.string.app_name),
+                actions = {
+                    AppIconButton(
+                        onClick = onSearchTriggered,
+                        icon = Icons.Filled.Search,
+                        contentDescription = "Search"
+                    )
+                }
+            )
+        }
+        SearchWidgetState.OPENED -> {
+            AppSearchBar(
+                text = searchTextState,
+                onTextChange = onTextChange,
+                onCloseClicked = onCloseClicked,
+                onSearchClicked = onSearchClicked
+            )
         }
     }
 }
@@ -290,7 +352,9 @@ private fun ErrorState(
 ) {
     AppScreen(
         topBar = {
-            AppBar(title = stringResource(R.string.app_name))
+            AppBar(
+                title = stringResource(R.string.app_name)
+            )
         },
     ) {
         AppBlockingError(

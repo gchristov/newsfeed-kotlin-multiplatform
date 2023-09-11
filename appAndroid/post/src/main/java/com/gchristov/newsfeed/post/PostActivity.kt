@@ -1,6 +1,7 @@
 package com.gchristov.newsfeed.post
 
 import android.content.Intent
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
