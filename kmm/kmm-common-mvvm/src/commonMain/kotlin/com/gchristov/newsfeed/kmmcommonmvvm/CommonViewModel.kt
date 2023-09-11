@@ -2,7 +2,6 @@ package com.gchristov.newsfeed.kmmcommonmvvm
 
 import dev.icerock.moko.mvvm.livedata.LiveData
 import dev.icerock.moko.mvvm.livedata.MutableLiveData
-import dev.icerock.moko.mvvm.livedata.postValue
 import dev.icerock.moko.mvvm.livedata.setValue
 import dev.icerock.moko.mvvm.viewmodel.ViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -33,17 +32,8 @@ abstract class CommonViewModel<S : Any>(
         val currentState = _state.value
         val newState = currentState.reducer()
         if (newState != currentState) {
-            // Fix for loading not showing on time
-            // what it happens is there's a number of
-            // calls enqueued here, and there's a 'missing update'
-            // call 1 puts loading to true
-            // call 2 puts it to false
-            // but call 2 sees current state with loading false
-            // as it's picking from _state.value
-            // the queue is not refreshed quickly enough in this branch
-            // The potential fix is always storing locally the 'actual'
-            // currentState as the newState, the next tick will post the queue
-            // but this may happen slower in the branch as it's in a coroutine?
+            // postValue vs setValue
+            // see: https://stackoverflow.com/questions/51299641/difference-of-setvalue-postvalue-in-mutablelivedata/51299672#51299672
             _state.setValue(newState, false)
         }
     }

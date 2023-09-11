@@ -8,6 +8,7 @@ package com.gchristov.newsfeed.kmmfeed
 // }
 //
 // TODO: Remodel this and move to AppSearchBar
+// https://github.com/gchristov/newsfeed-kmm/issues/20
 enum class SearchWidgetState {
     OPENED,
     CLOSED

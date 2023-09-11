@@ -29,6 +29,7 @@ fun AppSearchBar(
     // This implementation can then expose the properties or provide defaults as appropriate.
     //
     // TODO: Make this search bar a bit ore flexible
+    // https://github.com/gchristov/newsfeed-kmm/issues/19
     TextField(modifier = Modifier.fillMaxWidth(),
         value = text,
         onValueChange = {
