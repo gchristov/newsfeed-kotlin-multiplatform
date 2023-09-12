@@ -36,7 +36,7 @@ buildkonfig {
         buildConfigField(
             type = com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING,
             name = "API_KEY",
-            value = "09658731-cb6d-4a84-9e3c-5f030389de4e"
+            value = "86cb30cc-1eb4-478f-a147-f73e02862a2e"
         )
         buildConfigField(
             type = com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING,
