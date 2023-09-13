@@ -34,7 +34,7 @@ abstract class CommonViewModel<S : Any>(
         if (newState != currentState) {
             // postValue vs setValue
             // see: https://stackoverflow.com/questions/51299641/difference-of-setvalue-postvalue-in-mutablelivedata/51299672#51299672
-            _state.setValue(newState, false)
+            _state.setValue(newState, async = false)
         }
     }
 

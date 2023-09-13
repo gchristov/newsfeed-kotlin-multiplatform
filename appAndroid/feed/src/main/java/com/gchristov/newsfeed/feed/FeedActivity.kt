@@ -126,8 +126,8 @@ private fun FeedState(
             MainAppBar(
                 searchWidgetState = searchWidgetState,
                 searchTextState = searchTextState,
-                onTextChange = onSearchTextChange,
-                onCloseClicked = {
+                onSearchTextChange = onSearchTextChange,
+                onSearchCloseClicked = {
                     onSearchClick(SearchWidgetState.CLOSED)
                 },
                 onSearchClicked = {
@@ -175,8 +175,8 @@ private fun FeedState(
 private fun MainAppBar(
     searchWidgetState: SearchWidgetState,
     searchTextState: String,
-    onTextChange: (String) -> Unit,
-    onCloseClicked: () -> Unit,
+    onSearchTextChange: (String) -> Unit,
+    onSearchCloseClicked: () -> Unit,
     onSearchClicked: (String) -> Unit,
     onSearchTriggered: () -> Unit
 ) {
@@ -196,8 +196,8 @@ private fun MainAppBar(
         SearchWidgetState.OPENED -> {
             AppSearchBar(
                 text = searchTextState,
-                onTextChange = onTextChange,
-                onCloseClicked = onCloseClicked,
+                onTextChange = onSearchTextChange,
+                onCloseClicked = onSearchCloseClicked,
                 onSearchClicked = onSearchClicked
             )
         }
