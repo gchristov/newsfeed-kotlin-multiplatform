@@ -76,6 +76,8 @@ jobs:
         with:
           path: '~/.konan/**'
           key: konan-ios
+      - name: Xcode cache
+        uses: mikehardy/buildcache-action@v2
       - name: Compile iOS app
         run: |
           cd appIos
@@ -112,6 +114,8 @@ jobs:
         with:
           path: '~/.konan/**'
           key: konan-ios-test
+      - name: Xcode cache
+        uses: mikehardy/buildcache-action@v2
       - name: iOS tests
         run: |
           cd appIos
