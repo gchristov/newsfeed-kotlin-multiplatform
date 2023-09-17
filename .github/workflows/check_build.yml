@@ -54,7 +54,7 @@ jobs:
           path: 'kmm/**/build/test-results/**/TEST-*.xml'
 
   ioscachetest:
-    runs-on: macos-latest
+    runs-on: macos-11
     steps:
       - uses: mikehardy/buildcache-action@v2
 
