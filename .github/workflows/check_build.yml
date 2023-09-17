@@ -13,7 +13,7 @@ env:
   IOS_SIMULATOR: "platform=iOS Simulator,name=iPhone 11,OS=15.0"
   ANDROID_COMPILE_SDK: "31"
   ANDROID_EMULATOR_ARCHITECTURE: "x86_64"
-
+  
 jobs:
   kmmTest:
     runs-on: ubuntu-20.04
@@ -53,9 +53,12 @@ jobs:
           name: KMM test results
           path: 'kmm/**/build/test-results/**/TEST-*.xml'
 
+  ioscachetest:
+    runs-on: macos-latest
+    steps:
+      - uses: mikehardy/buildcache-action@v2
+
   iosBuild:
-    env:
-      BUILDCACHE_DIR: ../.xcodecache
     runs-on: macos-11
     concurrency:
       group: ${{ github.ref }}_iosBuild
@@ -78,8 +81,6 @@ jobs:
         with:
           path: '~/.konan/**'
           key: konan-ios
-      - name: Xcode cache
-        uses: mikehardy/buildcache-action@v2
       - name: Compile iOS app
         run: |
           cd appIos
@@ -94,8 +95,6 @@ jobs:
             ~/Library/Developer/Xcode/DerivedData/**/Build/Products/**/appIos.app.dSYM
 
   iosTest:
-    env:
-      BUILDCACHE_DIR: ../.xcodecache
     runs-on: macos-11
     concurrency:
       group: ${{ github.ref }}_iosTest
@@ -118,8 +117,6 @@ jobs:
         with:
           path: '~/.konan/**'
           key: konan-ios-test
-      - name: Xcode cache
-        uses: mikehardy/buildcache-action@v2
       - name: iOS tests
         run: |
           cd appIos
