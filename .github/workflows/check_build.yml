@@ -53,13 +53,8 @@ jobs:
           name: KMM test results
           path: 'kmm/**/build/test-results/**/TEST-*.xml'
 
-  ioscachetest:
-    runs-on: macos-12
-    steps:
-      - uses: mikehardy/buildcache-action@v1
-
   iosBuild:
-    runs-on: macos-11
+    runs-on: macos-12
     concurrency:
       group: ${{ github.ref }}_iosBuild
       cancel-in-progress: true
@@ -95,7 +90,7 @@ jobs:
             ~/Library/Developer/Xcode/DerivedData/**/Build/Products/**/appIos.app.dSYM
 
   iosTest:
-    runs-on: macos-11
+    runs-on: macos-12
     concurrency:
       group: ${{ github.ref }}_iosTest
       cancel-in-progress: true
