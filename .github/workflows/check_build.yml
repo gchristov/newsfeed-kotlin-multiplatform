@@ -8,7 +8,7 @@ on:
 
 env:
   JAVA_VERSION: "11"
-  XCODE_VERSION: "13.0"
+  XCODE_VERSION: "13.3"
   XCODE_CACHE: "CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++"
   IOS_SIMULATOR: "platform=iOS Simulator,name=iPhone 11,OS=15.0"
   ANDROID_COMPILE_SDK: "31"
