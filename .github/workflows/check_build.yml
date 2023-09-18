@@ -8,9 +8,9 @@ on:
 
 env:
   JAVA_VERSION: "11"
-  XCODE_VERSION: "13.0"
+  XCODE_VERSION: "13.3"
   XCODE_CACHE: "CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++"
-  IOS_SIMULATOR: "platform=iOS Simulator,name=iPhone 11,OS=15.0"
+  IOS_SIMULATOR: "platform=iOS Simulator,name=iPhone 11,OS=15.4"
   ANDROID_COMPILE_SDK: "31"
   ANDROID_EMULATOR_ARCHITECTURE: "x86_64"
 
@@ -54,7 +54,7 @@ jobs:
           path: 'kmm/**/build/test-results/**/TEST-*.xml'
 
   iosBuild:
-    runs-on: macos-11
+    runs-on: macos-12
     concurrency:
       group: ${{ github.ref }}_iosBuild
       cancel-in-progress: true
@@ -76,6 +76,8 @@ jobs:
         with:
           path: '~/.konan/**'
           key: konan-ios
+      - name: Xcode cache
+        uses: mikehardy/buildcache-action@v2
       - name: Compile iOS app
         run: |
           cd appIos
@@ -90,7 +92,7 @@ jobs:
             ~/Library/Developer/Xcode/DerivedData/**/Build/Products/**/appIos.app.dSYM
 
   iosTest:
-    runs-on: macos-11
+    runs-on: macos-12
     concurrency:
       group: ${{ github.ref }}_iosTest
       cancel-in-progress: true
@@ -112,6 +114,8 @@ jobs:
         with:
           path: '~/.konan/**'
           key: konan-ios-test
+      - name: Xcode cache
+        uses: mikehardy/buildcache-action@v2
       - name: iOS tests
         run: |
           cd appIos
