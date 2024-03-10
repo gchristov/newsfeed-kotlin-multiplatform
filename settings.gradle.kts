@@ -7,7 +7,7 @@ pluginManagement {
         mavenCentral()
     }
 }
-rootProject.name = "newsfeed-kmm"
+rootProject.name = "newsfeed-kotlin-multiplatform"
 
 apply {
     from("modules.gradle.kts")
