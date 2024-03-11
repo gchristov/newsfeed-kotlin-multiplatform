@@ -8,7 +8,7 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                api(projects.kmmPostData) // Needed for knowing if post is favourite
+                api(projects.multiplatform.post.data) // Needed for knowing if post is favourite
             }
         }
     }

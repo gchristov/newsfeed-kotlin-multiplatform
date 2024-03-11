@@ -9,15 +9,19 @@ import com.gchristov.newsfeed.kmmcommontest.FakeResponse
 import com.gchristov.newsfeed.kmmfeed.FeedViewModel
 import com.gchristov.newsfeed.kmmfeeddata.model.DecoratedFeedItem
 import com.gchristov.newsfeed.kmmfeeddata.model.DecoratedFeedPage
-import com.gchristov.newsfeed.kmmfeeddata.usecase.*
+import com.gchristov.newsfeed.kmmfeeddata.usecase.BuildSectionedFeedUseCase
+import com.gchristov.newsfeed.kmmfeeddata.usecase.FlattenSectionedFeedUseCase
+import com.gchristov.newsfeed.kmmfeeddata.usecase.GetSectionedFeedUseCase
+import com.gchristov.newsfeed.kmmfeeddata.usecase.MergeSectionedFeedUseCase
+import com.gchristov.newsfeed.kmmfeeddata.usecase.RedecorateSectionedFeedUseCase
 import com.gchristov.newsfeed.kmmfeedtestfixtures.FakeFeedRepository
 import com.gchristov.newsfeed.kmmfeedtestfixtures.FeedCreator
-import com.gchristov.newsfeed.kmmposttestfixtures.FakePostRepository
+import com.gchristov.newsfeed.multiplatform.post.testfixtures.FakePostRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Test
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
 import kotlin.test.assertEquals
 
 @ExperimentalCoroutinesApi

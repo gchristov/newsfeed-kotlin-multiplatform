@@ -18,9 +18,9 @@ kotlin {
         projects.kmmFeed,
         projects.kmmFeedData,
         projects.kmmFeedTestFixtures,
-        projects.kmmPost,
-        projects.kmmPostData,
-        projects.kmmPostTestFixtures,
+        projects.multiplatform.post.feature,
+        projects.multiplatform.post.data,
+        projects.multiplatform.post.testFixtures,
     )
 
     val iosTarget: (String, KotlinNativeTarget.() -> Unit) -> KotlinNativeTarget = when {

@@ -5,9 +5,13 @@ import com.gchristov.newsfeed.kmmcommonnetwork.ApiClient
 import com.gchristov.newsfeed.kmmcommonnetwork.CommonNetworkModule
 import com.gchristov.newsfeed.kmmcommonpersistence.CommonPersistenceModule
 import com.gchristov.newsfeed.kmmcommonpersistence.SqlDriverProperties
-import com.gchristov.newsfeed.kmmfeeddata.usecase.*
-import com.gchristov.newsfeed.kmmpostdata.PostDataModule
-import com.gchristov.newsfeed.kmmpostdata.PostRepository
+import com.gchristov.newsfeed.kmmfeeddata.usecase.BuildSectionedFeedUseCase
+import com.gchristov.newsfeed.kmmfeeddata.usecase.FlattenSectionedFeedUseCase
+import com.gchristov.newsfeed.kmmfeeddata.usecase.GetSectionedFeedUseCase
+import com.gchristov.newsfeed.kmmfeeddata.usecase.MergeSectionedFeedUseCase
+import com.gchristov.newsfeed.kmmfeeddata.usecase.RedecorateSectionedFeedUseCase
+import com.gchristov.newsfeed.multiplatform.post.data.PostDataModule
+import com.gchristov.newsfeed.multiplatform.post.data.PostRepository
 import com.russhwolf.settings.Settings
 import kotlinx.coroutines.Dispatchers
 import kotlinx.datetime.Clock

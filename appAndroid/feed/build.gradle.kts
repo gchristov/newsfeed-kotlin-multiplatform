@@ -10,6 +10,6 @@ android {
 
 dependencies {
     implementation(projects.kmmFeed)
-    implementation(projects.post)
+    implementation(projects.android.post.feature)
     androidTestImplementation(projects.feedTestFixtures)
 }

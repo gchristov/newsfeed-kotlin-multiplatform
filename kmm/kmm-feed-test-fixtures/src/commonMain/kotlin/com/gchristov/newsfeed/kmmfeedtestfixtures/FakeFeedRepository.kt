@@ -4,7 +4,7 @@ import com.gchristov.newsfeed.kmmcommontest.FakeResponse
 import com.gchristov.newsfeed.kmmcommontest.execute
 import com.gchristov.newsfeed.kmmfeeddata.FeedRepository
 import com.gchristov.newsfeed.kmmfeeddata.model.DecoratedFeedPage
-import com.gchristov.newsfeed.kmmpostdata.PostRepository
+import com.gchristov.newsfeed.multiplatform.post.data.PostRepository
 
 class FakeFeedRepository(
     private val postRepository: PostRepository,

@@ -3,7 +3,7 @@ package com.gchristov.newsfeed.kmmfeeddata
 import com.gchristov.newsfeed.kmmfeeddata.model.DecoratedFeedItem
 import com.gchristov.newsfeed.kmmfeeddata.model.DecoratedFeedPage
 import com.gchristov.newsfeed.kmmfeeddata.model.toFeedPage
-import com.gchristov.newsfeed.kmmpostdata.PostRepository
+import com.gchristov.newsfeed.multiplatform.post.data.PostRepository
 import com.russhwolf.settings.Settings
 import com.russhwolf.settings.set
 import kotlinx.coroutines.CoroutineDispatcher

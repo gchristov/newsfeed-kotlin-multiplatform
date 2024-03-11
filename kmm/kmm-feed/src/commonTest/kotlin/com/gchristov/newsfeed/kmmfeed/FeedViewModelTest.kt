@@ -6,13 +6,26 @@ import com.gchristov.newsfeed.kmmcommontest.FakeCoroutineDispatcher
 import com.gchristov.newsfeed.kmmcommontest.FakeResponse
 import com.gchristov.newsfeed.kmmfeeddata.model.DecoratedFeedPage
 import com.gchristov.newsfeed.kmmfeeddata.model.SectionedFeed
-import com.gchristov.newsfeed.kmmfeeddata.usecase.*
+import com.gchristov.newsfeed.kmmfeeddata.usecase.BuildSectionedFeedUseCase
+import com.gchristov.newsfeed.kmmfeeddata.usecase.FlattenSectionedFeedUseCase
+import com.gchristov.newsfeed.kmmfeeddata.usecase.GetSectionedFeedUseCase
+import com.gchristov.newsfeed.kmmfeeddata.usecase.MergeSectionedFeedUseCase
+import com.gchristov.newsfeed.kmmfeeddata.usecase.RedecorateSectionedFeedUseCase
 import com.gchristov.newsfeed.kmmfeedtestfixtures.FakeFeedRepository
 import com.gchristov.newsfeed.kmmfeedtestfixtures.FeedCreator
-import com.gchristov.newsfeed.kmmposttestfixtures.FakePostRepository
-import kotlinx.coroutines.*
+import com.gchristov.newsfeed.multiplatform.post.testfixtures.FakePostRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.Instant
-import kotlin.test.*
+import kotlin.test.Ignore
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertNotNull
+import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 @ExperimentalCoroutinesApi
 class FeedViewModelTest : CommonViewModelTestClass() {

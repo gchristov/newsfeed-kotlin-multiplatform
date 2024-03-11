@@ -8,7 +8,7 @@ kotlin {
             dependencies {
                 api(projects.kmmFeedData)
                 api(projects.kmmFeedTestFixtures)
-                api(projects.kmmPostTestFixtures) // Needed for fake post repository
+                api(projects.multiplatform.post.testFixtures) // Needed for fake post repository
             }
         }
     }
