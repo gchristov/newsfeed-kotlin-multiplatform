@@ -1,5 +1,5 @@
 plugins {
-    id("kmm-feature-plugin")
+    id("mpl-feature-plugin")
 }
 
 kotlin {

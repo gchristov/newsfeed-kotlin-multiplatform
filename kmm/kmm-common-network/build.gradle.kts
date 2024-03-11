@@ -1,9 +1,9 @@
-import com.gchristov.newsfeed.kmmgradleplugins.Deps
+import com.gchristov.newsfeed.gradleplugins.Deps
 
 val packageId = "com.gchristov.newsfeed.kmmcommonnetwork"
 
 plugins {
-    id("kmm-module-plugin")
+    id("mpl-module-plugin")
     id("com.codingfeline.buildkonfig")
 }
 
@@ -11,20 +11,20 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(Deps.Ktor.clientCore)
-                api(Deps.Ktor.clientSerialization)
-                implementation(Deps.Ktor.clientLogging)
-                implementation(Deps.Ktor.logbackClassic)
+                implementation(Deps.Multiplatform.Ktor.clientCore)
+                api(Deps.Multiplatform.Ktor.clientSerialization)
+                implementation(Deps.Multiplatform.Ktor.clientLogging)
+                implementation(Deps.Multiplatform.Ktor.logbackClassic)
             }
         }
         val androidMain by getting {
             dependencies {
-                implementation(Deps.Ktor.clientAndroid)
+                implementation(Deps.Multiplatform.Ktor.clientAndroid)
             }
         }
         val iosMain by getting {
             dependencies {
-                implementation(Deps.Ktor.clientIos)
+                implementation(Deps.Multiplatform.Ktor.clientIos)
             }
         }
     }

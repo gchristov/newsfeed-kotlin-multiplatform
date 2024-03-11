@@ -1,7 +1,7 @@
 val packageId = "com.gchristov.newsfeed.kmmfeeddata"
 
 plugins {
-    id("kmm-data-plugin")
+    id("mpl-data-plugin")
 }
 
 kotlin {

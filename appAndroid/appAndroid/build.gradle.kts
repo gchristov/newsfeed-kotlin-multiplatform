@@ -1,5 +1,5 @@
 plugins {
-    id("android-application-plugin")
+    id("android-application-binary-plugin")
 }
 
 android {

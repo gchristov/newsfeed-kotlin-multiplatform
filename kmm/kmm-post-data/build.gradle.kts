@@ -1,7 +1,7 @@
 val packageId = "com.gchristov.newsfeed.kmmpostdata"
 
 plugins {
-    id("kmm-data-plugin")
+    id("mpl-data-plugin")
 }
 
 sqldelight {

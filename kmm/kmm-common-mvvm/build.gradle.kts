@@ -1,14 +1,14 @@
-import com.gchristov.newsfeed.kmmgradleplugins.Deps
+import com.gchristov.newsfeed.gradleplugins.Deps
 
 plugins {
-    id("kmm-module-plugin")
+    id("mpl-module-plugin")
 }
 
 kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                api(Deps.Mvvm.liveData)
+                api(Deps.Multiplatform.Mvvm.liveData)
             }
         }
     }

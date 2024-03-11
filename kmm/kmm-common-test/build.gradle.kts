@@ -1,7 +1,7 @@
-import com.gchristov.newsfeed.kmmgradleplugins.Deps
+import com.gchristov.newsfeed.gradleplugins.Deps
 
 plugins {
-    id("kmm-platform-plugin")
+    id("mpl-base-plugin")
 }
 
 kotlin {
@@ -13,18 +13,18 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(Deps.Kotlin.coroutinesCore) // Needed for FakeResponse
-                implementation(Deps.Kotlin.dateTime) // Needed for FakeClock
-                api(kotlin(Deps.Tests.testCommon))
-                api(kotlin(Deps.Tests.testCommonAnnotations))
+                implementation(Deps.Multiplatform.Kotlin.coroutinesCore) // Needed for FakeResponse
+                implementation(Deps.Multiplatform.Kotlin.dateTime) // Needed for FakeClock
+                api(kotlin(Deps.Multiplatform.Tests.testCommon))
+                api(kotlin(Deps.Multiplatform.Tests.testCommonAnnotations))
             }
         }
         val androidMain by getting {
             dependencies {
-                api(kotlin(Deps.Tests.testJunit))
-                api(Deps.Tests.junit)
-                api(Deps.Tests.junitRunner)
-                api(Deps.Tests.archCoreTesting)
+                api(kotlin(Deps.Multiplatform.Tests.testJunit))
+                api(Deps.Multiplatform.Tests.junit)
+                api(Deps.Multiplatform.Tests.junitRunner)
+                api(Deps.Multiplatform.Tests.archCoreTesting)
             }
         }
     }

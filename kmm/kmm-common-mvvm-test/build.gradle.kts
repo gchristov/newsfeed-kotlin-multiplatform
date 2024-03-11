@@ -1,7 +1,7 @@
-import com.gchristov.newsfeed.kmmgradleplugins.Deps
+import com.gchristov.newsfeed.gradleplugins.Deps
 
 plugins {
-    id("kmm-module-plugin")
+    id("mpl-module-plugin")
 }
 
 kotlin {
@@ -13,7 +13,7 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                api(Deps.Mvvm.test)
+                api(Deps.Multiplatform.Mvvm.test)
             }
         }
     }

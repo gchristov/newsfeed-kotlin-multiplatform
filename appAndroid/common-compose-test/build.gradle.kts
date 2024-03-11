@@ -12,6 +12,6 @@ dependencies and code are local to the relevant module and cannot be accesses by
  */
 dependencies {
     implementation(projects.commonCompose)
-    api(Deps.Compose.uiTestJunit)
-    debugApi(Deps.Compose.uiTestManifest)
+    api(Deps.Android.Compose.uiTestJunit)
+    debugApi(Deps.Android.Compose.uiTestManifest)
 }

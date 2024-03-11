@@ -13,7 +13,6 @@ val projects = listOf(
     "kmm-feed",
     "kmm-feed-data",
     "kmm-feed-test-fixtures",
-    "kmm-gradle-plugins",
     "kmm-post",
     "kmm-post-data",
     "kmm-post-test-fixtures",
@@ -26,10 +25,10 @@ val projects = listOf(
     "common-test",
     "feed",
     "feed-test-fixtures",
-    "gradle-plugins",
     "post",
     "post-test-fixtures",
 )
+includeBuild("gradle-plugins")
 /**
  * Android modules are under the 'appAndroid' directory.
  * KMM modules are under the 'kmm' directory.

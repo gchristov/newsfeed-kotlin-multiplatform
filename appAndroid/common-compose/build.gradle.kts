@@ -6,16 +6,16 @@ plugins {
 }
 
 dependencies {
-    api(Deps.Compose.liveData)
-    api(Deps.Compose.compiler)
-    api(Deps.Compose.activity)
-    api(Deps.Compose.uiTooling)
-    api(Deps.Compose.foundation)
-    api(Deps.Compose.foundationLayout)
-    api(Deps.Compose.materialIcons)
-    implementation(Deps.Compose.material)
-    implementation(Deps.Compose.coil)
-    implementation(Deps.Compose.html)
-    implementation(Deps.Accompanist.swipeRefresh)
+    api(Deps.Android.Compose.liveData)
+    api(Deps.Android.Compose.compiler)
+    api(Deps.Android.Compose.activity)
+    api(Deps.Android.Compose.uiTooling)
+    api(Deps.Android.Compose.foundation)
+    api(Deps.Android.Compose.foundationLayout)
+    api(Deps.Android.Compose.materialIcons)
+    implementation(Deps.Android.Compose.material)
+    implementation(Deps.Android.Compose.coil)
+    implementation(Deps.Android.Compose.html)
+    implementation(Deps.Android.Accompanist.swipeRefresh)
     implementation(projects.commonDesign)
 }
