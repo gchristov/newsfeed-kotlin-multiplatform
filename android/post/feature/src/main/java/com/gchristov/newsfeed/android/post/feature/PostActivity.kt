@@ -39,7 +39,7 @@ import com.gchristov.newsfeed.commoncompose.elements.BlockingError
 import com.gchristov.newsfeed.commoncompose.elements.avatar.AppAvatar
 import com.gchristov.newsfeed.commoncompose.elements.toUiBlockingError
 import com.gchristov.newsfeed.commoncompose.theme.Theme
-import com.gchristov.newsfeed.kmmcommonmvvm.createViewModelFactory
+import com.gchristov.newsfeed.multiplatform.common.mvvm.createViewModelFactory
 import com.gchristov.newsfeed.multiplatform.post.data.model.DecoratedPost
 import com.gchristov.newsfeed.multiplatform.post.feature.PostModule
 import com.gchristov.newsfeed.multiplatform.post.feature.PostViewModel

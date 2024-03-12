@@ -1,7 +1,7 @@
 package com.gchristov.newsfeed.multiplatform.post.feature
 
-import com.gchristov.newsfeed.kmmcommondi.DiModule
-import com.gchristov.newsfeed.kmmcommondi.inject
+import com.gchristov.newsfeed.multiplatform.common.di.DiModule
+import com.gchristov.newsfeed.multiplatform.common.di.inject
 import com.gchristov.newsfeed.multiplatform.post.data.PostDataModule
 import com.gchristov.newsfeed.multiplatform.post.data.PostRepository
 import com.gchristov.newsfeed.multiplatform.post.data.usecase.DecoratePostUseCase

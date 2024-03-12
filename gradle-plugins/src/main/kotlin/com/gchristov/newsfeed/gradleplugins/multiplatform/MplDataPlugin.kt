@@ -13,8 +13,8 @@ class MplDataPlugin : Plugin<Project> {
             plugins.apply("com.squareup.sqldelight")
             extensions.configure<KotlinMultiplatformExtension> {
                 sourceSets.maybeCreate("commonMain").dependencies {
-                    api(project(":kmm-common-network"))
-                    api(project(":kmm-common-persistence"))
+                    api(project(":multiplatform:common:network"))
+                    api(project(":multiplatform:common:persistence"))
                 }
             }
         }

@@ -11,7 +11,7 @@ android {
 }
 
 dependencies {
-    implementation(projects.kmmCommonDi)
+    implementation(projects.multiplatform.common.di)
     implementation(projects.commonDesign)
     // Feature modules
     implementation(projects.android.feed.feature)

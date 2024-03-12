@@ -3,13 +3,6 @@
  * Suffix Gradle plugin modules with '-plugins'.
  */
 val projects = listOf(
-    "kmm-common-di",
-    "kmm-common-kotlin",
-    "kmm-common-mvvm",
-    "kmm-common-mvvm-test",
-    "kmm-common-network",
-    "kmm-common-persistence",
-    "kmm-common-test",
     "kmm-umbrella",
     "appAndroid",
     "common-compose",

@@ -1,10 +1,10 @@
 package com.gchristov.newsfeed.multiplatform.post.data
 
-import com.gchristov.newsfeed.kmmcommondi.DiModule
-import com.gchristov.newsfeed.kmmcommonnetwork.ApiClient
-import com.gchristov.newsfeed.kmmcommonnetwork.CommonNetworkModule
-import com.gchristov.newsfeed.kmmcommonpersistence.CommonPersistenceModule
-import com.gchristov.newsfeed.kmmcommonpersistence.SqlDriverProperties
+import com.gchristov.newsfeed.multiplatform.common.di.DiModule
+import com.gchristov.newsfeed.multiplatform.common.network.ApiClient
+import com.gchristov.newsfeed.multiplatform.common.network.CommonNetworkModule
+import com.gchristov.newsfeed.multiplatform.common.persistence.CommonPersistenceModule
+import com.gchristov.newsfeed.multiplatform.common.persistence.SqlDriverProperties
 import com.russhwolf.settings.Settings
 import kotlinx.coroutines.Dispatchers
 import org.kodein.di.DI

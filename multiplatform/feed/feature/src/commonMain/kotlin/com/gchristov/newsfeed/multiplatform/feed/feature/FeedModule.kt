@@ -1,7 +1,7 @@
 package com.gchristov.newsfeed.multiplatform.feed.feature
 
-import com.gchristov.newsfeed.kmmcommondi.DiModule
-import com.gchristov.newsfeed.kmmcommondi.inject
+import com.gchristov.newsfeed.multiplatform.common.di.DiModule
+import com.gchristov.newsfeed.multiplatform.common.di.inject
 import com.gchristov.newsfeed.multiplatform.feed.data.FeedDataModule
 import kotlinx.coroutines.Dispatchers
 import org.kodein.di.DI

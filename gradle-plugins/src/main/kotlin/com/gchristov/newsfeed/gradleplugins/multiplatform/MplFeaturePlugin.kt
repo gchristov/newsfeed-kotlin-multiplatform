@@ -11,10 +11,10 @@ class MplFeaturePlugin : Plugin<Project> {
             plugins.apply("mpl-module-plugin")
             extensions.configure<KotlinMultiplatformExtension> {
                 sourceSets.maybeCreate("commonMain").dependencies {
-                    api(project(":kmm-common-mvvm"))
+                    api(project(":multiplatform:common:mvvm"))
                 }
                 sourceSets.maybeCreate("commonTest").dependencies {
-                    api(project(":kmm-common-mvvm-test"))
+                    api(project(":multiplatform:common:mvvm-test"))
                 }
             }
         }

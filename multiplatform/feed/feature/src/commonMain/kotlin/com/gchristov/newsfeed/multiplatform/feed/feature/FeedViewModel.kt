@@ -1,6 +1,6 @@
 package com.gchristov.newsfeed.multiplatform.feed.feature
 
-import com.gchristov.newsfeed.kmmcommonmvvm.CommonViewModel
+import com.gchristov.newsfeed.multiplatform.common.mvvm.CommonViewModel
 import com.gchristov.newsfeed.multiplatform.feed.data.FeedRepository
 import com.gchristov.newsfeed.multiplatform.feed.data.model.SectionedFeed
 import com.gchristov.newsfeed.multiplatform.feed.data.model.hasNextPage

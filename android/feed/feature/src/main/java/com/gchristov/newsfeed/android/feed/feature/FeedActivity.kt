@@ -50,7 +50,7 @@ import com.gchristov.newsfeed.commoncompose.elements.toUiBlockingError
 import com.gchristov.newsfeed.commoncompose.elements.toUiNonBlockingError
 import com.gchristov.newsfeed.commoncompose.theme.Theme
 import com.gchristov.newsfeed.commonnavigation.NavigationModule
-import com.gchristov.newsfeed.kmmcommonmvvm.createViewModelFactory
+import com.gchristov.newsfeed.multiplatform.common.mvvm.createViewModelFactory
 import com.gchristov.newsfeed.multiplatform.feed.data.model.DecoratedFeedItem
 import com.gchristov.newsfeed.multiplatform.feed.data.model.SectionedFeed
 import com.gchristov.newsfeed.multiplatform.feed.feature.FeedModule

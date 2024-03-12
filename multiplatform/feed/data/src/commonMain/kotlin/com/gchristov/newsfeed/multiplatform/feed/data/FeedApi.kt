@@ -1,6 +1,6 @@
 package com.gchristov.newsfeed.multiplatform.feed.data
 
-import com.gchristov.newsfeed.kmmcommonnetwork.ApiClient
+import com.gchristov.newsfeed.multiplatform.common.network.ApiClient
 import com.gchristov.newsfeed.multiplatform.feed.data.api.ApiFeedResponse
 import io.ktor.client.request.get
 

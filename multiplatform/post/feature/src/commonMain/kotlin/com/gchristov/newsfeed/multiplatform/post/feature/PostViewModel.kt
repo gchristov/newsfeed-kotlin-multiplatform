@@ -1,6 +1,6 @@
 package com.gchristov.newsfeed.multiplatform.post.feature
 
-import com.gchristov.newsfeed.kmmcommonmvvm.CommonViewModel
+import com.gchristov.newsfeed.multiplatform.common.mvvm.CommonViewModel
 import com.gchristov.newsfeed.multiplatform.post.data.PostRepository
 import com.gchristov.newsfeed.multiplatform.post.data.model.DecoratedPost
 import com.gchristov.newsfeed.multiplatform.post.data.usecase.DecoratePostUseCase

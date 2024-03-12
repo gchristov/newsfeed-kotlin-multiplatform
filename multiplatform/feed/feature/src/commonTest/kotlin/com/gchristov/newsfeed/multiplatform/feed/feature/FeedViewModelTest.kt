@@ -1,9 +1,9 @@
 package com.gchristov.newsfeed.multiplatform.feed.feature
 
-import com.gchristov.newsfeed.kmmcommonmvvmtest.CommonViewModelTestClass
-import com.gchristov.newsfeed.kmmcommontest.FakeClock
-import com.gchristov.newsfeed.kmmcommontest.FakeCoroutineDispatcher
-import com.gchristov.newsfeed.kmmcommontest.FakeResponse
+import com.gchristov.newsfeed.multiplatform.common.mvvmtest.CommonViewModelTestClass
+import com.gchristov.newsfeed.multiplatform.common.test.FakeClock
+import com.gchristov.newsfeed.multiplatform.common.test.FakeCoroutineDispatcher
+import com.gchristov.newsfeed.multiplatform.common.test.FakeResponse
 import com.gchristov.newsfeed.multiplatform.feed.data.model.DecoratedFeedPage
 import com.gchristov.newsfeed.multiplatform.feed.data.model.SectionedFeed
 import com.gchristov.newsfeed.multiplatform.feed.data.usecase.BuildSectionedFeedUseCase

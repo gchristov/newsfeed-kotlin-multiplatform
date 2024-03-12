@@ -1,8 +1,8 @@
 package com.gchristov.newsfeed.multiplatform.post.feature
 
-import com.gchristov.newsfeed.kmmcommonmvvmtest.CommonViewModelTestClass
-import com.gchristov.newsfeed.kmmcommontest.FakeCoroutineDispatcher
-import com.gchristov.newsfeed.kmmcommontest.FakeResponse
+import com.gchristov.newsfeed.multiplatform.common.mvvmtest.CommonViewModelTestClass
+import com.gchristov.newsfeed.multiplatform.common.test.FakeCoroutineDispatcher
+import com.gchristov.newsfeed.multiplatform.common.test.FakeResponse
 import com.gchristov.newsfeed.multiplatform.post.data.model.DecoratedPost
 import com.gchristov.newsfeed.multiplatform.post.data.usecase.DecoratePostUseCase
 import com.gchristov.newsfeed.multiplatform.post.testfixtures.FakePostRepository

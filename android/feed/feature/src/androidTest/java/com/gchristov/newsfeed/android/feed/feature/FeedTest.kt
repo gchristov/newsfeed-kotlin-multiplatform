@@ -3,9 +3,9 @@ package com.gchristov.newsfeed.android.feed.feature
 import com.gchristov.newsfeed.commoncomposetest.CommonComposeTestClass
 import com.gchristov.newsfeed.android.feed.testfixtures.FeedRobot
 import com.gchristov.newsfeed.android.feed.testfixtures.feed
-import com.gchristov.newsfeed.kmmcommontest.FakeClock
-import com.gchristov.newsfeed.kmmcommontest.FakeCoroutineDispatcher
-import com.gchristov.newsfeed.kmmcommontest.FakeResponse
+import com.gchristov.newsfeed.multiplatform.common.test.FakeClock
+import com.gchristov.newsfeed.multiplatform.common.test.FakeCoroutineDispatcher
+import com.gchristov.newsfeed.multiplatform.common.test.FakeResponse
 import com.gchristov.newsfeed.multiplatform.feed.data.model.DecoratedFeedItem
 import com.gchristov.newsfeed.multiplatform.feed.data.model.DecoratedFeedPage
 import com.gchristov.newsfeed.multiplatform.feed.data.usecase.BuildSectionedFeedUseCase

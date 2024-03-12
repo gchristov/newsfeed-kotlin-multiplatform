@@ -1,7 +1,7 @@
 package com.gchristov.newsfeed
 
 import android.app.Application
-import com.gchristov.newsfeed.kmmcommondi.AppContext
+import com.gchristov.newsfeed.multiplatform.common.di.AppContext
 
 class NewsfeedApp : Application() {
     override fun onCreate() {

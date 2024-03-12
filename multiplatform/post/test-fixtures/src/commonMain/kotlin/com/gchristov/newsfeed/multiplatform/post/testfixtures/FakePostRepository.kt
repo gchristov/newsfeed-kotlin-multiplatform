@@ -1,7 +1,7 @@
 package com.gchristov.newsfeed.multiplatform.post.testfixtures
 
-import com.gchristov.newsfeed.kmmcommontest.FakeResponse
-import com.gchristov.newsfeed.kmmcommontest.execute
+import com.gchristov.newsfeed.multiplatform.common.test.FakeResponse
+import com.gchristov.newsfeed.multiplatform.common.test.execute
 import com.gchristov.newsfeed.multiplatform.post.data.Post
 import com.gchristov.newsfeed.multiplatform.post.data.PostRepository
 import com.gchristov.newsfeed.multiplatform.post.data.model.DecoratedPost

@@ -11,9 +11,9 @@ class MplModulePlugin : Plugin<Project> {
             plugins.apply("mpl-base-plugin")
             extensions.configure<KotlinMultiplatformExtension> {
                 sourceSets.maybeCreate("commonMain").dependencies {
-                    api(project(":kmm-common-kotlin"))
-                    api(project(":kmm-common-di"))
-                    api(project(":kmm-common-test"))
+                    api(project(":multiplatform:common:kotlin"))
+                    api(project(":multiplatform:common:di"))
+                    api(project(":multiplatform:common:test"))
                 }
             }
         }

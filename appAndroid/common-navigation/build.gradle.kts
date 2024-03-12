@@ -3,5 +3,5 @@ plugins {
 }
 
 dependencies {
-    implementation(projects.kmmCommonDi)
+    implementation(projects.multiplatform.common.di)
 }

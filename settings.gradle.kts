@@ -15,6 +15,13 @@ apply {
 }
 
 includeBuild("gradle-plugins")
+include(":multiplatform:common:di")
+include(":multiplatform:common:kotlin")
+include(":multiplatform:common:mvvm")
+include(":multiplatform:common:mvvm-test")
+include(":multiplatform:common:network")
+include(":multiplatform:common:persistence")
+include(":multiplatform:common:test")
 include(":multiplatform:feed:data")
 include(":multiplatform:feed:feature")
 include(":multiplatform:feed:test-fixtures")
