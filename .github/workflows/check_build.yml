@@ -51,7 +51,8 @@ jobs:
         if: always()
         with:
           name: KMM test results
-          path: 'kmm/**/build/test-results/**/TEST-*.xml'
+          path: |
+            **/TEST-*.xml
 
   iosBuild:
     runs-on: macos-12
@@ -149,12 +150,13 @@ jobs:
           path: '~/.konan/**'
           key: konan-android
       - name: Compile Android app
-        run: set -o pipefail && ./gradlew appAndroid:assembleDebug
+        run: set -o pipefail && ./gradlew android:app:assembleDebug
       - name: Save artifacts
         uses: actions/upload-artifact@v3
         with:
           name: Android build
-          path: 'appAndroid/**/build/**/appAndroid-*.apk'
+          path: |
+            **/*.apk
 
   androidTest:
     # Needed because of hardware acceleration for the emulator
@@ -211,4 +213,5 @@ jobs:
         if: always()
         with:
           name: Android test results
-          path: 'appAndroid/**/build/outputs/androidTest-results/connected/**/test-result.pb'
+          path: |
+            **/test-result.pb

@@ -15,6 +15,7 @@ apply {
 }
 
 includeBuild("gradle-plugins")
+// Multiplatform
 include(":multiplatform:common:di")
 include(":multiplatform:common:kotlin")
 include(":multiplatform:common:mvvm")
@@ -28,6 +29,8 @@ include(":multiplatform:feed:test-fixtures")
 include(":multiplatform:post:data")
 include(":multiplatform:post:feature")
 include(":multiplatform:post:test-fixtures")
+// Android
+include(":android:app")
 include(":android:common:compose")
 include(":android:common:compose-test")
 include(":android:common:design")

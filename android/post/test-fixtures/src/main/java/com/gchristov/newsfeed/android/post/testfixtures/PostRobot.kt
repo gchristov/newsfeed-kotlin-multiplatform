@@ -4,7 +4,7 @@ import androidx.compose.ui.test.SemanticsNodeInteractionsProvider
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import com.gchristov.newsfeed.commoncomposetest.onIndeterminateProgress
+import com.gchristov.newsfeed.android.common.composetest.onIndeterminateProgress
 
 fun SemanticsNodeInteractionsProvider.post(block: PostRobot.() -> Unit) {
     PostRobot(this).block()

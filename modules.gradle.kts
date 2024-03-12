@@ -4,7 +4,6 @@
  */
 val projects = listOf(
     "kmm-umbrella",
-    "appAndroid",
 )
 
 /**

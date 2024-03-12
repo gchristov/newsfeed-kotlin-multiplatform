@@ -28,28 +28,28 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.gchristov.newsfeed.commoncompose.CommonComposeActivity
-import com.gchristov.newsfeed.commoncompose.elements.AppBar
-import com.gchristov.newsfeed.commoncompose.elements.AppBlockingError
-import com.gchristov.newsfeed.commoncompose.elements.AppCircularProgressIndicator
-import com.gchristov.newsfeed.commoncompose.elements.AppIcon
-import com.gchristov.newsfeed.commoncompose.elements.AppIconButton
-import com.gchristov.newsfeed.commoncompose.elements.AppImage
-import com.gchristov.newsfeed.commoncompose.elements.AppNonBlockingError
-import com.gchristov.newsfeed.commoncompose.elements.AppPullRefresh
-import com.gchristov.newsfeed.commoncompose.elements.AppScreen
-import com.gchristov.newsfeed.commoncompose.elements.AppText
-import com.gchristov.newsfeed.commoncompose.elements.BlockingError
-import com.gchristov.newsfeed.commoncompose.elements.NonBlockingError
-import com.gchristov.newsfeed.commoncompose.elements.list.AppGroupedList
-import com.gchristov.newsfeed.commoncompose.elements.list.AppListRow
-import com.gchristov.newsfeed.commoncompose.elements.list.items
-import com.gchristov.newsfeed.commoncompose.elements.rememberRipple
-import com.gchristov.newsfeed.commoncompose.elements.search.AppSearchBar
-import com.gchristov.newsfeed.commoncompose.elements.toUiBlockingError
-import com.gchristov.newsfeed.commoncompose.elements.toUiNonBlockingError
-import com.gchristov.newsfeed.commoncompose.theme.Theme
-import com.gchristov.newsfeed.commonnavigation.NavigationModule
+import com.gchristov.newsfeed.android.common.compose.CommonComposeActivity
+import com.gchristov.newsfeed.android.common.compose.elements.AppBar
+import com.gchristov.newsfeed.android.common.compose.elements.AppBlockingError
+import com.gchristov.newsfeed.android.common.compose.elements.AppCircularProgressIndicator
+import com.gchristov.newsfeed.android.common.compose.elements.AppIcon
+import com.gchristov.newsfeed.android.common.compose.elements.AppIconButton
+import com.gchristov.newsfeed.android.common.compose.elements.AppImage
+import com.gchristov.newsfeed.android.common.compose.elements.AppNonBlockingError
+import com.gchristov.newsfeed.android.common.compose.elements.AppPullRefresh
+import com.gchristov.newsfeed.android.common.compose.elements.AppScreen
+import com.gchristov.newsfeed.android.common.compose.elements.AppText
+import com.gchristov.newsfeed.android.common.compose.elements.BlockingError
+import com.gchristov.newsfeed.android.common.compose.elements.NonBlockingError
+import com.gchristov.newsfeed.android.common.compose.elements.list.AppGroupedList
+import com.gchristov.newsfeed.android.common.compose.elements.list.AppListRow
+import com.gchristov.newsfeed.android.common.compose.elements.list.items
+import com.gchristov.newsfeed.android.common.compose.elements.rememberRipple
+import com.gchristov.newsfeed.android.common.compose.elements.search.AppSearchBar
+import com.gchristov.newsfeed.android.common.compose.elements.toUiBlockingError
+import com.gchristov.newsfeed.android.common.compose.elements.toUiNonBlockingError
+import com.gchristov.newsfeed.android.common.compose.theme.Theme
+import com.gchristov.newsfeed.android.common.navigation.NavigationModule
 import com.gchristov.newsfeed.multiplatform.common.mvvm.createViewModelFactory
 import com.gchristov.newsfeed.multiplatform.feed.data.model.DecoratedFeedItem
 import com.gchristov.newsfeed.multiplatform.feed.data.model.SectionedFeed
@@ -230,7 +230,7 @@ private fun MainAppBar(
 private fun BoxScope.FeedEmpty() {
     AppText(
         modifier = Modifier.align(Alignment.Center),
-        text = stringResource(com.gchristov.newsfeed.android.feed.feature.R.string.feed_empty),
+        text = stringResource(R.string.feed_empty),
         color = Theme.contentColors.secondary.copy(alpha = 0.6f),
         textAlign = TextAlign.Center
     )
@@ -308,7 +308,7 @@ private fun FeedItemRow(
                 AppIcon(
                     imageVector = Icons.Filled.Favorite,
                     tint = Theme.contentColors.action,
-                    contentDescription = stringResource(com.gchristov.newsfeed.android.feed.feature.R.string.feed_favourite)
+                    contentDescription = stringResource(R.string.feed_favourite)
                 )
             }
         }

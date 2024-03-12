@@ -1,6 +1,6 @@
 package com.gchristov.newsfeed.android.feed.feature
 
-import com.gchristov.newsfeed.commoncomposetest.CommonComposeTestClass
+import com.gchristov.newsfeed.android.common.composetest.CommonComposeTestClass
 import com.gchristov.newsfeed.android.feed.testfixtures.FeedRobot
 import com.gchristov.newsfeed.android.feed.testfixtures.feed
 import com.gchristov.newsfeed.multiplatform.common.test.FakeClock

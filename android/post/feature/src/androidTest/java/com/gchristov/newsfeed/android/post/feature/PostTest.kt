@@ -2,7 +2,7 @@ package com.gchristov.newsfeed.android.post.feature
 
 import com.gchristov.newsfeed.android.post.testfixtures.PostRobot
 import com.gchristov.newsfeed.android.post.testfixtures.post
-import com.gchristov.newsfeed.commoncomposetest.CommonComposeTestClass
+import com.gchristov.newsfeed.android.common.composetest.CommonComposeTestClass
 import com.gchristov.newsfeed.multiplatform.common.test.FakeCoroutineDispatcher
 import com.gchristov.newsfeed.multiplatform.common.test.FakeResponse
 import com.gchristov.newsfeed.multiplatform.post.data.model.DecoratedPost

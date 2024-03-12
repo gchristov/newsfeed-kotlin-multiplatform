@@ -1,0 +1,22 @@
+package com.gchristov.newsfeed.android.common.compose.elements
+
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import com.gchristov.newsfeed.android.common.compose.theme.Theme
+import com.ireward.htmlcompose.HtmlText
+
+@Composable
+fun AppHtmlText(
+    modifier: Modifier = Modifier,
+    html: String,
+    color: Color = Theme.contentColors.primary,
+    style: TextStyle = Theme.typography.body.copy(color = color)
+) {
+    HtmlText(
+        modifier = modifier,
+        text = html,
+        style = style,
+    )
+}
