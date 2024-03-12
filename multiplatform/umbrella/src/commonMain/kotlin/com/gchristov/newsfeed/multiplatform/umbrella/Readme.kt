@@ -1,4 +1,4 @@
-package com.gchristov.newsfeed.kmmumbrella
+package com.gchristov.newsfeed.multiplatform.umbrella
 
 /*
 Since this is a module to build an umbrella framework for the native clients, it doesn't really need

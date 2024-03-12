@@ -10,10 +10,6 @@ pluginManagement {
 
 rootProject.name = "newsfeed-kotlin-multiplatform"
 
-apply {
-    from("modules.gradle.kts")
-}
-
 includeBuild("gradle-plugins")
 // Multiplatform
 include(":multiplatform:common:di")
@@ -29,6 +25,7 @@ include(":multiplatform:feed:test-fixtures")
 include(":multiplatform:post:data")
 include(":multiplatform:post:feature")
 include(":multiplatform:post:test-fixtures")
+include(":multiplatform:umbrella")
 // Android
 include(":android:app")
 include(":android:common:compose")
