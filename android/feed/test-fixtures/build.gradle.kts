@@ -3,6 +3,6 @@ plugins {
 }
 
 dependencies {
-    implementation(projects.commonComposeTest)
+    implementation(projects.android.common.composeTest)
     implementation(projects.android.feed.feature)
 }

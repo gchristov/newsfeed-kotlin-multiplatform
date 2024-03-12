@@ -12,9 +12,9 @@ class AndroidFeaturePlugin : Plugin<Project> {
             // Add dependencies after plugins are set to avoid missing "implementation" errors
             afterEvaluate {
                 dependencies {
-                    add("api", project(":common-navigation"))
-                    add("api", project(":common-compose"))
-                    add("androidTestImplementation", project(":common-compose-test"))
+                    add("api", project(":android:common:navigation"))
+                    add("api", project(":android:common:compose"))
+                    add("androidTestImplementation", project(":android:common:compose-test"))
                 }
             }
         }

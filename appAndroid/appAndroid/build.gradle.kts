@@ -12,7 +12,7 @@ android {
 
 dependencies {
     implementation(projects.multiplatform.common.di)
-    implementation(projects.commonDesign)
+    implementation(projects.android.common.design)
     // Feature modules
     implementation(projects.android.feed.feature)
     implementation(projects.android.post.feature)

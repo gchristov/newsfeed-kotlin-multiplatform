@@ -11,7 +11,7 @@ source sets, and marked as `api`, rather than 'test'. This is because 'test' sou
 dependencies and code are local to the relevant module and cannot be accesses by other modules.
  */
 dependencies {
-    implementation(projects.commonCompose)
+    implementation(projects.android.common.compose)
     api(Deps.Android.Compose.uiTestJunit)
     debugApi(Deps.Android.Compose.uiTestManifest)
 }

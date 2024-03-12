@@ -12,7 +12,7 @@ class AndroidModulePlugin : Plugin<Project> {
             // Add dependencies after plugins are set to avoid missing "implementation" errors
             afterEvaluate {
                 dependencies {
-                    add("api", project(":common-test"))
+                    add("api", project(":android:common:test"))
                 }
             }
         }

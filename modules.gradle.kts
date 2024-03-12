@@ -5,11 +5,6 @@
 val projects = listOf(
     "kmm-umbrella",
     "appAndroid",
-    "common-compose",
-    "common-compose-test",
-    "common-design",
-    "common-navigation",
-    "common-test",
 )
 
 /**
