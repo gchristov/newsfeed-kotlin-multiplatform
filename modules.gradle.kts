@@ -10,9 +10,6 @@ val projects = listOf(
     "kmm-common-network",
     "kmm-common-persistence",
     "kmm-common-test",
-    "kmm-feed",
-    "kmm-feed-data",
-    "kmm-feed-test-fixtures",
     "kmm-umbrella",
     "appAndroid",
     "common-compose",
@@ -20,8 +17,6 @@ val projects = listOf(
     "common-design",
     "common-navigation",
     "common-test",
-    "feed",
-    "feed-test-fixtures",
 )
 
 /**

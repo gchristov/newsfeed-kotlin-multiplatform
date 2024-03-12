@@ -15,9 +15,9 @@ kotlin {
     val exportedDependencies = listOf(
         Deps.Multiplatform.Kotlin.coroutinesCore, // Needed for coroutine dispatchers
         projects.kmmCommonTest,
-        projects.kmmFeed,
-        projects.kmmFeedData,
-        projects.kmmFeedTestFixtures,
+        projects.multiplatform.feed.feature,
+        projects.multiplatform.feed.data,
+        projects.multiplatform.feed.testFixtures,
         projects.multiplatform.post.feature,
         projects.multiplatform.post.data,
         projects.multiplatform.post.testFixtures,
