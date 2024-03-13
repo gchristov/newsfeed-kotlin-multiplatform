@@ -4,7 +4,7 @@
 
     <application>
         <activity
-            android:name="com.gchristov.newsfeed.android.post.feature.PostActivity"
+            android:name=".PostActivity"
             android:exported="true"
             android:launchMode="singleTask">
             <intent-filter>
