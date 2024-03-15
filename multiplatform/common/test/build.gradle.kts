@@ -19,8 +19,8 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(Deps.Multiplatform.Kotlin.coroutinesCore) // Needed for FakeResponse
-                implementation(Deps.Multiplatform.Kotlin.dateTime) // Needed for FakeClock
+                implementation(libs.kotlinx.coroutines.core) // Needed for FakeResponse
+                implementation(libs.kotlinx.datetime) // Needed for FakeClock
                 api(kotlin(Deps.Multiplatform.Tests.testCommon))
                 api(kotlin(Deps.Multiplatform.Tests.testCommonAnnotations))
             }

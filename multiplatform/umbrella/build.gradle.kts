@@ -19,7 +19,7 @@ kotlin {
      https://touchlab.co/multiple-kotlin-frameworks-in-application/
      */
     val exportedDependencies = listOf(
-        Deps.Multiplatform.Kotlin.coroutinesCore, // Needed for coroutine dispatchers
+        libs.kotlinx.coroutines.core, // Needed for coroutine dispatchers
         projects.multiplatform.common.test,
         projects.multiplatform.feed.feature,
         projects.multiplatform.feed.data,

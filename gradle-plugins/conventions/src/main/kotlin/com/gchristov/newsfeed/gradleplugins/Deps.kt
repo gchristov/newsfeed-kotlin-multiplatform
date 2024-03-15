@@ -12,16 +12,6 @@ object Deps {
     }
 
     object Multiplatform {
-        object Kotlin {
-            private const val coroutinesVersion = "1.6.0"
-            // "-native-mt" is required here, otherwise iOS fails with runtime exception
-            const val coroutinesCore =
-                "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion-native-mt"
-            const val coroutinesAndroid =
-                "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
-            const val dateTime = "org.jetbrains.kotlinx:kotlinx-datetime:0.3.2"
-        }
-
         object Mvvm {
             private const val mvvmVersion = "0.12.0"
             const val liveData = "dev.icerock.moko:mvvm-livedata:$mvvmVersion"

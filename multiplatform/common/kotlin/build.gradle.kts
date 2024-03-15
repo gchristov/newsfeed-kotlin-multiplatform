@@ -1,5 +1,3 @@
-import com.gchristov.newsfeed.gradleplugins.Deps
-
 plugins {
     id("mpl-base-plugin")
 }
@@ -14,13 +12,13 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                api(Deps.Multiplatform.Kotlin.coroutinesCore)
-                api(Deps.Multiplatform.Kotlin.dateTime)
+                api(libs.kotlinx.coroutines.core)
+                api(libs.kotlinx.datetime)
             }
         }
         val androidMain by getting {
             dependencies {
-                api(Deps.Multiplatform.Kotlin.coroutinesAndroid)
+                api(libs.kotlinx.coroutines.android)
             }
         }
     }
