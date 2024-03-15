@@ -1,5 +1,3 @@
-import com.gchristov.newsfeed.gradleplugins.Deps
-
 plugins {
     id("android-module-plugin")
     id("android-compose-plugin")
@@ -18,6 +16,6 @@ dependencies and code are local to the relevant module and cannot be accesses by
  */
 dependencies {
     implementation(projects.android.common.compose)
-    api(Deps.Android.Compose.uiTestJunit)
-    debugApi(Deps.Android.Compose.uiTestManifest)
+    api(libs.androidx.compose.ui.test.junit)
+    debugApi(libs.androidx.compose.ui.test.manifest)
 }

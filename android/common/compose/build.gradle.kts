@@ -1,5 +1,3 @@
-import com.gchristov.newsfeed.gradleplugins.Deps
-
 plugins {
     id("android-module-plugin")
     id("android-compose-plugin")
@@ -12,16 +10,16 @@ android {
 }
 
 dependencies {
-    api(Deps.Android.Compose.liveData)
-    api(Deps.Android.Compose.compiler)
-    api(Deps.Android.Compose.activity)
-    api(Deps.Android.Compose.uiTooling)
-    api(Deps.Android.Compose.foundation)
-    api(Deps.Android.Compose.foundationLayout)
-    api(Deps.Android.Compose.materialIcons)
-    implementation(Deps.Android.Compose.material)
-    implementation(Deps.Android.Compose.coil)
-    implementation(Deps.Android.Compose.html)
+    api(libs.androidx.compose.liveData)
+    api(libs.androidx.compose.compiler)
+    api(libs.androidx.activity.compose)
+    api(libs.androidx.compose.ui.tooling)
+    api(libs.androidx.compose.foundation)
+    api(libs.androidx.compose.foundation.layout)
+    api(libs.androidx.compose.material.icons)
+    implementation(libs.androidx.compose.material)
+    implementation(libs.coil)
+    implementation(libs.composeHtml)
     implementation(libs.accompanist.swipeRefresh)
     implementation(projects.android.common.design)
 }

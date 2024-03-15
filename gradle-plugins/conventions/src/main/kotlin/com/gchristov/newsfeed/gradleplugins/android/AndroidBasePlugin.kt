@@ -20,7 +20,7 @@ class AndroidBasePlugin : Plugin<Project> {
                 defaultConfig {
                     minSdk = Deps.Android.minSdk
                     targetSdk = Deps.Android.targetSdk
-                    testInstrumentationRunner = Deps.Android.Tests.testInstrumentationRunner
+                    testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
                 }
                 buildTypes {
                     getByName("release") {
