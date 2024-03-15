@@ -22,6 +22,6 @@ dependencies {
     implementation(Deps.Android.Compose.material)
     implementation(Deps.Android.Compose.coil)
     implementation(Deps.Android.Compose.html)
-    implementation(Deps.Android.Accompanist.swipeRefresh)
+    implementation(libs.accompanist.swipeRefresh)
     implementation(projects.android.common.design)
 }
