@@ -4,6 +4,12 @@ plugins {
     id("mpl-module-plugin")
 }
 
+android {
+    defaultConfig {
+        namespace = "com.gchristov.newsfeed.multiplatform.common.mvvmtest"
+    }
+}
+
 kotlin {
     /*
     This module is used in other test modules. Common dependencies are linked to the 'main'

@@ -4,6 +4,12 @@ plugins {
     id("mpl-module-plugin")
 }
 
+android {
+    defaultConfig {
+        namespace = "com.gchristov.newsfeed.multiplatform.common.persistence"
+    }
+}
+
 kotlin {
     sourceSets {
         val commonMain by getting {

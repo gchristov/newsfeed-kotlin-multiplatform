@@ -1,6 +1,7 @@
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
+    includeBuild("gradle-plugins")
     repositories {
         google()
         gradlePluginPortal()
@@ -8,9 +9,16 @@ pluginManagement {
     }
 }
 
+dependencyResolutionManagement {
+    repositories {
+        google()
+        mavenCentral()
+        maven(uri("https://jitpack.io")) // For compose-html dependency
+    }
+}
+
 rootProject.name = "newsfeed-kotlin-multiplatform"
 
-includeBuild("gradle-plugins")
 // Multiplatform
 include(":multiplatform:common:di")
 include(":multiplatform:common:kotlin")

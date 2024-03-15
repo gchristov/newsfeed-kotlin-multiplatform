@@ -5,6 +5,12 @@ plugins {
     id("android-compose-plugin")
 }
 
+android {
+    defaultConfig {
+        namespace = "com.gchristov.newsfeed.android.common.compose"
+    }
+}
+
 dependencies {
     api(Deps.Android.Compose.liveData)
     api(Deps.Android.Compose.compiler)

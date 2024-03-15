@@ -2,6 +2,12 @@ plugins {
     id("mpl-feature-plugin")
 }
 
+android {
+    defaultConfig {
+        namespace = "com.gchristov.newsfeed.multiplatform.feed.feature"
+    }
+}
+
 kotlin {
     sourceSets {
         val commonMain by getting {

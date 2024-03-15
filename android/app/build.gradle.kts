@@ -4,6 +4,7 @@ plugins {
 
 android {
     defaultConfig {
+        namespace = "com.gchristov.newsfeed"
         applicationId = "com.gchristov.newsfeed"
         versionCode = 1
         versionName = "1.0"

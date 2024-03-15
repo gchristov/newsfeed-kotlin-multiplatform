@@ -4,6 +4,12 @@ plugins {
     id("mpl-data-plugin")
 }
 
+android {
+    defaultConfig {
+        namespace = "com.gchristov.newsfeed.multiplatform.feed.data"
+    }
+}
+
 kotlin {
     sourceSets {
         val commonMain by getting {

@@ -28,10 +28,10 @@ class AndroidBasePlugin : Plugin<Project> {
                     }
                 }
                 // Resolves "N files found with path 'META-INF/XXX'" errors
-                packagingOptions {
-                    resources.excludes.add("META-INF/AL2.0")
-                    resources.excludes.add("META-INF/LGPL2.1")
-                }
+//                packagingOptions {
+//                    resources.excludes.add("META-INF/AL2.0")
+//                    resources.excludes.add("META-INF/LGPL2.1")
+//                }
             }
         }
     }

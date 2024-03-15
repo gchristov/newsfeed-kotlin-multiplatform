@@ -6,6 +6,12 @@ plugins {
     id("mpl-base-plugin")
 }
 
+android {
+    defaultConfig {
+        namespace = "com.gchristov.newsfeed.multiplatform.umbrella"
+    }
+}
+
 kotlin {
     /*
      Dependencies that should be exported to native clients (e.g. iOS) to avoid having their module

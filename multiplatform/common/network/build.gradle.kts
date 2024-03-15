@@ -7,6 +7,12 @@ plugins {
     id("com.codingfeline.buildkonfig")
 }
 
+android {
+    defaultConfig {
+        namespace = "com.gchristov.newsfeed.multiplatform.common.network"
+    }
+}
+
 kotlin {
     sourceSets {
         val commonMain by getting {

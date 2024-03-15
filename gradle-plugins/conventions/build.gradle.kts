@@ -54,12 +54,8 @@ gradlePlugin {
     }
 }
 
-repositories {
-    google()
-    mavenCentral()
-}
-
 dependencies {
-    implementation("com.android.tools.build:gradle:7.1.2")
-    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.10")
+    compileOnly(libs.android.gradlePlugin)
+    compileOnly(libs.android.tools.common)
+    compileOnly(libs.kotlin.gradlePlugin)
 }
