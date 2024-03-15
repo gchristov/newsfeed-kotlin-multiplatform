@@ -12,10 +12,6 @@ object Deps {
     }
 
     object Multiplatform {
-        object Kodein {
-            const val di = "org.kodein.di:kodein-di:7.9.0"
-        }
-
         object Kotlin {
             private const val coroutinesVersion = "1.6.0"
             // "-native-mt" is required here, otherwise iOS fails with runtime exception
