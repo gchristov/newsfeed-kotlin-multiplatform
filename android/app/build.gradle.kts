@@ -1,5 +1,5 @@
 plugins {
-    id("android-application-binary-plugin")
+    alias(libs.plugins.newsfeed.android.applicationBinary)
 }
 
 android {

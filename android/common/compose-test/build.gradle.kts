@@ -1,6 +1,6 @@
 plugins {
-    id("android-module-plugin")
-    id("android-compose-plugin")
+    alias(libs.plugins.newsfeed.android.module)
+    alias(libs.plugins.newsfeed.android.compose)
 }
 
 android {

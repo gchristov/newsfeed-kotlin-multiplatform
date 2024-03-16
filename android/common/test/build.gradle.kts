@@ -1,5 +1,5 @@
 plugins {
-    id("android-base-plugin") // Avoids circular dependencies in android-module-plugin
+    alias(libs.plugins.newsfeed.android.base) // Avoids circular dependencies in android-module-plugin
 }
 
 android {

@@ -1,5 +1,5 @@
 plugins {
-    id("mpl-base-plugin")
+    alias(libs.plugins.newsfeed.mpl.base)
 }
 
 android {

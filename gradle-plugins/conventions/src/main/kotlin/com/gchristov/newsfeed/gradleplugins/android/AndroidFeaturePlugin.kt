@@ -1,14 +1,17 @@
 package com.gchristov.newsfeed.gradleplugins.android
 
+import com.gchristov.newsfeed.gradleplugins.libs
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.dependencies
 
 class AndroidFeaturePlugin : Plugin<Project> {
     override fun apply(target: Project) {
-        target.run {
-            plugins.apply("android-module-plugin")
-            plugins.apply("android-compose-plugin")
+        with (target) {
+            with (plugins) {
+                apply(libs.findPlugin("newsfeed-android-module").get().get().pluginId)
+                apply(libs.findPlugin("newsfeed-android-compose").get().get().pluginId)
+            }
             // Add dependencies after plugins are set to avoid missing "implementation" errors
             afterEvaluate {
                 dependencies {

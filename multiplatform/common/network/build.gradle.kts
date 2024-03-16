@@ -1,7 +1,7 @@
 val packageId = "com.gchristov.newsfeed.multiplatform.common.network"
 
 plugins {
-    id("mpl-module-plugin")
+    alias(libs.plugins.newsfeed.mpl.module)
     id("com.codingfeline.buildkonfig")
 }
 

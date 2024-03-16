@@ -1,5 +1,5 @@
 plugins {
-    id("mpl-feature-plugin")
+    alias(libs.plugins.newsfeed.mpl.feature)
 }
 
 android {

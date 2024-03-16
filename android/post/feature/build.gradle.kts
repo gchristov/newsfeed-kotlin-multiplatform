@@ -1,5 +1,5 @@
 plugins {
-    id("android-feature-plugin")
+    alias(libs.plugins.newsfeed.android.feature)
 }
 
 android {

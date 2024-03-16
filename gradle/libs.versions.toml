@@ -1,5 +1,5 @@
 [versions]
-agp = "8.3.0"
+android-gradlePlugin = "8.3.0"
 kotlin = "1.9.20"
 kotlinx-coroutines = "1.6.0"
 kotlinx-coroutines-native = "1.6.0-native-mt" # "-native-mt" is required here, otherwise iOS fails with runtime exception
@@ -56,14 +56,25 @@ sqlDelight-native = { module = "com.squareup.sqldelight:native-driver", version.
 multiplatformSettings = { module = "com.russhwolf:multiplatform-settings", version.ref = "multiplatform-settings" }
 
 # Dependencies of the included gradle-plugins
-android-gradlePlugin = { module = "com.android.tools.build:gradle", version.ref = "agp" }
+android-gradlePlugin = { module = "com.android.tools.build:gradle", version.ref = "android-gradlePlugin" }
 kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 
 [plugins]
-android-application = { id = "com.android.application", version.ref = "agp" }
-android-library = { id = "com.android.library", version.ref = "agp" }
+android-application = { id = "com.android.application", version.ref = "android-gradlePlugin" }
+android-library = { id = "com.android.library", version.ref = "android-gradlePlugin" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 buildKonfig = { id = "com.codingfeline.buildkonfig", version.ref = "buildKonfig" }
 sqlDelight = { id = "com.squareup.sqldelight", version.ref = "sqlDelight-gradlePlugin" }
+
+# Plugins defined by this project
+newsfeed-android-base = { id = "android-base-plugin", version = "unspecified" }
+newsfeed-android-module = { id = "android-module-plugin", version = "unspecified" }
+newsfeed-android-compose = { id = "android-compose-plugin", version = "unspecified" }
+newsfeed-android-feature = { id = "android-feature-plugin", version = "unspecified" }
+newsfeed-android-applicationBinary = { id = "android-application-binary-plugin", version = "unspecified" }
+newsfeed-mpl-base = { id = "mpl-base-plugin", version = "unspecified" }
+newsfeed-mpl-module = { id = "mpl-module-plugin", version = "unspecified" }
+newsfeed-mpl-data = { id = "mpl-data-plugin", version = "unspecified" }
+newsfeed-mpl-feature = { id = "mpl-feature-plugin", version = "unspecified" }

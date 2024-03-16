@@ -1,7 +1,7 @@
 package com.gchristov.newsfeed.gradleplugins.multiplatform
 
 import com.android.build.gradle.BaseExtension
-import com.gchristov.newsfeed.gradleplugins.Deps
+import com.gchristov.newsfeed.gradleplugins.configure
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
@@ -10,16 +10,13 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
 class MplBasePlugin : Plugin<Project> {
     override fun apply(target: Project) {
-        target.run {
-            plugins.apply("com.android.library")
-            plugins.apply("org.jetbrains.kotlin.multiplatform")
+        with (target) {
+            with (plugins) {
+                apply("com.android.library")
+                apply("org.jetbrains.kotlin.multiplatform")
+            }
             extensions.configure<BaseExtension> {
-                compileSdkVersion(Deps.Android.compileSdk)
-                defaultConfig {
-                    minSdk = Deps.Android.minSdk
-                    targetSdk = Deps.Android.targetSdk
-                    testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-                }
+                configure()
                 // Include AndroidManifest.xml, if it exists.
                 sourceSets {
                     maybeCreate("main").manifest {

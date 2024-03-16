@@ -1,8 +1,8 @@
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
 plugins {
-    // Normally, this would be mpl-module-plugin but since this is an umbrella module this is enough
-    id("mpl-base-plugin")
+    // Normally, this would be libs.plugins.newsfeed.mpl.module but since this is an umbrella module this is enough
+    alias(libs.plugins.newsfeed.mpl.base)
 }
 
 android {

@@ -1,7 +1,7 @@
 val packageId = "com.gchristov.newsfeed.multiplatform.feed.data"
 
 plugins {
-    id("mpl-data-plugin")
+    alias(libs.plugins.newsfeed.mpl.data)
 }
 
 android {
