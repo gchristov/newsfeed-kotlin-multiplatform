@@ -14,5 +14,5 @@ source sets, and marked as `api`, rather than 'test'. This is because 'test' sou
 dependencies and code are local to the relevant module and cannot be accesses by other modules.
  */
 dependencies {
-    api(libs.test.junit)
+    api(libs.junit)
 }

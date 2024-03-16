@@ -1,5 +1,3 @@
-import com.gchristov.newsfeed.gradleplugins.Deps
-
 val packageId = "com.gchristov.newsfeed.multiplatform.common.network"
 
 plugins {
@@ -17,20 +15,20 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(Deps.Multiplatform.Ktor.clientCore)
-                api(Deps.Multiplatform.Ktor.clientSerialization)
-                implementation(Deps.Multiplatform.Ktor.clientLogging)
-                implementation(Deps.Multiplatform.Ktor.logbackClassic)
+                implementation(libs.ktor.client.core)
+                api(libs.ktor.client.serialization)
+                implementation(libs.ktor.client.logging)
+                implementation(libs.logback)
             }
         }
         val androidMain by getting {
             dependencies {
-                implementation(Deps.Multiplatform.Ktor.clientAndroid)
+                implementation(libs.ktor.client.android)
             }
         }
         val iosMain by getting {
             dependencies {
-                implementation(Deps.Multiplatform.Ktor.clientIos)
+                implementation(libs.ktor.client.ios)
             }
         }
     }

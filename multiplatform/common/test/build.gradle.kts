@@ -1,5 +1,3 @@
-import com.gchristov.newsfeed.gradleplugins.Deps
-
 plugins {
     id("mpl-base-plugin")
 }
@@ -21,16 +19,18 @@ kotlin {
             dependencies {
                 implementation(libs.kotlinx.coroutines.core) // Needed for FakeResponse
                 implementation(libs.kotlinx.datetime) // Needed for FakeClock
-                api(kotlin(Deps.Multiplatform.Tests.testCommon))
-                api(kotlin(Deps.Multiplatform.Tests.testCommonAnnotations))
+                api(kotlin("test-common")) // Assertions for use in common code
+                api(kotlin("test-annotations-common")) // Test annotations for use in common code
             }
         }
         val androidMain by getting {
             dependencies {
-                api(kotlin(Deps.Multiplatform.Tests.testJunit))
-                api(Deps.Multiplatform.Tests.junit)
-                api(Deps.Multiplatform.Tests.junitRunner)
-                api(Deps.Multiplatform.Tests.archCoreTesting)
+                // Provides an implementation of Asserter on top of JUnit and maps the test
+                // annotations from kotlin-test-annotations-common to JUnit test annotations
+                api(kotlin("test-junit"))
+                api(libs.junit)
+                api(libs.androidx.testRunner)
+                api(libs.androidx.coreTesting)
             }
         }
     }

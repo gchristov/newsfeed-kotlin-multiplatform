@@ -1,4 +1,3 @@
-import com.gchristov.newsfeed.gradleplugins.Deps
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
 plugins {

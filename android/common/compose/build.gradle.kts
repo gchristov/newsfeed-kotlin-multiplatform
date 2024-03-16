@@ -12,7 +12,7 @@ android {
 dependencies {
     api(libs.androidx.compose.liveData)
     api(libs.androidx.compose.compiler)
-    api(libs.androidx.activity.compose)
+    api(libs.androidx.activityCompose)
     api(libs.androidx.compose.ui.tooling)
     api(libs.androidx.compose.foundation)
     api(libs.androidx.compose.foundation.layout)

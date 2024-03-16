@@ -1,5 +1,3 @@
-import com.gchristov.newsfeed.gradleplugins.Deps
-
 plugins {
     id("mpl-module-plugin")
 }
@@ -14,18 +12,18 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(Deps.Multiplatform.SqlDelight.runtime)
-                api(Deps.Multiplatform.SharedPreferences.multiplatformSettings)
+                implementation(libs.sqlDelight.runtime)
+                api(libs.multiplatformSettings)
             }
         }
         val androidMain by getting {
             dependencies {
-                implementation(Deps.Multiplatform.SqlDelight.driverAndroid)
+                implementation(libs.sqlDelight.android)
             }
         }
         val iosMain by getting {
             dependencies {
-                implementation(Deps.Multiplatform.SqlDelight.driverNative)
+                implementation(libs.sqlDelight.native)
             }
         }
     }
