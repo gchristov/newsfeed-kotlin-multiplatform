@@ -1,7 +1,8 @@
 package com.gchristov.newsfeed.gradleplugins.android
 
 import com.android.build.gradle.BaseExtension
-import com.gchristov.newsfeed.gradleplugins.configure
+import com.gchristov.newsfeed.gradleplugins.configureAndroid
+import com.gchristov.newsfeed.gradleplugins.configureKotlin
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
@@ -17,18 +18,14 @@ class AndroidBasePlugin : Plugin<Project> {
                 apply("kotlin-android")
                 apply("kotlin-parcelize")
             }
+            configureKotlin()
             extensions.configure<BaseExtension> {
-                configure()
+                configureAndroid()
                 buildTypes {
                     getByName("release") {
                         isMinifyEnabled = true
                     }
                 }
-                // Resolves "N files found with path 'META-INF/XXX'" errors
-//                packagingOptions {
-//                    resources.excludes.add("META-INF/AL2.0")
-//                    resources.excludes.add("META-INF/LGPL2.1")
-//                }
             }
         }
     }

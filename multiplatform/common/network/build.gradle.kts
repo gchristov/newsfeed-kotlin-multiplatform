@@ -13,23 +13,17 @@ android {
 
 kotlin {
     sourceSets {
-        val commonMain by getting {
-            dependencies {
-                implementation(libs.ktor.client.core)
-                api(libs.ktor.client.serialization)
-                implementation(libs.ktor.client.logging)
-                implementation(libs.logback)
-            }
+        commonMain.dependencies {
+            implementation(libs.ktor.client.core)
+            api(libs.ktor.client.serialization)
+            implementation(libs.ktor.client.logging)
+            implementation(libs.logback)
         }
-        val androidMain by getting {
-            dependencies {
-                implementation(libs.ktor.client.android)
-            }
+        androidMain.dependencies {
+            implementation(libs.ktor.client.android)
         }
-        val iosMain by getting {
-            dependencies {
-                implementation(libs.ktor.client.ios)
-            }
+        iosMain.dependencies {
+            implementation(libs.ktor.client.ios)
         }
     }
 }

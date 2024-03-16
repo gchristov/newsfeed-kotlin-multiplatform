@@ -10,10 +10,8 @@ android {
 
 kotlin {
     sourceSets {
-        val commonMain by getting {
-            dependencies {
-                api(libs.moko.mvvm.livedata)
-            }
+        commonMain.dependencies {
+            api(libs.moko.mvvm.livedata)
         }
     }
 }

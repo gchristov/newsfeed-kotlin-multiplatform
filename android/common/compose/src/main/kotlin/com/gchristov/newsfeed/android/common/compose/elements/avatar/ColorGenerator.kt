@@ -3,8 +3,9 @@ package com.gchristov.newsfeed.android.common.compose.elements.avatar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
-import com.gchristov.newsfeed.android.common.compose.R
-import java.util.*
+import java.util.Collections
+import java.util.Stack
+import com.gchristov.newsfeed.android.common.design.R as DesignR
 
 internal class ColorGenerator {
     private val recycle = Stack<Color>()
@@ -26,27 +27,27 @@ internal class ColorGenerator {
 
     @Composable
     private fun palette() = listOf(
-        colorResource(R.color.red),
-        colorResource(R.color.red_2),
-        colorResource(R.color.red_3),
-        colorResource(R.color.blue),
-        colorResource(R.color.blue_2),
-        colorResource(R.color.blue_3),
-        colorResource(R.color.blue_4),
-        colorResource(R.color.blue_5),
-        colorResource(R.color.blue_6),
-        colorResource(R.color.green),
-        colorResource(R.color.green_2),
-        colorResource(R.color.green_3),
-        colorResource(R.color.green_4),
-        colorResource(R.color.yellow),
-        colorResource(R.color.yellow_2),
-        colorResource(R.color.yellow_3),
-        colorResource(R.color.yellow_4),
-        colorResource(R.color.yellow_5),
-        colorResource(R.color.brown),
-        colorResource(R.color.gray),
-        colorResource(R.color.gray_2),
-        colorResource(R.color.gray_3),
+        colorResource(DesignR.color.red),
+        colorResource(DesignR.color.red_2),
+        colorResource(DesignR.color.red_3),
+        colorResource(DesignR.color.blue),
+        colorResource(DesignR.color.blue_2),
+        colorResource(DesignR.color.blue_3),
+        colorResource(DesignR.color.blue_4),
+        colorResource(DesignR.color.blue_5),
+        colorResource(DesignR.color.blue_6),
+        colorResource(DesignR.color.green),
+        colorResource(DesignR.color.green_2),
+        colorResource(DesignR.color.green_3),
+        colorResource(DesignR.color.green_4),
+        colorResource(DesignR.color.yellow),
+        colorResource(DesignR.color.yellow_2),
+        colorResource(DesignR.color.yellow_3),
+        colorResource(DesignR.color.yellow_4),
+        colorResource(DesignR.color.yellow_5),
+        colorResource(DesignR.color.brown),
+        colorResource(DesignR.color.gray),
+        colorResource(DesignR.color.gray_2),
+        colorResource(DesignR.color.gray_3),
     )
 }

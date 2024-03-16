@@ -13,7 +13,7 @@ class MplModulePlugin : Plugin<Project> {
                 apply(libs.findPlugin("newsfeed-mpl-base").get().get().pluginId)
             }
             extensions.configure<KotlinMultiplatformExtension> {
-                sourceSets.maybeCreate("commonMain").dependencies {
+                sourceSets.commonMain.dependencies {
                     api(project(":multiplatform:common:kotlin"))
                     api(project(":multiplatform:common:di"))
                     api(project(":multiplatform:common:test"))

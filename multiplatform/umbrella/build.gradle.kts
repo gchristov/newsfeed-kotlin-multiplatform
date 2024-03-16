@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
-
 plugins {
     // Normally, this would be libs.plugins.newsfeed.mpl.module but since this is an umbrella module this is enough
     alias(libs.plugins.newsfeed.mpl.base)
@@ -28,27 +26,23 @@ kotlin {
         projects.multiplatform.post.testFixtures,
     )
 
-    val iosTarget: (String, KotlinNativeTarget.() -> Unit) -> KotlinNativeTarget = when {
-        System.getenv("SDK_NAME")?.startsWith("iphoneos") == true -> ::iosArm64
-        System.getenv("NATIVE_ARCH")?.startsWith("arm") == true -> ::iosSimulatorArm64
-        else -> ::iosX64
-    }
-    iosTarget("ios") {
-        binaries {
-            framework {
-                baseName = "KmmShared"
-                exportedDependencies.forEach { export(it) }
-                // Required for SQLDelight
-                freeCompilerArgs = freeCompilerArgs + arrayOf("-linker-options", "-lsqlite3")
-            }
+    listOf(
+        iosX64(),
+        iosArm64(),
+        iosSimulatorArm64()
+    ).forEach {
+        it.binaries.framework {
+            baseName = "KmmShared"
+            // Required for SQLDelight
+            freeCompilerArgs = freeCompilerArgs + arrayOf("-linker-options", "-lsqlite3")
+            isStatic = true
+            exportedDependencies.forEach { export(it) }
         }
     }
 
     sourceSets {
-        val commonMain by getting {
-            dependencies {
-                exportedDependencies.forEach { api(it) }
-            }
+        commonMain.dependencies {
+            exportedDependencies.forEach { api(it) }
         }
     }
 }

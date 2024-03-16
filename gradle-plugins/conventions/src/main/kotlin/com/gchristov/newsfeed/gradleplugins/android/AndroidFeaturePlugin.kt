@@ -17,6 +17,7 @@ class AndroidFeaturePlugin : Plugin<Project> {
                 dependencies {
                     add("api", project(":android:common:navigation"))
                     add("api", project(":android:common:compose"))
+                    add("api", project(":android:common:design"))
                     add("androidTestImplementation", project(":android:common:compose-test"))
                 }
             }

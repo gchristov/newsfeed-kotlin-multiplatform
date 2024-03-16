@@ -59,6 +59,7 @@ import com.gchristov.newsfeed.multiplatform.feed.feature.SearchWidgetState
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.Random
+import com.gchristov.newsfeed.android.common.design.R as DesignR
 
 class FeedActivity : CommonComposeActivity() {
     private val viewModel by viewModels<FeedViewModel> { createViewModelFactory { FeedModule.injectFeedViewModel() } }
@@ -205,7 +206,7 @@ private fun MainAppBar(
     when (searchWidgetState) {
         SearchWidgetState.CLOSED -> {
             AppBar(
-                title = stringResource(R.string.app_name),
+                title = stringResource(DesignR.string.app_name),
                 actions = {
                     AppIconButton(
                         onClick = onSearchTriggered,
@@ -375,7 +376,7 @@ private fun ErrorState(
     AppScreen(
         topBar = {
             AppBar(
-                title = stringResource(R.string.app_name)
+                title = stringResource(DesignR.string.app_name)
             )
         },
     ) {

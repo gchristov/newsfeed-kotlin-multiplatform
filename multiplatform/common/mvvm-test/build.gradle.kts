@@ -15,10 +15,8 @@ kotlin {
     dependencies and code are local to the relevant module and cannot be accesses by other modules.
      */
     sourceSets {
-        val commonMain by getting {
-            dependencies {
-                api(libs.moko.mvvm.test)
-            }
+        commonMain.dependencies {
+            api(libs.moko.mvvm.test)
         }
     }
 }

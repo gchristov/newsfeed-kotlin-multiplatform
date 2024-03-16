@@ -10,10 +10,8 @@ android {
 
 kotlin {
     sourceSets {
-        val commonMain by getting {
-            dependencies {
-                api(libs.kodein)
-            }
+        commonMain.dependencies {
+            api(libs.kodein)
         }
     }
 }

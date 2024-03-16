@@ -10,10 +10,8 @@ android {
 
 kotlin {
     sourceSets {
-        val commonMain by getting {
-            dependencies {
-                implementation(projects.multiplatform.feed.data)
-            }
+        commonMain.dependencies {
+            implementation(projects.multiplatform.feed.data)
         }
     }
 }

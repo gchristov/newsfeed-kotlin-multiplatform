@@ -8,11 +8,12 @@ import org.gradle.kotlin.dsl.configure
 
 class AndroidComposePlugin : Plugin<Project> {
     override fun apply(target: Project) {
-        with (target) {
+        with(target) {
             extensions.configure<BaseExtension> {
                 buildFeatures.compose = true
                 composeOptions {
-                    kotlinCompilerExtensionVersion = libs.findVersion("androidX-compose").get().requiredVersion
+                    kotlinCompilerExtensionVersion =
+                        libs.findVersion("androidX-compose-compiler").get().requiredVersion
                 }
             }
         }

@@ -13,10 +13,10 @@ class MplFeaturePlugin : Plugin<Project> {
                 apply(libs.findPlugin("newsfeed-mpl-module").get().get().pluginId)
             }
             extensions.configure<KotlinMultiplatformExtension> {
-                sourceSets.maybeCreate("commonMain").dependencies {
+                sourceSets.commonMain.dependencies {
                     api(project(":multiplatform:common:mvvm"))
                 }
-                sourceSets.maybeCreate("commonTest").dependencies {
+                sourceSets.commonTest.dependencies {
                     api(project(":multiplatform:common:mvvm-test"))
                 }
             }
