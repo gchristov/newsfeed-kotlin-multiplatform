@@ -6,7 +6,7 @@ plugins {
 
 android {
     defaultConfig {
-        namespace = "com.gchristov.newsfeed.multiplatform.feed.data"
+        namespace = packageId
     }
 }
 
@@ -19,7 +19,9 @@ kotlin {
 }
 
 sqldelight {
-    database("FeedSqlDelightDatabase") {
-        packageName = packageId
+    databases {
+        create("FeedSqlDelightDatabase") {
+            packageName.set(packageId)
+        }
     }
 }

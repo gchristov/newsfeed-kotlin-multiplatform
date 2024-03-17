@@ -12,8 +12,7 @@ androidx-coreTesting = "2.1.0"
 coil = "1.4.0"
 composeHtml = "1.0.1"
 buildKonfig = "0.15.1"
-sqlDelight = "1.5.3"
-sqlDelight-gradlePlugin = "1.5.0"
+sqlDelight = "2.0.1"
 accompanist-swipeRefresh = "0.19.0"
 junit = "4.13.2"
 kodein = "7.21.1"
@@ -51,9 +50,9 @@ ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "k
 ktor-client-android = { module = "io.ktor:ktor-client-android", version.ref = "ktor" }
 ktor-client-ios = { module = "io.ktor:ktor-client-ios", version.ref = "ktor" }
 logback = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
-sqlDelight-runtime = { module = "com.squareup.sqldelight:runtime", version.ref = "sqlDelight" }
-sqlDelight-android = { module = "com.squareup.sqldelight:android-driver", version.ref = "sqlDelight" }
-sqlDelight-native = { module = "com.squareup.sqldelight:native-driver", version.ref = "sqlDelight" }
+sqlDelight-core = { module = "app.cash.sqldelight:primitive-adapters", version.ref = "sqlDelight" }
+sqlDelight-android = { module = "app.cash.sqldelight:android-driver", version.ref = "sqlDelight" }
+sqlDelight-native = { module = "app.cash.sqldelight:native-driver", version.ref = "sqlDelight" }
 multiplatformSettings = { module = "com.russhwolf:multiplatform-settings", version.ref = "multiplatform-settings" }
 
 # Dependencies of the included gradle-plugins
@@ -67,7 +66,7 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 buildKonfig = { id = "com.codingfeline.buildkonfig", version.ref = "buildKonfig" }
-sqlDelight = { id = "com.squareup.sqldelight", version.ref = "sqlDelight-gradlePlugin" }
+sqlDelight = { id = "app.cash.sqldelight", version.ref = "sqlDelight" }
 
 # Plugins defined by this project
 newsfeed-android-base = { id = "android-base-plugin", version = "unspecified" }

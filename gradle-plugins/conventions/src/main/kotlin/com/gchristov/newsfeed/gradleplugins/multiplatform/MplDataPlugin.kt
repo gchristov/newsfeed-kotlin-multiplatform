@@ -12,7 +12,7 @@ class MplDataPlugin : Plugin<Project> {
             with (plugins) {
                 apply(libs.findPlugin("newsfeed-mpl-module").get().get().pluginId)
                 apply("org.jetbrains.kotlin.plugin.serialization")
-                apply("com.squareup.sqldelight")
+                apply("app.cash.sqldelight")
             }
             extensions.configure<KotlinMultiplatformExtension> {
                 sourceSets.commonMain.dependencies {

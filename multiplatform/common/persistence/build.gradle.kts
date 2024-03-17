@@ -11,7 +11,7 @@ android {
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation(libs.sqlDelight.runtime)
+            implementation(libs.sqlDelight.core)
             api(libs.multiplatformSettings)
         }
         androidMain.dependencies {

@@ -11,12 +11,12 @@ class FlattenSectionedFeedUseCase(private val dispatcher: CoroutineDispatcher) {
         withContext(dispatcher) {
             val items = feed.sections.flatMap { it.feedItems }
             val page = FeedPage(
-                pageId = feed.currentPage,
-                pages = feed.pages
+                pageId = feed.currentPage.toLong(),
+                pages = feed.pages.toLong(),
             )
             DecoratedFeedPage(
                 raw = page,
-                items = items
+                items = items,
             )
         }
 }

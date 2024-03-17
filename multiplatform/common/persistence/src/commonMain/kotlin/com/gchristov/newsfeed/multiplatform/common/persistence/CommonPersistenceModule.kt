@@ -1,8 +1,10 @@
 package com.gchristov.newsfeed.multiplatform.common.persistence
 
+import app.cash.sqldelight.db.QueryResult
+import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.db.SqlSchema
 import com.gchristov.newsfeed.multiplatform.common.di.DiModule
 import com.russhwolf.settings.Settings
-import com.squareup.sqldelight.db.SqlDriver
 import org.kodein.di.DI
 import org.kodein.di.bindFactory
 import org.kodein.di.bindSingleton
@@ -23,6 +25,6 @@ internal expect fun provideSqlDriver(properties: SqlDriverProperties): SqlDriver
 internal expect fun provideSharedPreferences(): Settings
 
 data class SqlDriverProperties(
-    val schema: SqlDriver.Schema,
+    val schema: SqlSchema<QueryResult.Value<Unit>>,
     val databaseName: String,
 )

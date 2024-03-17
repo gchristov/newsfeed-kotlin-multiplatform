@@ -33,10 +33,11 @@ kotlin {
     ).forEach {
         it.binaries.framework {
             baseName = "KmmShared"
-            // Required for SQLDelight
+            // Both dynamic frameworks and -lsqlite3 are required for SQLDelight, otherwise we get linker errors
+            // TODO: Adding -lsqlite3 to Other Linked Flags in Xcode fixes the issue and we can use a static lib then
             freeCompilerArgs = freeCompilerArgs + arrayOf("-linker-options", "-lsqlite3")
-            isStatic = true
-            exportedDependencies.forEach { export(it) }
+            isStatic = false
+            exportedDependencies.forEach { dependency -> export(dependency) }
         }
     }
 

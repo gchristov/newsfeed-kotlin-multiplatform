@@ -1,9 +1,9 @@
 package com.gchristov.newsfeed.multiplatform.common.persistence
 
+import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.driver.native.NativeSqliteDriver
 import com.russhwolf.settings.AppleSettings
 import com.russhwolf.settings.Settings
-import com.squareup.sqldelight.db.SqlDriver
-import com.squareup.sqldelight.drivers.native.NativeSqliteDriver
 
 internal actual fun provideSqlDriver(properties: SqlDriverProperties): SqlDriver =
     NativeSqliteDriver(

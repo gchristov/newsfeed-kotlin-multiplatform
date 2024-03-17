@@ -5,7 +5,15 @@ import com.gchristov.newsfeed.multiplatform.feed.data.model.DecoratedFeedPage
 import com.gchristov.newsfeed.multiplatform.feed.data.model.SectionedFeed
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
-import kotlinx.datetime.*
+import kotlinx.datetime.Clock
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
+import kotlinx.datetime.plus
+import kotlinx.datetime.toLocalDateTime
 
 class BuildSectionedFeedUseCase(
     private val dispatcher: CoroutineDispatcher,
@@ -23,8 +31,8 @@ class BuildSectionedFeedUseCase(
                 )
             }
             SectionedFeed(
-                pages = feed.raw.pages,
-                currentPage = feed.raw.pageId,
+                pages = feed.raw.pages.toInt(),
+                currentPage = feed.raw.pageId.toInt(),
                 sections = sections
             )
         }

@@ -21,10 +21,10 @@ data class DecoratedFeedItem(
 
 internal inline fun ApiFeedResponse.toFeedPage(itemDecorator: (FeedItem) -> DecoratedFeedItem): DecoratedFeedPage {
     val page = FeedPage(
-        pageId = response.currentPage,
-        pages = response.pages,
+        pageId = response.currentPage.toLong(),
+        pages = response.pages.toLong(),
     )
-    val items = response.results.map { itemDecorator(it.toFeedItem(pageId = page.pageId)) }
+    val items = response.results.map { itemDecorator(it.toFeedItem(pageId = page.pageId.toInt())) }
     return DecoratedFeedPage(
         raw = page,
         items = items
@@ -33,7 +33,7 @@ internal inline fun ApiFeedResponse.toFeedPage(itemDecorator: (FeedItem) -> Deco
 
 private fun ApiFeedItem.toFeedItem(pageId: Int): FeedItem = FeedItem(
     itemId = id,
-    pageId = pageId,
+    pageId = pageId.toLong(),
     apiUrl = apiUrl,
     date = webPublicationDate,
     headline = fields?.headline,

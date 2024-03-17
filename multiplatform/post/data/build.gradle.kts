@@ -6,12 +6,14 @@ plugins {
 
 android {
     defaultConfig {
-        namespace = "com.gchristov.newsfeed.multiplatform.post.data"
+        namespace = packageId
     }
 }
 
 sqldelight {
-    database("PostSqlDelightDatabase") {
-        packageName = packageId
+    databases {
+        create("PostSqlDelightDatabase") {
+            packageName.set(packageId)
+        }
     }
 }
