@@ -20,7 +20,6 @@ dependencyResolutionManagement {
 rootProject.name = "newsfeed-kotlin-multiplatform"
 
 // Multiplatform
-include(":multiplatform:common:di")
 include(":multiplatform:common:kotlin")
 include(":multiplatform:common:mvvm")
 include(":multiplatform:common:mvvm-test")
@@ -33,7 +32,8 @@ include(":multiplatform:feed:test-fixtures")
 include(":multiplatform:post:data")
 include(":multiplatform:post:feature")
 include(":multiplatform:post:test-fixtures")
-include(":multiplatform:umbrella")
+include(":multiplatform:umbrella:app")
+include(":multiplatform:umbrella:di")
 // Android
 include(":android:app")
 include(":android:common:compose")

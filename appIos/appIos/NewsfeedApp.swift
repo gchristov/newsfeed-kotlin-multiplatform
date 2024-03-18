@@ -1,12 +1,17 @@
 import SwiftUI
 import CommonSwiftUi
 import Feed
+import KmmShared
 
 /**
  Entry point of the app.
  */
 @main
 struct NewsfeedApp: App {
+    init() {
+        MplNewsfeedDi.shared.setup(appModules: [])
+    }
+    
     var body: some Scene {
         WindowGroup {
             ThemeView()

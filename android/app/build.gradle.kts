@@ -12,9 +12,9 @@ android {
 }
 
 dependencies {
-    implementation(projects.multiplatform.common.di)
+    implementation(projects.multiplatform.umbrella.di)
+    // Android leaf modules
     implementation(projects.android.common.design)
-    // Feature modules
     implementation(projects.android.feed.feature)
     implementation(projects.android.post.feature)
 }

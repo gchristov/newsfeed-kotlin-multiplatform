@@ -15,7 +15,6 @@ class MplModulePlugin : Plugin<Project> {
             extensions.configure<KotlinMultiplatformExtension> {
                 sourceSets.commonMain.dependencies {
                     api(project(":multiplatform:common:kotlin"))
-                    api(project(":multiplatform:common:di"))
                     api(project(":multiplatform:common:test"))
                 }
             }

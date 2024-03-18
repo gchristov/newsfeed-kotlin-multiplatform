@@ -1,10 +1,12 @@
 package com.gchristov.newsfeed.multiplatform.post.data
 
+import com.gchristov.newsfeed.multiplatform.post.data.api.ApiPostResponse
 import com.gchristov.newsfeed.multiplatform.post.data.model.DecoratedPost
 import com.gchristov.newsfeed.multiplatform.post.data.model.toPost
 import com.russhwolf.settings.Settings
 import com.russhwolf.settings.contains
 import com.russhwolf.settings.set
+import io.ktor.client.call.body
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.Clock
@@ -20,7 +22,7 @@ internal class RealPostRepository(
     override suspend fun post(
         postId: String,
         postMetadataFields: String
-    ): Post = apiService.post(postId, postMetadataFields).toPost()
+    ): Post = apiService.post(postId, postMetadataFields).body<ApiPostResponse>().toPost()
 
     override suspend fun cachedPost(postId: String): Post? =
         withContext(dispatcher) {

@@ -1,16 +1,13 @@
 package com.gchristov.newsfeed.multiplatform.feed.data
 
-import com.gchristov.newsfeed.multiplatform.common.di.DiModule
-import com.gchristov.newsfeed.multiplatform.common.network.ApiClient
-import com.gchristov.newsfeed.multiplatform.common.network.CommonNetworkModule
-import com.gchristov.newsfeed.multiplatform.common.persistence.CommonPersistenceModule
+import com.gchristov.newsfeed.multiplatform.common.kotlin.di.DiModule
+import com.gchristov.newsfeed.multiplatform.common.network.NetworkClient
 import com.gchristov.newsfeed.multiplatform.common.persistence.SqlDriverProperties
 import com.gchristov.newsfeed.multiplatform.feed.data.usecase.BuildSectionedFeedUseCase
 import com.gchristov.newsfeed.multiplatform.feed.data.usecase.FlattenSectionedFeedUseCase
 import com.gchristov.newsfeed.multiplatform.feed.data.usecase.GetSectionedFeedUseCase
 import com.gchristov.newsfeed.multiplatform.feed.data.usecase.MergeSectionedFeedUseCase
 import com.gchristov.newsfeed.multiplatform.feed.data.usecase.RedecorateSectionedFeedUseCase
-import com.gchristov.newsfeed.multiplatform.post.data.PostDataModule
 import com.gchristov.newsfeed.multiplatform.post.data.PostRepository
 import com.russhwolf.settings.Settings
 import kotlinx.coroutines.Dispatchers
@@ -23,9 +20,9 @@ import org.kodein.di.instance
 object FeedDataModule : DiModule() {
     override fun name() = "multiplatform-feed-data"
 
-    override fun bindLocalDependencies(builder: DI.Builder) {
+    override fun bindDependencies(builder: DI.Builder) {
         builder.apply {
-            bindSingleton { provideFeedApi(client = instance()) }
+            bindSingleton { provideFeedApi(networkClient = instance()) }
             bindSingleton {
                 provideFeedRepository(
                     api = instance(),
@@ -61,14 +58,6 @@ object FeedDataModule : DiModule() {
         }
     }
 
-    override fun moduleDependencies(): List<DI.Module> {
-        return listOf(
-            CommonNetworkModule.module,
-            CommonPersistenceModule.module,
-            PostDataModule.module
-        )
-    }
-
     private fun provideFeedRepository(
         api: FeedApi,
         postRepository: PostRepository,
@@ -82,7 +71,7 @@ object FeedDataModule : DiModule() {
         sharedPreferences = sharedPreferences
     )
 
-    private fun provideFeedApi(client: ApiClient) = FeedApi(client)
+    private fun provideFeedApi(networkClient: NetworkClient.Json) = FeedApi(networkClient)
 
     private fun provideBuildSectionedFeedUseCase() = BuildSectionedFeedUseCase(
         dispatcher = Dispatchers.Default,

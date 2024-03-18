@@ -9,5 +9,5 @@ android {
 }
 
 dependencies {
-    implementation(projects.multiplatform.common.di)
+    implementation(projects.multiplatform.common.kotlin)
 }

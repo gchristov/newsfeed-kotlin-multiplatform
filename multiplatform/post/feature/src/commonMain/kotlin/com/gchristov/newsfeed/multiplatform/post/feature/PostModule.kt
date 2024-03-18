@@ -1,8 +1,8 @@
 package com.gchristov.newsfeed.multiplatform.post.feature
 
-import com.gchristov.newsfeed.multiplatform.common.di.DiModule
-import com.gchristov.newsfeed.multiplatform.common.di.inject
-import com.gchristov.newsfeed.multiplatform.post.data.PostDataModule
+import com.gchristov.newsfeed.multiplatform.common.kotlin.di.DiGraph
+import com.gchristov.newsfeed.multiplatform.common.kotlin.di.DiModule
+import com.gchristov.newsfeed.multiplatform.common.kotlin.di.inject
 import com.gchristov.newsfeed.multiplatform.post.data.PostRepository
 import com.gchristov.newsfeed.multiplatform.post.data.usecase.DecoratePostUseCase
 import kotlinx.coroutines.Dispatchers
@@ -14,7 +14,7 @@ import org.kodein.di.instance
 object PostModule : DiModule() {
     override fun name() = "multiplatform-post"
 
-    override fun bindLocalDependencies(builder: DI.Builder) {
+    override fun bindDependencies(builder: DI.Builder) {
         builder.apply {
             bindProvider { provideDecoratePostUseCase(postRepository = instance()) }
             bindFactory { postId: String ->
@@ -33,11 +33,5 @@ object PostModule : DiModule() {
         dispatcher = Dispatchers.Main
     )
 
-    override fun moduleDependencies(): List<DI.Module> {
-        return listOf(
-            PostDataModule.module
-        )
-    }
-
-    fun injectPostViewModel(postId: String): PostViewModel = inject(arg = postId)
+    fun injectPostViewModel(postId: String): PostViewModel = DiGraph.inject(arg = postId)
 }
