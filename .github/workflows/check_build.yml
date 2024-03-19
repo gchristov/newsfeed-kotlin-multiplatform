@@ -7,7 +7,7 @@ on:
     branches: [ master ]
 
 env:
-  JAVA_VERSION: "11"
+  JAVA_VERSION: "17"
   XCODE_VERSION: "13.3"
   XCODE_CACHE: "CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++"
   IOS_SIMULATOR: "platform=iOS Simulator,name=iPhone 11,OS=15.4"
