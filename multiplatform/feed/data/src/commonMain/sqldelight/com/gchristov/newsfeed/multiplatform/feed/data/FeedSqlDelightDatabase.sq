@@ -1,6 +1,6 @@
 CREATE TABLE FeedPage (
-    pageId INTEGER AS Int NOT NULL PRIMARY KEY,
-    pages INTEGER AS Int NOT NULL
+    pageId INTEGER NOT NULL PRIMARY KEY,
+    pages INTEGER NOT NULL
 );
 CREATE INDEX feed_page_id ON FeedPage(pageId);
 
@@ -19,7 +19,7 @@ VALUES (?, ?);
 
 CREATE TABLE FeedItem (
     itemId TEXT NOT NULL PRIMARY KEY,
-    pageId INTEGER AS Int NOT NULL,
+    pageId INTEGER NOT NULL,
     apiUrl TEXT NOT NULL,
     date TEXT NOT NULL,
     headline TEXT,

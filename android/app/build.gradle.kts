@@ -1,9 +1,10 @@
 plugins {
-    id("android-application-binary-plugin")
+    alias(libs.plugins.newsfeed.android.applicationBinary)
 }
 
 android {
     defaultConfig {
+        namespace = "com.gchristov.newsfeed"
         applicationId = "com.gchristov.newsfeed"
         versionCode = 1
         versionName = "1.0"
@@ -11,9 +12,11 @@ android {
 }
 
 dependencies {
-    implementation(projects.multiplatform.common.di)
+    // Multiplatform leaf modules
+    implementation(projects.multiplatform.feed.feature)
+    implementation(projects.multiplatform.post.feature)
+    // Android leaf modules
     implementation(projects.android.common.design)
-    // Feature modules
     implementation(projects.android.feed.feature)
     implementation(projects.android.post.feature)
 }

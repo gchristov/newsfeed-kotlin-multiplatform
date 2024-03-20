@@ -1,7 +1,11 @@
-import com.gchristov.newsfeed.gradleplugins.Deps
-
 plugins {
-    id("mpl-base-plugin")
+    alias(libs.plugins.newsfeed.mpl.base)
+}
+
+android {
+    defaultConfig {
+        namespace = "com.gchristov.newsfeed.multiplatform.common.test"
+    }
 }
 
 kotlin {
@@ -11,21 +15,19 @@ kotlin {
     dependencies and code are local to the relevant module and cannot be accesses by other modules.
      */
     sourceSets {
-        val commonMain by getting {
-            dependencies {
-                implementation(Deps.Multiplatform.Kotlin.coroutinesCore) // Needed for FakeResponse
-                implementation(Deps.Multiplatform.Kotlin.dateTime) // Needed for FakeClock
-                api(kotlin(Deps.Multiplatform.Tests.testCommon))
-                api(kotlin(Deps.Multiplatform.Tests.testCommonAnnotations))
-            }
+        commonMain.dependencies {
+            implementation(libs.kotlinx.coroutines.core) // Needed for FakeResponse
+            implementation(libs.kotlinx.datetime) // Needed for FakeClock
+            api(kotlin("test-common")) // Assertions for use in common code
+            api(kotlin("test-annotations-common")) // Test annotations for use in common code
         }
-        val androidMain by getting {
-            dependencies {
-                api(kotlin(Deps.Multiplatform.Tests.testJunit))
-                api(Deps.Multiplatform.Tests.junit)
-                api(Deps.Multiplatform.Tests.junitRunner)
-                api(Deps.Multiplatform.Tests.archCoreTesting)
-            }
+        androidMain.dependencies {
+            // Provides an implementation of Asserter on top of JUnit and maps the test
+            // annotations from kotlin-test-annotations-common to JUnit test annotations
+            api(kotlin("test-junit"))
+            api(libs.junit)
+            api(libs.androidx.testRunner)
+            api(libs.androidx.coreTesting)
         }
     }
 }

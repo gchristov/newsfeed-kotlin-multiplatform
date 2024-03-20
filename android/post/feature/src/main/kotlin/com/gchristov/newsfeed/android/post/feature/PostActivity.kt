@@ -39,17 +39,15 @@ import com.gchristov.newsfeed.android.common.compose.elements.BlockingError
 import com.gchristov.newsfeed.android.common.compose.elements.avatar.AppAvatar
 import com.gchristov.newsfeed.android.common.compose.elements.toUiBlockingError
 import com.gchristov.newsfeed.android.common.compose.theme.Theme
+import com.gchristov.newsfeed.multiplatform.common.kotlin.di.DependencyInjector
+import com.gchristov.newsfeed.multiplatform.common.kotlin.di.inject
 import com.gchristov.newsfeed.multiplatform.common.mvvm.createViewModelFactory
 import com.gchristov.newsfeed.multiplatform.post.data.model.DecoratedPost
-import com.gchristov.newsfeed.multiplatform.post.feature.PostModule
 import com.gchristov.newsfeed.multiplatform.post.feature.PostViewModel
 
 class PostActivity : CommonComposeActivity() {
-
     private val viewModel by viewModels<PostViewModel> {
-        createViewModelFactory {
-            PostModule.injectPostViewModel(postId = postId)
-        }
+        createViewModelFactory { DependencyInjector.inject(arg = postId) }
     }
 
     private val postId: String
@@ -76,6 +74,7 @@ internal fun PostScreen(viewModel: PostViewModel) {
             blockingError = state.blockingError!!.toUiBlockingError(),
             onRetry = viewModel::loadContent
         )
+
         else -> PostState(
             loading = state?.loading == true,
             post = state?.post,

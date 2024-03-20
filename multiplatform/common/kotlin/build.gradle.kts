@@ -1,21 +1,24 @@
-import com.gchristov.newsfeed.gradleplugins.Deps
-
 plugins {
-    id("mpl-base-plugin")
+    alias(libs.plugins.newsfeed.mpl.base)
+}
+
+android {
+    defaultConfig {
+        namespace = "com.gchristov.newsfeed.multiplatform.common.kotlin"
+    }
 }
 
 kotlin {
     sourceSets {
-        val commonMain by getting {
-            dependencies {
-                api(Deps.Multiplatform.Kotlin.coroutinesCore)
-                api(Deps.Multiplatform.Kotlin.dateTime)
-            }
+        commonMain.dependencies {
+            api(libs.kodein)
+            api(libs.kermit)
+            api(libs.kotlinx.coroutines.core)
+            api(libs.kotlinx.datetime)
+            api(libs.kotlinx.serialization)
         }
-        val androidMain by getting {
-            dependencies {
-                api(Deps.Multiplatform.Kotlin.coroutinesAndroid)
-            }
+        androidMain.dependencies {
+            api(libs.kotlinx.coroutines.android)
         }
     }
 }

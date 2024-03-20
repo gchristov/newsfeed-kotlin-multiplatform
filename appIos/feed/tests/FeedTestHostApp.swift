@@ -15,6 +15,7 @@ struct FeedTestHostApp: App {
     private let redecorateSectionedFeedUseCase: RedecorateSectionedFeedUseCase
     
     init() {
+        DependencyInjector.shared.initialise()
         // Mock/fake necessary constructs based on launch environment
         self.feedPages = FeedType.obtainFromEnvironment()
         self.feedPageCache = FeedCacheType.obtainFromEnvironment()

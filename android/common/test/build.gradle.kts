@@ -1,7 +1,11 @@
-import com.gchristov.newsfeed.gradleplugins.Deps
-
 plugins {
-    id("android-base-plugin") // Avoids circular dependencies in android-module-plugin
+    alias(libs.plugins.newsfeed.android.base) // Avoids circular dependencies in android-module-plugin
+}
+
+android {
+    defaultConfig {
+        namespace = "com.gchristov.newsfeed.android.common.test"
+    }
 }
 
 /*
@@ -10,5 +14,5 @@ source sets, and marked as `api`, rather than 'test'. This is because 'test' sou
 dependencies and code are local to the relevant module and cannot be accesses by other modules.
  */
 dependencies {
-    api(Deps.Android.Tests.junit)
+    api(libs.junit)
 }

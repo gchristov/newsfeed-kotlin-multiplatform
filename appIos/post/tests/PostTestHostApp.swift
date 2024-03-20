@@ -14,6 +14,7 @@ struct PostTestHostApp: App {
     private let decoratePostUseCase: DecoratePostUseCase
     
     init() {
+        DependencyInjector.shared.initialise()
         // Mock/fake necessary constructs based on launch environment
         self.post = PostType.obtainFromEnvironment()
         self.postCache = PostCacheType.obtainFromEnvironment()

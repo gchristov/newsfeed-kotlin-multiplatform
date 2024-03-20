@@ -1,31 +1,29 @@
-import com.gchristov.newsfeed.gradleplugins.Deps
-
 val packageId = "com.gchristov.newsfeed.multiplatform.common.network"
 
 plugins {
-    id("mpl-module-plugin")
+    alias(libs.plugins.newsfeed.mpl.module)
     id("com.codingfeline.buildkonfig")
+}
+
+android {
+    defaultConfig {
+        namespace = packageId
+    }
 }
 
 kotlin {
     sourceSets {
-        val commonMain by getting {
-            dependencies {
-                implementation(Deps.Multiplatform.Ktor.clientCore)
-                api(Deps.Multiplatform.Ktor.clientSerialization)
-                implementation(Deps.Multiplatform.Ktor.clientLogging)
-                implementation(Deps.Multiplatform.Ktor.logbackClassic)
-            }
+        commonMain.dependencies {
+            api(libs.ktor.client.core)
+            implementation(libs.ktor.client.contentNegotiation)
+            implementation(libs.ktor.client.serializationJson)
+            implementation(libs.ktor.client.logging)
         }
-        val androidMain by getting {
-            dependencies {
-                implementation(Deps.Multiplatform.Ktor.clientAndroid)
-            }
+        androidMain.dependencies {
+            implementation(libs.ktor.client.android)
         }
-        val iosMain by getting {
-            dependencies {
-                implementation(Deps.Multiplatform.Ktor.clientIos)
-            }
+        iosMain.dependencies {
+            implementation(libs.ktor.client.ios)
         }
     }
 }

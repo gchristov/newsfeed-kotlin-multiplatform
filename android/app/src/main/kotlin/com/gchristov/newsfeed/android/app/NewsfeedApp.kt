@@ -1,7 +1,7 @@
 package com.gchristov.newsfeed.android.app
 
 import android.app.Application
-import com.gchristov.newsfeed.multiplatform.common.di.AppContext
+import com.gchristov.newsfeed.multiplatform.common.kotlin.di.DependencyInjector
 
 class NewsfeedApp : Application() {
     override fun onCreate() {
@@ -10,6 +10,6 @@ class NewsfeedApp : Application() {
     }
 
     private fun setupDependencyInjection() {
-        AppContext = this
+        DependencyInjector.initialise(this)
     }
 }

@@ -1,11 +1,13 @@
 package com.gchristov.newsfeed.multiplatform.feed.data
 
+import com.gchristov.newsfeed.multiplatform.feed.data.api.ApiFeedResponse
 import com.gchristov.newsfeed.multiplatform.feed.data.model.DecoratedFeedItem
 import com.gchristov.newsfeed.multiplatform.feed.data.model.DecoratedFeedPage
 import com.gchristov.newsfeed.multiplatform.feed.data.model.toFeedPage
 import com.gchristov.newsfeed.multiplatform.post.data.PostRepository
 import com.russhwolf.settings.Settings
 import com.russhwolf.settings.set
+import io.ktor.client.call.body
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.Instant
@@ -23,12 +25,13 @@ internal class RealFeedRepository(
         pageId: Int,
         feedQuery: String,
     ): DecoratedFeedPage = withContext(dispatcher) {
-        val feed = apiService.feed(
+        val feedResponse: ApiFeedResponse = apiService.feed(
             pageId = pageId,
             feedQuery = feedQuery
-        ).toFeedPage { decorateFeedItem(feedItem = it) }
-        cacheFeedPage(feed)
-        feed
+        ).body()
+        val feedPage = feedResponse.toFeedPage { decorateFeedItem(feedItem = it) }
+        cacheFeedPage(feedPage)
+        feedPage
     }
 
     override suspend fun redecorateFeedPage(feedPage: DecoratedFeedPage): DecoratedFeedPage =

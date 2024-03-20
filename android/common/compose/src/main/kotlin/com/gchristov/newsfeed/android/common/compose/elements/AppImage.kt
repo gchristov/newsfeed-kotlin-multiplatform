@@ -4,7 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import coil.compose.rememberImagePainter
+import coil.compose.rememberAsyncImagePainter
 
 @Composable
 fun AppImage(
@@ -15,7 +15,7 @@ fun AppImage(
 ) {
     Image(
         modifier = modifier,
-        painter = rememberImagePainter(imageUrl),
+        painter = rememberAsyncImagePainter(imageUrl),
         contentDescription = contentDescription,
         contentScale = contentScale,
     )

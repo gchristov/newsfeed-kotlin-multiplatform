@@ -1,9 +1,12 @@
-import com.gchristov.newsfeed.gradleplugins.Deps
-import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
-
 plugins {
-    // Normally, this would be mpl-module-plugin but since this is an umbrella module this is enough
-    id("mpl-base-plugin")
+    // Normally, this would be libs.plugins.newsfeed.mpl.module but since this is an umbrella module this is enough
+    alias(libs.plugins.newsfeed.mpl.base)
+}
+
+android {
+    defaultConfig {
+        namespace = "com.gchristov.newsfeed.multiplatform.umbrella"
+    }
 }
 
 kotlin {
@@ -13,7 +16,8 @@ kotlin {
      https://touchlab.co/multiple-kotlin-frameworks-in-application/
      */
     val exportedDependencies = listOf(
-        Deps.Multiplatform.Kotlin.coroutinesCore, // Needed for coroutine dispatchers
+        libs.kotlinx.coroutines.core, // Needed for coroutine dispatchers
+        projects.multiplatform.common.kotlin,
         projects.multiplatform.common.test,
         projects.multiplatform.feed.feature,
         projects.multiplatform.feed.data,
@@ -23,27 +27,24 @@ kotlin {
         projects.multiplatform.post.testFixtures,
     )
 
-    val iosTarget: (String, KotlinNativeTarget.() -> Unit) -> KotlinNativeTarget = when {
-        System.getenv("SDK_NAME")?.startsWith("iphoneos") == true -> ::iosArm64
-        System.getenv("NATIVE_ARCH")?.startsWith("arm") == true -> ::iosSimulatorArm64
-        else -> ::iosX64
-    }
-    iosTarget("ios") {
-        binaries {
-            framework {
-                baseName = "KmmShared"
-                exportedDependencies.forEach { export(it) }
-                // Required for SQLDelight
-                freeCompilerArgs = freeCompilerArgs + arrayOf("-linker-options", "-lsqlite3")
-            }
+    listOf(
+        iosX64(),
+        iosArm64(),
+        iosSimulatorArm64()
+    ).forEach {
+        it.binaries.framework {
+            baseName = "KmmShared"
+            // Both dynamic frameworks and -lsqlite3 are required for SQLDelight, otherwise we get linker errors
+            // TODO: Adding -lsqlite3 to Other Linked Flags in Xcode fixes the issue and we can use a static lib then
+            freeCompilerArgs = freeCompilerArgs + arrayOf("-linker-options", "-lsqlite3")
+            isStatic = false
+            exportedDependencies.forEach { dependency -> export(dependency) }
         }
     }
 
     sourceSets {
-        val commonMain by getting {
-            dependencies {
-                exportedDependencies.forEach { api(it) }
-            }
+        commonMain.dependencies {
+            exportedDependencies.forEach { api(it) }
         }
     }
 }

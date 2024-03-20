@@ -4,7 +4,7 @@ import android.app.Activity
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -33,7 +33,7 @@ fun AppBar(
         navigationIcon = if (showBack) {
             @Composable {
                 AppIconButton(
-                    icon = Icons.Filled.ArrowBack,
+                    icon = Icons.AutoMirrored.Filled.ArrowBack,
                     tint = contentColor,
                     onClick = { activity?.finish() }
                 )

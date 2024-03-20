@@ -1,0 +1,80 @@
+[versions]
+android-gradlePlugin = "8.3.1"
+kotlin = "1.9.22"
+kotlinx-coroutines = "1.7.3"
+kotlinx-datetime = "0.4.1"
+kotlinx-serialization = "1.6.3"
+androidX-compose = "1.6.3"
+androidX-compose-compiler = "1.5.10"
+androidx-activityCompose = "1.8.2"
+androidx-testRunner = "1.5.2"
+androidx-coreTesting = "2.2.0"
+coil = "2.6.0"
+composeHtml = "1.0.2"
+buildKonfig = "0.15.1"
+sqlDelight = "2.0.1"
+junit = "4.13.2"
+kodein = "7.21.2"
+moko-mvvm = "0.12.0"
+ktor = "2.3.9"
+kermit = "2.0.3"
+multiplatform-settings = "1.1.1"
+
+[libraries]
+junit = { module = "junit:junit", version.ref = "junit" }
+androidx-activityCompose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
+androidx-compose-liveData = { module = "androidx.compose.runtime:runtime-livedata", version.ref = "androidX-compose" }
+androidx-compose-compiler = { module = "androidx.compose.compiler:compiler", version.ref = "androidX-compose-compiler" }
+androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "androidX-compose" }
+androidx-compose-ui-test-junit = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "androidX-compose" }
+androidx-compose-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest", version.ref = "androidX-compose" }
+androidx-compose-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "androidX-compose" }
+androidx-compose-foundation-layout = { module = "androidx.compose.foundation:foundation-layout", version.ref = "androidX-compose" }
+androidx-compose-material = { module = "androidx.compose.material:material", version.ref = "androidX-compose" }
+androidx-compose-material-icons = { module = "androidx.compose.material:material-icons-core", version.ref = "androidX-compose" }
+androidx-testRunner = { module = "androidx.test:runner", version.ref = "androidx-testRunner" }
+androidx-coreTesting = { module = "androidx.arch.core:core-testing", version.ref = "androidx-coreTesting" }
+coil = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
+composeHtml = { module = "com.github.ireward:compose-html", version.ref = "composeHtml" }
+kodein = { module = "org.kodein.di:kodein-di", version.ref = "kodein" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
+kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
+moko-mvvm-livedata = { module = "dev.icerock.moko:mvvm-livedata", version.ref = "moko-mvvm" }
+moko-mvvm-test = { module = "dev.icerock.moko:mvvm-test", version.ref = "moko-mvvm" }
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+ktor-client-contentNegotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-client-serializationJson = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
+ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
+ktor-client-android = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
+ktor-client-ios = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
+kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
+sqlDelight-core = { module = "app.cash.sqldelight:primitive-adapters", version.ref = "sqlDelight" }
+sqlDelight-android = { module = "app.cash.sqldelight:android-driver", version.ref = "sqlDelight" }
+sqlDelight-native = { module = "app.cash.sqldelight:native-driver", version.ref = "sqlDelight" }
+multiplatformSettings = { module = "com.russhwolf:multiplatform-settings", version.ref = "multiplatform-settings" }
+
+# Dependencies of the included gradle-plugins
+android-gradlePlugin = { module = "com.android.tools.build:gradle", version.ref = "android-gradlePlugin" }
+kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "android-gradlePlugin" }
+android-library = { id = "com.android.library", version.ref = "android-gradlePlugin" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+buildKonfig = { id = "com.codingfeline.buildkonfig", version.ref = "buildKonfig" }
+sqlDelight = { id = "app.cash.sqldelight", version.ref = "sqlDelight" }
+
+# Plugins defined by this project
+newsfeed-android-base = { id = "android-base-plugin", version = "unspecified" }
+newsfeed-android-module = { id = "android-module-plugin", version = "unspecified" }
+newsfeed-android-compose = { id = "android-compose-plugin", version = "unspecified" }
+newsfeed-android-feature = { id = "android-feature-plugin", version = "unspecified" }
+newsfeed-android-applicationBinary = { id = "android-application-binary-plugin", version = "unspecified" }
+newsfeed-mpl-base = { id = "mpl-base-plugin", version = "unspecified" }
+newsfeed-mpl-module = { id = "mpl-module-plugin", version = "unspecified" }
+newsfeed-mpl-data = { id = "mpl-data-plugin", version = "unspecified" }
+newsfeed-mpl-feature = { id = "mpl-feature-plugin", version = "unspecified" }

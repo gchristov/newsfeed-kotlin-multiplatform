@@ -1,10 +1,10 @@
 package com.gchristov.newsfeed.multiplatform.common.persistence
 
-import com.gchristov.newsfeed.multiplatform.common.di.AppContext
-import com.russhwolf.settings.AndroidSettings
+import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.driver.android.AndroidSqliteDriver
+import com.gchristov.newsfeed.multiplatform.common.kotlin.AppContext
 import com.russhwolf.settings.Settings
-import com.squareup.sqldelight.android.AndroidSqliteDriver
-import com.squareup.sqldelight.db.SqlDriver
+import com.russhwolf.settings.SharedPreferencesSettings
 
 internal actual fun provideSqlDriver(properties: SqlDriverProperties): SqlDriver =
     AndroidSqliteDriver(
@@ -14,4 +14,4 @@ internal actual fun provideSqlDriver(properties: SqlDriverProperties): SqlDriver
     )
 
 internal actual fun provideSharedPreferences(): Settings =
-    AndroidSettings.Factory(AppContext).create()
+    SharedPreferencesSettings.Factory(AppContext).create()

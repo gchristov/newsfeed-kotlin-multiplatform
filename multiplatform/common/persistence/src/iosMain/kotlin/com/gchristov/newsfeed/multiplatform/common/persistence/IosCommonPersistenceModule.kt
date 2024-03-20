@@ -1,9 +1,9 @@
 package com.gchristov.newsfeed.multiplatform.common.persistence
 
-import com.russhwolf.settings.AppleSettings
+import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.driver.native.NativeSqliteDriver
+import com.russhwolf.settings.NSUserDefaultsSettings
 import com.russhwolf.settings.Settings
-import com.squareup.sqldelight.db.SqlDriver
-import com.squareup.sqldelight.drivers.native.NativeSqliteDriver
 
 internal actual fun provideSqlDriver(properties: SqlDriverProperties): SqlDriver =
     NativeSqliteDriver(
@@ -11,4 +11,4 @@ internal actual fun provideSqlDriver(properties: SqlDriverProperties): SqlDriver
         name = properties.databaseName
     )
 
-internal actual fun provideSharedPreferences(): Settings = AppleSettings.Factory().create()
+internal actual fun provideSharedPreferences(): Settings = NSUserDefaultsSettings.Factory().create()

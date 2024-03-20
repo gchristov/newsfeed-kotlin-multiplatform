@@ -1,11 +1,19 @@
 val packageId = "com.gchristov.newsfeed.multiplatform.post.data"
 
 plugins {
-    id("mpl-data-plugin")
+    alias(libs.plugins.newsfeed.mpl.data)
+}
+
+android {
+    defaultConfig {
+        namespace = packageId
+    }
 }
 
 sqldelight {
-    database("PostSqlDelightDatabase") {
-        packageName = packageId
+    databases {
+        create("PostSqlDelightDatabase") {
+            packageName.set(packageId)
+        }
     }
 }

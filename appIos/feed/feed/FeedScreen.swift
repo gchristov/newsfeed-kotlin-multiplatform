@@ -12,7 +12,7 @@ public struct FeedScreen: View {
     }
     
     public var body: some View {
-        FeedScreenContent(viewModel: FeedModule.shared.injectFeedViewModel())
+        FeedScreenContent(viewModel: DependencyInjector.shared.injectFeedViewModel())
     }
 }
 

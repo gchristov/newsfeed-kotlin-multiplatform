@@ -1,5 +1,11 @@
 plugins {
-    id("android-module-plugin")
+    alias(libs.plugins.newsfeed.android.module)
+}
+
+android {
+    defaultConfig {
+        namespace = "com.gchristov.newsfeed.android.feed.testfixtures"
+    }
 }
 
 dependencies {

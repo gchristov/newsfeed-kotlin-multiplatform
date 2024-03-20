@@ -1,7 +1,13 @@
 plugins {
-    id("android-module-plugin")
+    alias(libs.plugins.newsfeed.android.module)
+}
+
+android {
+    defaultConfig {
+        namespace = "com.gchristov.newsfeed.android.common.navigation"
+    }
 }
 
 dependencies {
-    implementation(projects.multiplatform.common.di)
+    implementation(projects.multiplatform.common.kotlin)
 }

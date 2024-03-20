@@ -1,7 +1,11 @@
-import com.gchristov.newsfeed.gradleplugins.Deps
-
 plugins {
-    id("mpl-module-plugin")
+    alias(libs.plugins.newsfeed.mpl.module)
+}
+
+android {
+    defaultConfig {
+        namespace = "com.gchristov.newsfeed.multiplatform.common.mvvmtest"
+    }
 }
 
 kotlin {
@@ -11,10 +15,8 @@ kotlin {
     dependencies and code are local to the relevant module and cannot be accesses by other modules.
      */
     sourceSets {
-        val commonMain by getting {
-            dependencies {
-                api(Deps.Multiplatform.Mvvm.test)
-            }
+        commonMain.dependencies {
+            api(libs.moko.mvvm.test)
         }
     }
 }
