@@ -5,7 +5,7 @@ plugins {
 
 android {
     defaultConfig {
-        namespace = "com.gchristov.newsfeed.multiplatform.umbrella.app"
+        namespace = "com.gchristov.newsfeed.multiplatform.umbrella"
     }
 }
 
@@ -17,8 +17,8 @@ kotlin {
      */
     val exportedDependencies = listOf(
         libs.kotlinx.coroutines.core, // Needed for coroutine dispatchers
+        projects.multiplatform.common.kotlin,
         projects.multiplatform.common.test,
-        projects.multiplatform.umbrella.di,
         projects.multiplatform.feed.feature,
         projects.multiplatform.feed.data,
         projects.multiplatform.feed.testFixtures,

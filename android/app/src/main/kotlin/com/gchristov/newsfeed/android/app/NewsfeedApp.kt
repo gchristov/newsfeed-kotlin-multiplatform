@@ -1,9 +1,7 @@
 package com.gchristov.newsfeed.android.app
 
 import android.app.Application
-import com.gchristov.newsfeed.android.common.navigation.NavigationModule
-import com.gchristov.newsfeed.multiplatform.common.kotlin.AppContext
-import com.gchristov.newsfeed.multiplatform.umbrella.di.MplNewsfeedDi
+import com.gchristov.newsfeed.multiplatform.common.kotlin.di.DependencyInjector
 
 class NewsfeedApp : Application() {
     override fun onCreate() {
@@ -12,7 +10,6 @@ class NewsfeedApp : Application() {
     }
 
     private fun setupDependencyInjection() {
-        AppContext = this
-        MplNewsfeedDi.setup(appModules = listOf(NavigationModule.module))
+        DependencyInjector.initialise(this)
     }
 }

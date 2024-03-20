@@ -2,13 +2,13 @@ package com.gchristov.newsfeed.multiplatform.common.network
 
 import co.touchlab.kermit.Logger
 import com.gchristov.newsfeed.multiplatform.common.kotlin.JsonSerializer
-import com.gchristov.newsfeed.multiplatform.common.kotlin.di.DiModule
+import com.gchristov.newsfeed.multiplatform.common.kotlin.di.DependencyModule
 import org.kodein.di.DI
 import org.kodein.di.bindSingleton
 import org.kodein.di.instance
 
-object CommonNetworkModule : DiModule() {
-    override fun name() = "multiplatform-network-module"
+object MplCommonNetworkModule : DependencyModule() {
+    override fun name() = "mpl-network-module"
 
     override fun bindDependencies(builder: DI.Builder) {
         builder.apply {

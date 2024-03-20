@@ -2,7 +2,7 @@ package com.gchristov.newsfeed.multiplatform.common.kotlin.di
 
 import org.kodein.di.DI
 
-abstract class DiModule {
+abstract class DependencyModule {
     abstract fun name(): String
 
     abstract fun bindDependencies(builder: DI.Builder)

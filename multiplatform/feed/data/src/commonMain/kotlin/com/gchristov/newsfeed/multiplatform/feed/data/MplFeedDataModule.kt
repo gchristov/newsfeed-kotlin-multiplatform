@@ -1,6 +1,6 @@
 package com.gchristov.newsfeed.multiplatform.feed.data
 
-import com.gchristov.newsfeed.multiplatform.common.kotlin.di.DiModule
+import com.gchristov.newsfeed.multiplatform.common.kotlin.di.DependencyModule
 import com.gchristov.newsfeed.multiplatform.common.network.NetworkClient
 import com.gchristov.newsfeed.multiplatform.common.persistence.SqlDriverProperties
 import com.gchristov.newsfeed.multiplatform.feed.data.usecase.BuildSectionedFeedUseCase
@@ -17,8 +17,8 @@ import org.kodein.di.bindProvider
 import org.kodein.di.bindSingleton
 import org.kodein.di.instance
 
-object FeedDataModule : DiModule() {
-    override fun name() = "multiplatform-feed-data"
+object MplFeedDataModule : DependencyModule() {
+    override fun name() = "mpl-feed-data"
 
     override fun bindDependencies(builder: DI.Builder) {
         builder.apply {

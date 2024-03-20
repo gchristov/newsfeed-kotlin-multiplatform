@@ -9,7 +9,7 @@ import KmmShared
 @main
 struct NewsfeedApp: App {
     init() {
-        MplNewsfeedDi.shared.setup(appModules: [])
+        DependencyInjector.shared.initialise()
     }
     
     var body: some Scene {

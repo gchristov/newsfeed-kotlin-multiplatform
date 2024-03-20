@@ -10,7 +10,7 @@ public struct PostScreen: View {
     }
     
     public var body: some View {
-        PostScreenContent(viewModel: PostModule.shared.injectPostViewModel(postId: postId))
+        PostScreenContent(viewModel: DependencyInjector.shared.injectPostViewModel(postId: postId))
     }
 }
 

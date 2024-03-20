@@ -49,11 +49,12 @@ import com.gchristov.newsfeed.android.common.compose.elements.search.AppSearchBa
 import com.gchristov.newsfeed.android.common.compose.elements.toUiBlockingError
 import com.gchristov.newsfeed.android.common.compose.elements.toUiNonBlockingError
 import com.gchristov.newsfeed.android.common.compose.theme.Theme
-import com.gchristov.newsfeed.android.common.navigation.NavigationModule
+import com.gchristov.newsfeed.android.common.navigation.Navigator
+import com.gchristov.newsfeed.multiplatform.common.kotlin.di.DependencyInjector
+import com.gchristov.newsfeed.multiplatform.common.kotlin.di.inject
 import com.gchristov.newsfeed.multiplatform.common.mvvm.createViewModelFactory
 import com.gchristov.newsfeed.multiplatform.feed.data.model.DecoratedFeedItem
 import com.gchristov.newsfeed.multiplatform.feed.data.model.SectionedFeed
-import com.gchristov.newsfeed.multiplatform.feed.feature.FeedModule
 import com.gchristov.newsfeed.multiplatform.feed.feature.FeedViewModel
 import com.gchristov.newsfeed.multiplatform.feed.feature.SearchWidgetState
 import java.text.SimpleDateFormat
@@ -62,8 +63,8 @@ import java.util.Random
 import com.gchristov.newsfeed.android.common.design.R as DesignR
 
 class FeedActivity : CommonComposeActivity() {
-    private val viewModel by viewModels<FeedViewModel> { createViewModelFactory { FeedModule.injectFeedViewModel() } }
-    private val navigator by lazy { NavigationModule.injectNavigator(context = this) }
+    private val viewModel by viewModels<FeedViewModel> { createViewModelFactory { DependencyInjector.inject() } }
+    private val navigator: Navigator by lazy { DependencyInjector.inject(arg = this) }
 
     private val feedItemDateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
     private val feedSectionDateFormat = SimpleDateFormat("MMM, yyyy", Locale.getDefault())
@@ -104,6 +105,7 @@ internal fun FeedScreen(
             blockingError = state.blockingError!!.toUiBlockingError(),
             onRetry = viewModel::refreshContent
         )
+
         else -> FeedState(
             feedItemDateFormatter = feedItemDateFormatter,
             feedSectionDateFormatter = feedSectionDateFormatter,
@@ -216,6 +218,7 @@ private fun MainAppBar(
                 }
             )
         }
+
         SearchWidgetState.OPENED -> {
             AppSearchBar(
                 text = searchTextState,

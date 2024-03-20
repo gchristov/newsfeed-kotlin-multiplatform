@@ -1,15 +1,13 @@
 package com.gchristov.newsfeed.multiplatform.feed.feature
 
-import com.gchristov.newsfeed.multiplatform.common.kotlin.di.DiGraph
-import com.gchristov.newsfeed.multiplatform.common.kotlin.di.DiModule
-import com.gchristov.newsfeed.multiplatform.common.kotlin.di.inject
+import com.gchristov.newsfeed.multiplatform.common.kotlin.di.DependencyModule
 import kotlinx.coroutines.Dispatchers
 import org.kodein.di.DI
 import org.kodein.di.bindProvider
 import org.kodein.di.instance
 
-object FeedModule : DiModule() {
-    override fun name() = "multiplatform-feed"
+object MplFeedModule : DependencyModule() {
+    override fun name() = "mpl-feed"
 
     override fun bindDependencies(builder: DI.Builder) {
         builder.apply {
@@ -23,6 +21,4 @@ object FeedModule : DiModule() {
             }
         }
     }
-
-    fun injectFeedViewModel(): FeedViewModel = DiGraph.inject()
 }

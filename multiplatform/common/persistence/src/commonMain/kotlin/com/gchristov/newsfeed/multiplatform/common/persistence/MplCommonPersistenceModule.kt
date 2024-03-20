@@ -3,14 +3,14 @@ package com.gchristov.newsfeed.multiplatform.common.persistence
 import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlSchema
-import com.gchristov.newsfeed.multiplatform.common.kotlin.di.DiModule
+import com.gchristov.newsfeed.multiplatform.common.kotlin.di.DependencyModule
 import com.russhwolf.settings.Settings
 import org.kodein.di.DI
 import org.kodein.di.bindFactory
 import org.kodein.di.bindSingleton
 
-object CommonPersistenceModule : DiModule() {
-    override fun name() = "multiplatform-common-persistence"
+object MplCommonPersistenceModule : DependencyModule() {
+    override fun name() = "mpl-common-persistence"
 
     override fun bindDependencies(builder: DI.Builder) {
         builder.apply {
