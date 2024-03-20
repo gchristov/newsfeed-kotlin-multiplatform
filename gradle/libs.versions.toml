@@ -1,28 +1,26 @@
 [versions]
-android-gradlePlugin = "8.3.0"
+android-gradlePlugin = "8.3.1"
 kotlin = "1.9.22"
 kotlinx-coroutines = "1.7.3"
-kotlinx-datetime = "0.3.2"
+kotlinx-datetime = "0.4.1"
 kotlinx-serialization = "1.6.3"
 androidX-compose = "1.6.3"
 androidX-compose-compiler = "1.5.10"
 androidx-activityCompose = "1.8.2"
 androidx-testRunner = "1.5.2"
 androidx-coreTesting = "2.2.0"
-coil = "1.4.0"
-composeHtml = "1.0.1"
+coil = "2.6.0"
+composeHtml = "1.0.2"
 buildKonfig = "0.15.1"
 sqlDelight = "2.0.1"
-accompanist-swipeRefresh = "0.19.0"
 junit = "4.13.2"
-kodein = "7.21.1"
+kodein = "7.21.2"
 moko-mvvm = "0.12.0"
 ktor = "2.3.9"
 kermit = "2.0.3"
-multiplatform-settings = "0.8.1"
+multiplatform-settings = "1.1.1"
 
 [libraries]
-accompanist-swipeRefresh = { module = "com.google.accompanist:accompanist-swiperefresh", version.ref = "accompanist-swipeRefresh" }
 junit = { module = "junit:junit", version.ref = "junit" }
 androidx-activityCompose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
 androidx-compose-liveData = { module = "androidx.compose.runtime:runtime-livedata", version.ref = "androidX-compose" }

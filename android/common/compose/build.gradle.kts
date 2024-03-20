@@ -20,6 +20,5 @@ dependencies {
     implementation(libs.androidx.compose.material)
     implementation(libs.coil)
     implementation(libs.composeHtml)
-    implementation(libs.accompanist.swipeRefresh)
     implementation(projects.android.common.design)
 }
