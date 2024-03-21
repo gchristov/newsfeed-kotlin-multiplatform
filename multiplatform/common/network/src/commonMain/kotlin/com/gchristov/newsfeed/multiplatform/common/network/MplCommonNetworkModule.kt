@@ -12,6 +12,7 @@ object MplCommonNetworkModule : DependencyModule() {
 
     override fun bindDependencies(builder: DI.Builder) {
         builder.apply {
+            bindSingleton { provideNetworkConfig() }
             bindSingleton {
                 provideJsonNetworkClient(
                     log = instance(),
@@ -20,6 +21,11 @@ object MplCommonNetworkModule : DependencyModule() {
             }
         }
     }
+
+    private fun provideNetworkConfig(): NetworkConfig = NetworkConfig(
+        guardianApiKey = BuildConfig.GUARDIAN_API_KEY,
+        guardianApiUrl = BuildConfig.GUARDIAN_API_URL,
+    )
 
     private fun provideJsonNetworkClient(
         log: Logger,

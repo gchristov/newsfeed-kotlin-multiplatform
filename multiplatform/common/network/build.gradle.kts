@@ -1,3 +1,5 @@
+import com.gchristov.newsfeed.gradleplugins.envSecret
+
 val packageId = "com.gchristov.newsfeed.multiplatform.common.network"
 
 plugins {
@@ -30,21 +32,17 @@ kotlin {
 
 buildkonfig {
     packageName = packageId
+    exposeObjectWithName = "BuildConfig"
     defaultConfigs {
         buildConfigField(
             type = com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING,
-            name = "API_KEY",
-            value = "86cb30cc-1eb4-478f-a147-f73e02862a2e"
+            name = "GUARDIAN_API_KEY",
+            value = project.envSecret("GUARDIAN_API_KEY")
         )
         buildConfigField(
             type = com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING,
-            name = "API_URL",
-            value = "https://content.guardianapis.com"
-        )
-        buildConfigField(
-            type = com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING,
-            name = "API_AUTH_HEADER",
-            value = "api-key"
+            name = "GUARDIAN_API_URL",
+            value = project.envSecret("GUARDIAN_API_URL")
         )
     }
 }

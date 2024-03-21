@@ -2,6 +2,7 @@ package com.gchristov.newsfeed.multiplatform.feed.data
 
 import com.gchristov.newsfeed.multiplatform.common.kotlin.di.DependencyModule
 import com.gchristov.newsfeed.multiplatform.common.network.NetworkClient
+import com.gchristov.newsfeed.multiplatform.common.network.NetworkConfig
 import com.gchristov.newsfeed.multiplatform.common.persistence.SqlDriverProperties
 import com.gchristov.newsfeed.multiplatform.feed.data.usecase.BuildSectionedFeedUseCase
 import com.gchristov.newsfeed.multiplatform.feed.data.usecase.FlattenSectionedFeedUseCase
@@ -22,7 +23,12 @@ object MplFeedDataModule : DependencyModule() {
 
     override fun bindDependencies(builder: DI.Builder) {
         builder.apply {
-            bindSingleton { provideFeedApi(networkClient = instance()) }
+            bindSingleton {
+                provideFeedApi(
+                    networkClient = instance(),
+                    networkConfig = instance(),
+                )
+            }
             bindSingleton {
                 provideFeedRepository(
                     api = instance(),
@@ -71,7 +77,13 @@ object MplFeedDataModule : DependencyModule() {
         sharedPreferences = sharedPreferences
     )
 
-    private fun provideFeedApi(networkClient: NetworkClient.Json) = FeedApi(networkClient)
+    private fun provideFeedApi(
+        networkClient: NetworkClient.Json,
+        networkConfig: NetworkConfig,
+    ) = FeedApi(
+        client = networkClient,
+        config = networkConfig,
+    )
 
     private fun provideBuildSectionedFeedUseCase() = BuildSectionedFeedUseCase(
         dispatcher = Dispatchers.Default,

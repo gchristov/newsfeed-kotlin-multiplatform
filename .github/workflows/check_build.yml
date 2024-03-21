@@ -13,6 +13,8 @@ env:
   IOS_SIMULATOR: "platform=iOS Simulator,name=iPhone 11,OS=15.4"
   ANDROID_COMPILE_SDK: "31"
   ANDROID_EMULATOR_ARCHITECTURE: "x86_64"
+  GUARDIAN_API_KEY: ${{ secrets.GUARDIAN_API_KEY }}
+  GUARDIAN_API_URL: ${{ secrets.GUARDIAN_API_URL }}
 
 jobs:
   kmmTest:
@@ -22,36 +24,39 @@ jobs:
       cancel-in-progress: true
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup Java
-        uses: actions/setup-java@v2
+        uses: actions/checkout@v4
+      - name: Set up Java
+        uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: ${{ env.JAVA_VERSION }}
-      - name: Gradle cache
-        uses: gradle/gradle-build-action@v2
-      - name: KMM cache
-        uses: actions/cache@v2
-        id: konan-kmm
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v3 # By default, cache is only saved on the 'master' branch
+      - name: Set up Konan
+        uses: actions/cache@v4
+        id: konan-kmm-test
         with:
           path: '~/.konan/**'
-          key: konan-kmm
+          key: konan-kmm-build
+      - name: Set up secrets
+        run: |
+          bash secrets.sh
       - name: KMM tests
-        run: set -o pipefail && ./gradlew --continue testDebugUnitTest
-      # Always run this job even if the previous steps fail to collect all test reports
-      - name: Generate KMM test report
-        uses: mikepenz/action-junit-report@v3
-        if: always()
+        run: |
+          set -o pipefail && 
+          ./gradlew --no-daemon --continue testDebugUnitTest
+      - name: Generate test report
+        uses: mikepenz/action-junit-report@v4
+        if: always() # Ensure all test reports are collected, even after errors
         with:
           report_paths: |
             **/TEST-*.xml
           check_name: 'kmmTestResults'
-      # Always run this job even if the previous steps fail to collect all artifacts
       - name: Save artifacts
-        uses: actions/upload-artifact@v3
-        if: always()
+        uses: actions/upload-artifact@v4
+        if: always() # Ensure all artifacts are collected, even after errors
         with:
-          name: KMM test results
+          name: Tests
           path: |
             **/TEST-*.xml
 
@@ -62,36 +67,44 @@ jobs:
       cancel-in-progress: true
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup Java
-        uses: actions/setup-java@v2
+        uses: actions/checkout@v4
+      - name: Set up Java
+        uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: ${{ env.JAVA_VERSION }}
-      - name: Setup Xcode
-        run: sudo xcode-select -s /Applications/Xcode_${{ env.XCODE_VERSION }}.app
-      - name: Gradle cache
-        uses: gradle/gradle-build-action@v2
-      - name: KMM cache
-        uses: actions/cache@v2
-        id: konan-ios
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v3 # By default, cache is only saved on the 'master' branch
+      - name: Set up Konan
+        uses: actions/cache@v4
+        id: konan-ios-build
         with:
           path: '~/.konan/**'
-          key: konan-ios
-      - name: Xcode cache
+          key: konan-ios-build
+      - name: Set up secrets
+        run: |
+          bash secrets.sh
+      - name: Set up Xcode version
+        run: sudo xcode-select -s /Applications/Xcode_${{ env.XCODE_VERSION }}.app
+      - name: Set up Xcode
         uses: mikehardy/buildcache-action@v2
       - name: Compile iOS app
         run: |
-          cd appIos
-          set -o pipefail && xcodebuild ${{ env.XCODE_CACHE }} -workspace appIos.xcworkspace -scheme "appIos" -sdk iphonesimulator -destination '${{ env.IOS_SIMULATOR }}' build | tee xcodebuild.log | xcpretty
+          cd appIos &&
+          set -o pipefail && 
+          xcodebuild ${{ env.XCODE_CACHE }} -workspace appIos.xcworkspace -scheme "appIos" -sdk iphonesimulator -destination '${{ env.IOS_SIMULATOR }}' build | tee xcodebuild.log | xcpretty &&
+          cd ..
       - name: Save artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
+        if: always() # Ensure all artifacts are collected, even after errors
         with:
-          name: iOS build
+          name: Build
           path: |
             appIos/xcodebuild.log
             ~/Library/Developer/Xcode/DerivedData/**/Build/Products/**/appIos.app
             ~/Library/Developer/Xcode/DerivedData/**/Build/Products/**/appIos.app.dSYM
+            **/build
+            **/secrets.properties
 
   iosTest:
     runs-on: macos-12
@@ -100,32 +113,38 @@ jobs:
       cancel-in-progress: true
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup Java
-        uses: actions/setup-java@v2
+        uses: actions/checkout@v4
+      - name: Set up Java
+        uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: ${{ env.JAVA_VERSION }}
-      - name: Setup Xcode
-        run: sudo xcode-select -s /Applications/Xcode_${{ env.XCODE_VERSION }}.app
-      - name: Gradle cache
-        uses: gradle/gradle-build-action@v2
-      - name: KMM cache
-        uses: actions/cache@v2
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v3 # By default, cache is only saved on the 'master' branch
+      - name: Set up Konan
+        uses: actions/cache@v4
         id: konan-ios-test
         with:
           path: '~/.konan/**'
           key: konan-ios-test
-      - name: Xcode cache
+      - name: Set up secrets
+        run: |
+          bash secrets.sh
+      - name: Set up Xcode version
+        run: sudo xcode-select -s /Applications/Xcode_${{ env.XCODE_VERSION }}.app
+      - name: Set up Xcode
         uses: mikehardy/buildcache-action@v2
       - name: iOS tests
         run: |
-          cd appIos
-          set -o pipefail && xcodebuild ${{ env.XCODE_CACHE }} -workspace appIos.xcworkspace -scheme "appIos" -sdk iphonesimulator -destination '${{ env.IOS_SIMULATOR }}' test | tee xcodebuild.log | xcpretty
+          cd appIos &&
+          set -o pipefail && 
+          xcodebuild ${{ env.XCODE_CACHE }} -workspace appIos.xcworkspace -scheme "appIos" -sdk iphonesimulator -destination '${{ env.IOS_SIMULATOR }}' test | tee xcodebuild.log | xcpretty &&
+          cd ..
       - name: Save artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
+        if: always() # Ensure all artifacts are collected, even after errors
         with:
-          name: iOS test results
+          name: Tests
           path: |
             appIos/xcodebuild.log
 
@@ -136,53 +155,63 @@ jobs:
       cancel-in-progress: true
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup Java
-        uses: actions/setup-java@v2
+        uses: actions/checkout@v4
+      - name: Set up Java
+        uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: ${{ env.JAVA_VERSION }}
-      - name: Gradle cache
-        uses: gradle/gradle-build-action@v2
-      - name: KMM cache
-        uses: actions/cache@v2
-        id: konan-android
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v3 # By default, cache is only saved on the 'master' branch
+      - name: Set up Konan
+        uses: actions/cache@v4
+        id: konan-android-build
         with:
           path: '~/.konan/**'
-          key: konan-android
+          key: konan-android-build
+      - name: Set up secrets
+        run: |
+          bash secrets.sh
       - name: Compile Android app
-        run: set -o pipefail && ./gradlew android:app:assembleDebug
+        run: |
+          set -o pipefail && 
+          ./gradlew android:app:assembleDebug
       - name: Save artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
+        if: always() # Ensure all artifacts are collected, even after errors
         with:
-          name: Android build
+          name: Build
           path: |
             **/*.apk
+            **/build
+            **/secrets.properties
 
   androidTest:
-    # Needed because of hardware acceleration for the emulator
-    runs-on: macos-11
+    runs-on: macos-11 # Allows Android emulator hardware acceleration
     concurrency:
       group: ${{ github.ref }}_androidTest
       cancel-in-progress: true
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup Java
-        uses: actions/setup-java@v2
+        uses: actions/checkout@v4
+      - name: Set up Java
+        uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: ${{ env.JAVA_VERSION }}
-      - name: Gradle cache
-        uses: gradle/gradle-build-action@v2
-      - name: KMM cache
-        uses: actions/cache@v2
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v3 # By default, cache is only saved on the 'master' branch
+      - name: Set up Konan
+        uses: actions/cache@v4
         id: konan-android-test
         with:
           path: '~/.konan/**'
           key: konan-android-test
-      - name: AVD cache
-        uses: actions/cache@v2
+      - name: Set up secrets
+        run: |
+          bash secrets.sh
+      - name: Set up AVD
+        uses: actions/cache@v4
         id: avd-cache
         with:
           path: |
@@ -208,11 +237,10 @@ jobs:
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
           script: set -o pipefail && ./gradlew connectedAndroidTest
-      # Always run this job even if the previous steps fail to collect all artifacts
       - name: Save artifacts
-        uses: actions/upload-artifact@v3
-        if: always()
+        uses: actions/upload-artifact@v4
+        if: always() # Ensure all artifacts are collected, even after errors
         with:
-          name: Android test results
+          name: Tests
           path: |
             **/test-result.pb

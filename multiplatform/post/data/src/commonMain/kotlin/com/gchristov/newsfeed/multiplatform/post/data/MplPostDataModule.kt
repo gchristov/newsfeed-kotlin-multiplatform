@@ -2,6 +2,7 @@ package com.gchristov.newsfeed.multiplatform.post.data
 
 import com.gchristov.newsfeed.multiplatform.common.kotlin.di.DependencyModule
 import com.gchristov.newsfeed.multiplatform.common.network.NetworkClient
+import com.gchristov.newsfeed.multiplatform.common.network.NetworkConfig
 import com.gchristov.newsfeed.multiplatform.common.persistence.SqlDriverProperties
 import com.russhwolf.settings.Settings
 import kotlinx.coroutines.Dispatchers
@@ -14,7 +15,12 @@ object MplPostDataModule : DependencyModule() {
 
     override fun bindDependencies(builder: DI.Builder) {
         builder.apply {
-            bindSingleton { providePostApi(networkClient = instance()) }
+            bindSingleton {
+                providePostApi(
+                    networkClient = instance(),
+                    networkConfig = instance(),
+                )
+            }
             bindSingleton {
                 providePostRepository(
                     api = instance(),
@@ -43,5 +49,11 @@ object MplPostDataModule : DependencyModule() {
         database = database
     )
 
-    private fun providePostApi(networkClient: NetworkClient.Json) = PostApi(networkClient)
+    private fun providePostApi(
+        networkClient: NetworkClient.Json,
+        networkConfig: NetworkConfig,
+    ) = PostApi(
+        client = networkClient,
+        config = networkConfig,
+    )
 }
