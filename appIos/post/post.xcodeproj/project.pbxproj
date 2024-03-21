@@ -311,7 +311,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Shared KMM compilation needed here in addition to the main app because Xcode compiles \n# projects based on dependencies so this module might be compiled before anything else, \n# in which case we might get Xcode errors about missing KMM modules\necho \"Building shared KMM module for target $TARGET_NAME\"\ncd \"$SRCROOT/../..\"\n./gradlew :multiplatform:umbrella:embedAndSignAppleFrameworkForXcode --scan\n";
+			shellScript = "# Shared KMM compilation needed here in addition to the main app because Xcode compiles \n# projects based on dependencies so this module might be compiled before anything else, \n# in which case we might get Xcode errors about missing KMM modules\necho \"Building shared KMM module for target $TARGET_NAME\"\ncd \"$SRCROOT/../..\"\n./gradlew :multiplatform:umbrella:embedAndSignAppleFrameworkForXcode\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

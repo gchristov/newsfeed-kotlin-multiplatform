@@ -9,11 +9,23 @@ pluginManagement {
     }
 }
 
+plugins {
+    id("com.gradle.enterprise") version("3.16.2")
+}
+
 dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
         maven(uri("https://jitpack.io")) // For compose-html dependency
+    }
+}
+
+gradleEnterprise {
+    buildScan {
+        termsOfServiceUrl = "https://gradle.com/terms-of-service"
+        termsOfServiceAgree = "yes"
+        publishAlways()
     }
 }
 

@@ -45,7 +45,7 @@ jobs:
       - name: Unit test
         run: |
           set -o pipefail && 
-          ./gradlew --no-daemon --continue testDebugUnitTest --scan
+          ./gradlew --no-daemon --continue testDebugUnitTest
       - name: Generate test report
         uses: mikepenz/action-junit-report@v4
         if: always() # Ensure all test reports are collected, even after errors
@@ -176,7 +176,7 @@ jobs:
       - name: Compile Android app
         run: |
           set -o pipefail && 
-          ./gradlew android:app:assembleDebug --scan
+          ./gradlew android:app:assembleDebug
       - name: Artifacts
         uses: actions/upload-artifact@v4
         if: always() # Ensure all artifacts are collected, even after errors
@@ -237,7 +237,7 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
-          script: set -o pipefail && ./gradlew connectedAndroidTest --scan
+          script: set -o pipefail && ./gradlew connectedAndroidTest
       - name: Artifacts
         uses: actions/upload-artifact@v4
         if: always() # Ensure all artifacts are collected, even after errors
