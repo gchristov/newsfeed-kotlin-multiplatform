@@ -183,7 +183,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Compile shared KMM code from the main app to so that its signature is valid\necho \"Signing shared KMM module with $TARGET_NAME's signature\"\ncd \"$SRCROOT/..\"\n./gradlew :multiplatform:umbrella:embedAndSignAppleFrameworkForXcode\n";
+			shellScript = "# Compile shared KMM code from the main app to so that its signature is valid\necho \"Signing shared KMM module with $TARGET_NAME's signature\"\ncd \"$SRCROOT/..\"\n./gradlew :multiplatform:umbrella:embedAndSignAppleFrameworkForXcode --scan\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
