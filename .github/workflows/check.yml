@@ -1,4 +1,4 @@
-name: Check Build
+name: check
 
 on:
   push:
@@ -17,10 +17,10 @@ env:
   GUARDIAN_API_URL: ${{ secrets.GUARDIAN_API_URL }}
 
 jobs:
-  kmmTest:
+  check-unit-test:
     runs-on: ubuntu-20.04
     concurrency:
-      group: ${{ github.ref }}_kmmTest
+      group: ${{ github.ref }}-check-unit-test
       cancel-in-progress: true
     steps:
       - name: Checkout
@@ -34,14 +34,14 @@ jobs:
         uses: gradle/actions/setup-gradle@v3 # By default, cache is only saved on the 'master' branch
       - name: Set up Konan
         uses: actions/cache@v4
-        id: konan-kmm-test
+        id: check-unit-test-konan
         with:
           path: '~/.konan/**'
-          key: konan-kmm-build
+          key: check-unit-test-konan
       - name: Set up secrets
         run: |
           bash secrets.sh
-      - name: KMM tests
+      - name: Unit test
         run: |
           set -o pipefail && 
           ./gradlew --no-daemon --continue testDebugUnitTest
@@ -51,19 +51,19 @@ jobs:
         with:
           report_paths: |
             **/TEST-*.xml
-          check_name: 'kmmTestResults'
-      - name: Save artifacts
+          check_name: 'check-unit-test-results'
+      - name: Artifacts
         uses: actions/upload-artifact@v4
         if: always() # Ensure all artifacts are collected, even after errors
         with:
-          name: Tests
+          name: Unit tests
           path: |
             **/TEST-*.xml
 
-  iosBuild:
+  ios-check-build:
     runs-on: macos-12
     concurrency:
-      group: ${{ github.ref }}_iosBuild
+      group: ${{ github.ref }}-ios-check-build
       cancel-in-progress: true
     steps:
       - name: Checkout
@@ -77,10 +77,10 @@ jobs:
         uses: gradle/actions/setup-gradle@v3 # By default, cache is only saved on the 'master' branch
       - name: Set up Konan
         uses: actions/cache@v4
-        id: konan-ios-build
+        id: ios-check-build-konan
         with:
           path: '~/.konan/**'
-          key: konan-ios-build
+          key: ios-check-build-konan
       - name: Set up secrets
         run: |
           bash secrets.sh
@@ -94,11 +94,11 @@ jobs:
           set -o pipefail && 
           xcodebuild ${{ env.XCODE_CACHE }} -workspace appIos.xcworkspace -scheme "appIos" -sdk iphonesimulator -destination '${{ env.IOS_SIMULATOR }}' build | tee xcodebuild.log | xcpretty &&
           cd ..
-      - name: Save artifacts
+      - name: Artifacts
         uses: actions/upload-artifact@v4
         if: always() # Ensure all artifacts are collected, even after errors
         with:
-          name: Build
+          name: iOS Build
           path: |
             appIos/xcodebuild.log
             ~/Library/Developer/Xcode/DerivedData/**/Build/Products/**/appIos.app
@@ -106,10 +106,10 @@ jobs:
             **/build
             **/secrets.properties
 
-  iosTest:
+  ios-check-test:
     runs-on: macos-12
     concurrency:
-      group: ${{ github.ref }}_iosTest
+      group: ${{ github.ref }}-ios-check-test
       cancel-in-progress: true
     steps:
       - name: Checkout
@@ -123,10 +123,10 @@ jobs:
         uses: gradle/actions/setup-gradle@v3 # By default, cache is only saved on the 'master' branch
       - name: Set up Konan
         uses: actions/cache@v4
-        id: konan-ios-test
+        id: ios-check-test-konan
         with:
           path: '~/.konan/**'
-          key: konan-ios-test
+          key: ios-check-test-konan
       - name: Set up secrets
         run: |
           bash secrets.sh
@@ -140,18 +140,18 @@ jobs:
           set -o pipefail && 
           xcodebuild ${{ env.XCODE_CACHE }} -workspace appIos.xcworkspace -scheme "appIos" -sdk iphonesimulator -destination '${{ env.IOS_SIMULATOR }}' test | tee xcodebuild.log | xcpretty &&
           cd ..
-      - name: Save artifacts
+      - name: Artifacts
         uses: actions/upload-artifact@v4
         if: always() # Ensure all artifacts are collected, even after errors
         with:
-          name: Tests
+          name: iOS Tests
           path: |
             appIos/xcodebuild.log
 
-  androidBuild:
+  android-check-build:
     runs-on: ubuntu-20.04
     concurrency:
-      group: ${{ github.ref }}_androidBuild
+      group: ${{ github.ref }}-android-check-build
       cancel-in-progress: true
     steps:
       - name: Checkout
@@ -165,10 +165,10 @@ jobs:
         uses: gradle/actions/setup-gradle@v3 # By default, cache is only saved on the 'master' branch
       - name: Set up Konan
         uses: actions/cache@v4
-        id: konan-android-build
+        id: android-check-build-konan
         with:
           path: '~/.konan/**'
-          key: konan-android-build
+          key: android-check-build-konan
       - name: Set up secrets
         run: |
           bash secrets.sh
@@ -176,20 +176,20 @@ jobs:
         run: |
           set -o pipefail && 
           ./gradlew android:app:assembleDebug
-      - name: Save artifacts
+      - name: Artifacts
         uses: actions/upload-artifact@v4
         if: always() # Ensure all artifacts are collected, even after errors
         with:
-          name: Build
+          name: Android Build
           path: |
             **/*.apk
             **/build
             **/secrets.properties
 
-  androidTest:
+  android-check-test:
     runs-on: macos-11 # Allows Android emulator hardware acceleration
     concurrency:
-      group: ${{ github.ref }}_androidTest
+      group: ${{ github.ref }}-android-check-test
       cancel-in-progress: true
     steps:
       - name: Checkout
@@ -203,10 +203,10 @@ jobs:
         uses: gradle/actions/setup-gradle@v3 # By default, cache is only saved on the 'master' branch
       - name: Set up Konan
         uses: actions/cache@v4
-        id: konan-android-test
+        id: android-check-test-konan
         with:
           path: '~/.konan/**'
-          key: konan-android-test
+          key: android-check-test-konan
       - name: Set up secrets
         run: |
           bash secrets.sh
@@ -237,10 +237,10 @@ jobs:
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
           script: set -o pipefail && ./gradlew connectedAndroidTest
-      - name: Save artifacts
+      - name: Artifacts
         uses: actions/upload-artifact@v4
         if: always() # Ensure all artifacts are collected, even after errors
         with:
-          name: Tests
+          name: Android Tests
           path: |
             **/test-result.pb
