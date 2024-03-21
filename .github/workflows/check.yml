@@ -8,6 +8,7 @@ on:
 
 env:
   JAVA_VERSION: "17"
+  JAVA_DISTRIBUTION: "zulu"
   XCODE_VERSION: "13.3"
   XCODE_CACHE: "CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++"
   IOS_SIMULATOR: "platform=iOS Simulator,name=iPhone 11,OS=15.4"
@@ -28,7 +29,7 @@ jobs:
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
-          distribution: 'zulu'
+          distribution: ${{ env.JAVA_DISTRIBUTION }}
           java-version: ${{ env.JAVA_VERSION }}
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v3 # By default, cache is only saved on the 'master' branch
@@ -71,7 +72,7 @@ jobs:
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
-          distribution: 'zulu'
+          distribution: ${{ env.JAVA_DISTRIBUTION }}
           java-version: ${{ env.JAVA_VERSION }}
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v3 # By default, cache is only saved on the 'master' branch
@@ -117,7 +118,7 @@ jobs:
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
-          distribution: 'zulu'
+          distribution: ${{ env.JAVA_DISTRIBUTION }}
           java-version: ${{ env.JAVA_VERSION }}
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v3 # By default, cache is only saved on the 'master' branch
@@ -159,7 +160,7 @@ jobs:
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
-          distribution: 'zulu'
+          distribution: ${{ env.JAVA_DISTRIBUTION }}
           java-version: ${{ env.JAVA_VERSION }}
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v3 # By default, cache is only saved on the 'master' branch
@@ -197,7 +198,7 @@ jobs:
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
-          distribution: 'zulu'
+          distribution: ${{ env.JAVA_DISTRIBUTION }}
           java-version: ${{ env.JAVA_VERSION }}
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v3 # By default, cache is only saved on the 'master' branch
