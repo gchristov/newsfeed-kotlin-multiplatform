@@ -4,7 +4,6 @@ import org.gradle.api.JavaVersion
 import org.gradle.api.Project
 import org.gradle.api.artifacts.VersionCatalog
 import org.gradle.api.artifacts.VersionCatalogsExtension
-import org.gradle.api.file.Directory
 import org.gradle.kotlin.dsl.getByType
 import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -22,8 +21,6 @@ internal fun Project.configureKotlin() {
         }
     }
 }
-
-fun Project.binaryRootDirectory(): Directory = layout.buildDirectory.dir("dist/js").get()
 
 fun Project.envSecret(key: String): String {
     val propFile = file("./secrets.properties")
