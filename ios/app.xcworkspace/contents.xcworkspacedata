@@ -2,7 +2,7 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "container:appIos.xcodeproj">
+      location = "container:app.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:common-design/common-design.xcodeproj">
