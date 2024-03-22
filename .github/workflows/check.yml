@@ -91,9 +91,9 @@ jobs:
         uses: mikehardy/buildcache-action@v2
       - name: Compile iOS app
         run: |
-          cd appIos &&
+          cd ios &&
           set -o pipefail && 
-          xcodebuild ${{ env.XCODE_CACHE }} -workspace appIos.xcworkspace -scheme "appIos" -sdk iphonesimulator -destination '${{ env.IOS_SIMULATOR }}' build | tee xcodebuild.log | xcpretty &&
+          xcodebuild ${{ env.XCODE_CACHE }} -workspace app.xcworkspace -scheme "app" -sdk iphonesimulator -destination '${{ env.IOS_SIMULATOR }}' build | tee xcodebuild.log | xcpretty &&
           cd ..
       - name: Artifacts
         uses: actions/upload-artifact@v4
@@ -101,9 +101,9 @@ jobs:
         with:
           name: iOS Build
           path: |
-            appIos/xcodebuild.log
-            ~/Library/Developer/Xcode/DerivedData/**/Build/Products/**/appIos.app
-            ~/Library/Developer/Xcode/DerivedData/**/Build/Products/**/appIos.app.dSYM
+            ios/xcodebuild.log
+            ~/Library/**/app.app
+            ~/Library/**/app.app.dSYM
             **/build
             **/secrets.properties
 
@@ -137,9 +137,9 @@ jobs:
         uses: mikehardy/buildcache-action@v2
       - name: iOS tests
         run: |
-          cd appIos &&
+          cd ios &&
           set -o pipefail && 
-          xcodebuild ${{ env.XCODE_CACHE }} -workspace appIos.xcworkspace -scheme "appIos" -sdk iphonesimulator -destination '${{ env.IOS_SIMULATOR }}' test | tee xcodebuild.log | xcpretty &&
+          xcodebuild ${{ env.XCODE_CACHE }} -workspace app.xcworkspace -scheme "app" -sdk iphonesimulator -destination '${{ env.IOS_SIMULATOR }}' test | tee xcodebuild.log | xcpretty &&
           cd ..
       - name: Artifacts
         uses: actions/upload-artifact@v4
@@ -147,7 +147,7 @@ jobs:
         with:
           name: iOS Tests
           path: |
-            appIos/xcodebuild.log
+            ios/xcodebuild.log
 
   android-check-build:
     runs-on: ubuntu-20.04
