@@ -27,6 +27,7 @@
 		4644B91C278529350067B224 /* CommonDesign.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4644B91A278529350067B224 /* CommonDesign.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4644B92327860A6B0067B224 /* AppButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4644B92227860A6B0067B224 /* AppButton.swift */; };
 		4644B925278675520067B224 /* AppIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4644B924278675520067B224 /* AppIcon.swift */; };
+		467558692BAD82F700CB625D /* CustomSwiftUiTestRuleWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 467558682BAD82F700CB625D /* CustomSwiftUiTestRuleWrapper.swift */; };
 		46AA3CC32763EE2300684D28 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46AA3CC22763EE2300684D28 /* Theme.swift */; };
 		46AA3CC52763EF0B00684D28 /* ContentColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46AA3CC42763EF0B00684D28 /* ContentColor.swift */; };
 		46C78D962787971F0026FE88 /* AppProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46C78D952787971F0026FE88 /* AppProgress.swift */; };
@@ -64,6 +65,7 @@
 		4644B91A278529350067B224 /* CommonDesign.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CommonDesign.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4644B92227860A6B0067B224 /* AppButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppButton.swift; sourceTree = "<group>"; };
 		4644B924278675520067B224 /* AppIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIcon.swift; sourceTree = "<group>"; };
+		467558682BAD82F700CB625D /* CustomSwiftUiTestRuleWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomSwiftUiTestRuleWrapper.swift; sourceTree = "<group>"; };
 		46AA3CC22763EE2300684D28 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		46AA3CC42763EF0B00684D28 /* ContentColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentColor.swift; sourceTree = "<group>"; };
 		46C78D952787971F0026FE88 /* AppProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppProgress.swift; sourceTree = "<group>"; };
@@ -105,6 +107,7 @@
 			isa = PBXGroup;
 			children = (
 				4642A9F52728C199005B31ED /* elements */,
+				467558672BAD82DB00CB625D /* test */,
 				46AA3CC12763DDDA00684D28 /* theme */,
 			);
 			path = "common-swiftui";
@@ -144,6 +147,14 @@
 				4644B91A278529350067B224 /* CommonDesign.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		467558672BAD82DB00CB625D /* test */ = {
+			isa = PBXGroup;
+			children = (
+				467558682BAD82F700CB625D /* CustomSwiftUiTestRuleWrapper.swift */,
+			);
+			path = test;
 			sourceTree = "<group>";
 		};
 		46AA3CC12763DDDA00684D28 /* theme */ = {
@@ -249,6 +260,7 @@
 			files = (
 				4642A9F7272D50D0005B31ED /* AppAvatar.swift in Sources */,
 				4624BE4C2756AF0400DCC43B /* Typography.swift in Sources */,
+				467558692BAD82F700CB625D /* CustomSwiftUiTestRuleWrapper.swift in Sources */,
 				464180F227D0F02C0070F9F7 /* AppGroupedList.swift in Sources */,
 				46AA3CC52763EF0B00684D28 /* ContentColor.swift in Sources */,
 				4644B8DF276F4F780067B224 /* AppNavigation.swift in Sources */,

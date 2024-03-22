@@ -1,5 +1,4 @@
 import XCTest
-import PostTestFixtures
 
 class PostUiTest: XCTestCase {
     

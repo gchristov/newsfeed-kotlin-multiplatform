@@ -1,5 +1,5 @@
 import SwiftUI
-import CommonSwiftUiTest
+import CommonSwiftUi
 import Post
 import KmmShared
 

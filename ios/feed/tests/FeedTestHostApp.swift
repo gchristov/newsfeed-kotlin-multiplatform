@@ -1,5 +1,5 @@
 import SwiftUI
-import CommonSwiftUiTest
+import CommonSwiftUi
 import Feed
 import KmmShared
 
