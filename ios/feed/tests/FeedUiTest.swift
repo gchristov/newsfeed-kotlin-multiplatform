@@ -1,5 +1,4 @@
 import XCTest
-import FeedTestFixtures
 
 class FeedUiTest: XCTestCase {
     

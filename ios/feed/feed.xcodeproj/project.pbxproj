@@ -12,13 +12,10 @@
 		464126D12723093B0094BF9B /* Post.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 464126CF2723093B0094BF9B /* Post.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4642A9EF27257553005B31ED /* CommonSwiftUi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4642A9EE27257553005B31ED /* CommonSwiftUi.framework */; };
 		4642A9F027257553005B31ED /* CommonSwiftUi.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4642A9EE27257553005B31ED /* CommonSwiftUi.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4675586C2BAD894D00CB625D /* FeedRobot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4675586A2BAD88FA00CB625D /* FeedRobot.swift */; };
 		4680F47A27A7209E007DA70E /* FeedTestHostApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4680F47927A7209E007DA70E /* FeedTestHostApp.swift */; };
-		4680F48627A72115007DA70E /* CommonSwiftUiTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4680F48527A72115007DA70E /* CommonSwiftUiTest.framework */; };
-		4680F48727A72115007DA70E /* CommonSwiftUiTest.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4680F48527A72115007DA70E /* CommonSwiftUiTest.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4680F48927A7211D007DA70E /* Feed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 464126A42722DD760094BF9B /* Feed.framework */; platformFilter = ios; };
 		4680F48A27A7211D007DA70E /* Feed.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 464126A42722DD760094BF9B /* Feed.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4680F48E27A72123007DA70E /* FeedTestFixtures.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4680F48D27A72123007DA70E /* FeedTestFixtures.framework */; };
-		4680F48F27A72123007DA70E /* FeedTestFixtures.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4680F48D27A72123007DA70E /* FeedTestFixtures.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4680F4A027A73F63007DA70E /* FeedUiTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4680F49627A73EFA007DA70E /* FeedUiTest.swift */; };
 /* End PBXBuildFile section */
 
@@ -59,8 +56,6 @@
 			dstSubfolderSpec = 10;
 			files = (
 				4680F48A27A7211D007DA70E /* Feed.framework in Embed Frameworks */,
-				4680F48F27A72123007DA70E /* FeedTestFixtures.framework in Embed Frameworks */,
-				4680F48727A72115007DA70E /* CommonSwiftUiTest.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -71,12 +66,10 @@
 		464126A42722DD760094BF9B /* Feed.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Feed.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		464126AE2722FC010094BF9B /* FeedScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedScreen.swift; sourceTree = "<group>"; };
 		464126CF2723093B0094BF9B /* Post.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Post.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		464126F1272319DA0094BF9B /* CommonUiKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CommonUiKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4642A9EE27257553005B31ED /* CommonSwiftUi.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CommonSwiftUi.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4675586A2BAD88FA00CB625D /* FeedRobot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedRobot.swift; sourceTree = "<group>"; };
 		4680F47727A7209E007DA70E /* FeedTestHost.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FeedTestHost.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4680F47927A7209E007DA70E /* FeedTestHostApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedTestHostApp.swift; sourceTree = "<group>"; };
-		4680F48527A72115007DA70E /* CommonSwiftUiTest.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CommonSwiftUiTest.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		4680F48D27A72123007DA70E /* FeedTestFixtures.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FeedTestFixtures.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4680F49427A73EFA007DA70E /* FeedUiTest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FeedUiTest.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4680F49627A73EFA007DA70E /* FeedUiTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedUiTest.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -96,8 +89,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				4680F48927A7211D007DA70E /* Feed.framework in Frameworks */,
-				4680F48E27A72123007DA70E /* FeedTestFixtures.framework in Frameworks */,
-				4680F48627A72115007DA70E /* CommonSwiftUiTest.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -142,10 +133,7 @@
 		464126CE2723093B0094BF9B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				4680F48D27A72123007DA70E /* FeedTestFixtures.framework */,
-				4680F48527A72115007DA70E /* CommonSwiftUiTest.framework */,
 				4642A9EE27257553005B31ED /* CommonSwiftUi.framework */,
-				464126F1272319DA0094BF9B /* CommonUiKit.framework */,
 				464126CF2723093B0094BF9B /* Post.framework */,
 			);
 			name = Frameworks;
@@ -154,8 +142,9 @@
 		4680F47227A72061007DA70E /* tests */ = {
 			isa = PBXGroup;
 			children = (
-				4680F49627A73EFA007DA70E /* FeedUiTest.swift */,
+				4675586A2BAD88FA00CB625D /* FeedRobot.swift */,
 				4680F47927A7209E007DA70E /* FeedTestHostApp.swift */,
+				4680F49627A73EFA007DA70E /* FeedUiTest.swift */,
 			);
 			path = tests;
 			sourceTree = "<group>";
@@ -342,6 +331,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4675586C2BAD894D00CB625D /* FeedRobot.swift in Sources */,
 				4680F4A027A73F63007DA70E /* FeedUiTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

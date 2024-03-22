@@ -7,14 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		462F99F227A3563000680FA5 /* PostTestFixtures.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 462F99F127A3563000680FA5 /* PostTestFixtures.framework */; };
-		462F99F327A3563000680FA5 /* PostTestFixtures.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 462F99F127A3563000680FA5 /* PostTestFixtures.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		464126CD272309260094BF9B /* PostScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464126CC272309260094BF9B /* PostScreen.swift */; };
 		4642A9F22725755D005B31ED /* CommonSwiftUi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4642A9F12725755D005B31ED /* CommonSwiftUi.framework */; };
 		4642A9F32725755D005B31ED /* CommonSwiftUi.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4642A9F12725755D005B31ED /* CommonSwiftUi.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4675586E2BAD8A3400CB625D /* PostRobot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4675586D2BAD8A3400CB625D /* PostRobot.swift */; };
 		46AA1202279EF2EC0066D1A0 /* PostTestHostApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46AA1201279EF2EC0066D1A0 /* PostTestHostApp.swift */; };
-		46AA120E279EF3300066D1A0 /* CommonSwiftUiTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46AA120D279EF3300066D1A0 /* CommonSwiftUiTest.framework */; };
-		46AA120F279EF3300066D1A0 /* CommonSwiftUiTest.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 46AA120D279EF3300066D1A0 /* CommonSwiftUiTest.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		46AA1227279EFBE30066D1A0 /* Post.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 464126C1272308AD0094BF9B /* Post.framework */; platformFilter = ios; };
 		46AA1228279EFBE30066D1A0 /* Post.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 464126C1272308AD0094BF9B /* Post.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		46AA122F27A2BC350066D1A0 /* PostUiTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46AA1217279EF4910066D1A0 /* PostUiTest.swift */; };
@@ -55,9 +52,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				462F99F327A3563000680FA5 /* PostTestFixtures.framework in Embed Frameworks */,
 				46AA1228279EFBE30066D1A0 /* Post.framework in Embed Frameworks */,
-				46AA120F279EF3300066D1A0 /* CommonSwiftUiTest.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -65,14 +60,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		462F99F127A3563000680FA5 /* PostTestFixtures.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = PostTestFixtures.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		464126C1272308AD0094BF9B /* Post.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Post.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		464126CC272309260094BF9B /* PostScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostScreen.swift; sourceTree = "<group>"; };
-		464126EA2723190A0094BF9B /* CommonUiKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CommonUiKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4642A9F12725755D005B31ED /* CommonSwiftUi.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CommonSwiftUi.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4675586D2BAD8A3400CB625D /* PostRobot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostRobot.swift; sourceTree = "<group>"; };
 		46AA11FF279EF2EC0066D1A0 /* PostTestHost.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PostTestHost.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		46AA1201279EF2EC0066D1A0 /* PostTestHostApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostTestHostApp.swift; sourceTree = "<group>"; };
-		46AA120D279EF3300066D1A0 /* CommonSwiftUiTest.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CommonSwiftUiTest.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		46AA1215279EF4910066D1A0 /* PostUiTest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PostUiTest.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		46AA1217279EF4910066D1A0 /* PostUiTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostUiTest.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -90,9 +83,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				462F99F227A3563000680FA5 /* PostTestFixtures.framework in Frameworks */,
 				46AA1227279EFBE30066D1A0 /* Post.framework in Frameworks */,
-				46AA120E279EF3300066D1A0 /* CommonSwiftUiTest.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -137,10 +128,7 @@
 		464126E92723190A0094BF9B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				462F99F127A3563000680FA5 /* PostTestFixtures.framework */,
-				46AA120D279EF3300066D1A0 /* CommonSwiftUiTest.framework */,
 				4642A9F12725755D005B31ED /* CommonSwiftUi.framework */,
-				464126EA2723190A0094BF9B /* CommonUiKit.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -148,8 +136,9 @@
 		46AA1200279EF2EC0066D1A0 /* tests */ = {
 			isa = PBXGroup;
 			children = (
-				46AA1217279EF4910066D1A0 /* PostUiTest.swift */,
+				4675586D2BAD8A3400CB625D /* PostRobot.swift */,
 				46AA1201279EF2EC0066D1A0 /* PostTestHostApp.swift */,
+				46AA1217279EF4910066D1A0 /* PostUiTest.swift */,
 			);
 			path = tests;
 			sourceTree = "<group>";
@@ -336,6 +325,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4675586E2BAD8A3400CB625D /* PostRobot.swift in Sources */,
 				46AA122F27A2BC350066D1A0 /* PostUiTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
