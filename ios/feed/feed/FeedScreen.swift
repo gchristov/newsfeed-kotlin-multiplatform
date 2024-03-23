@@ -1,5 +1,5 @@
 import SwiftUI
-import KmmShared
+import NewsfeedMultiplatform
 import Post
 import CommonSwiftUi
 
