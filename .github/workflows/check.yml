@@ -105,8 +105,8 @@ jobs:
           name: iOS Build
           path: |
             ios/xcodebuild.log
-            ~/Library/**/app.app
-            ~/Library/**/app.app.dSYM
+            ~/Library/Developer/Xcode/DerivedData/**/*.app
+            ~/Library/Developer/Xcode/DerivedData/**/*.app.dSYM
             **/build
             **/secrets.properties
 
