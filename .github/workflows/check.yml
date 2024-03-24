@@ -92,7 +92,7 @@ jobs:
         with:
           key: ios-check-build-${{ github.workflow }}-${{ github.sha }}
           restore-keys: ios-check-build-${{ github.workflow }}-
-      - name: Compile iOS app
+      - name: Compile iOS appp
         run: |
           cd ios &&
           set -o pipefail && 
