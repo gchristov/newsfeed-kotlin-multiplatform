@@ -1,7 +1,7 @@
 import SwiftUI
 import CommonSwiftUi
 import Feed
-import KmmShared
+import NewsfeedMultiplatform
 
 /**
  Entry point of the app.

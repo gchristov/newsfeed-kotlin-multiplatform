@@ -1,7 +1,7 @@
 import SwiftUI
 import CommonSwiftUi
 import Feed
-import KmmShared
+import NewsfeedMultiplatform
 
 /*
  App to setup and run the UI tests for this module using a launch environment

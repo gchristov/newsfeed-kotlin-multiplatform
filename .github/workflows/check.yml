@@ -88,8 +88,11 @@ jobs:
       - name: Set up Xcode version
         run: sudo xcode-select -s /Applications/Xcode_${{ env.XCODE_VERSION }}.app
       - name: Set up Xcode
-        uses: mikehardy/buildcache-action@v2
-      - name: Compile iOS app
+        uses: irgaly/xcode-cache@v1
+        with:
+          key: ios-check-build-${{ github.workflow }}-${{ github.sha }}
+          restore-keys: ios-check-build-${{ github.workflow }}-
+      - name: Compile iOS appp
         run: |
           cd ios &&
           set -o pipefail && 
@@ -102,8 +105,8 @@ jobs:
           name: iOS Build
           path: |
             ios/xcodebuild.log
-            ~/Library/**/app.app
-            ~/Library/**/app.app.dSYM
+            ~/Library/Developer/Xcode/DerivedData/**/*.app
+            ~/Library/Developer/Xcode/DerivedData/**/*.app.dSYM
             **/build
             **/secrets.properties
 
@@ -134,7 +137,10 @@ jobs:
       - name: Set up Xcode version
         run: sudo xcode-select -s /Applications/Xcode_${{ env.XCODE_VERSION }}.app
       - name: Set up Xcode
-        uses: mikehardy/buildcache-action@v2
+        uses: irgaly/xcode-cache@v1
+        with:
+          key: ios-check-test-${{ github.workflow }}-${{ github.sha }}
+          restore-keys: ios-check-test-${{ github.workflow }}-
       - name: iOS tests
         run: |
           cd ios &&
