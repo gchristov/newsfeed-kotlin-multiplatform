@@ -1,5 +1,6 @@
 package com.gchristov.newsfeed.multiplatform.feed.testfixtures
 
+import arrow.core.Either
 import com.gchristov.newsfeed.multiplatform.common.test.FakeResponse
 import com.gchristov.newsfeed.multiplatform.common.test.execute
 import com.gchristov.newsfeed.multiplatform.feed.data.FeedRepository
@@ -37,9 +38,7 @@ class FakeFeedRepository(
         })
     }
 
-    override suspend fun cachedFeedPage(): DecoratedFeedPage? {
-        return feedPageCache
-    }
+    override suspend fun cachedFeedPage() = Either.Right(feedPageCache)
 
     override suspend fun clearCache() {
         _cacheCleared = true
