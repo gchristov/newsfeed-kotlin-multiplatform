@@ -1,5 +1,6 @@
 package com.gchristov.newsfeed.multiplatform.feed.data
 
+import arrow.core.Either
 import com.gchristov.newsfeed.multiplatform.feed.data.model.DecoratedFeedPage
 
 interface FeedRepository {
@@ -10,7 +11,7 @@ interface FeedRepository {
 
     suspend fun redecorateFeedPage(feedPage: DecoratedFeedPage): DecoratedFeedPage
 
-    suspend fun cachedFeedPage(): DecoratedFeedPage?
+    suspend fun cachedFeedPage(): Either<Throwable, DecoratedFeedPage?>
 
     suspend fun clearCache()
 

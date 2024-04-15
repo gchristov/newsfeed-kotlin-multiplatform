@@ -15,7 +15,8 @@ object MplFeedModule : DependencyModule() {
                 FeedViewModel(
                     dispatcher = Dispatchers.Main,
                     feedRepository = instance(),
-                    getSectionedFeedUseCase = instance(),
+                    getSectionedFeedPageUseCase = instance(),
+                    buildSectionedFeedUseCase = instance(),
                     redecorateSectionedFeedUseCase = instance()
                 )
             }
