@@ -9,7 +9,7 @@ on:
 env:
   JAVA_VERSION: "17"
   JAVA_DISTRIBUTION: "zulu"
-  XCODE_VERSION: "13.3"
+  XCODE_VERSION: "16.2"
   XCODE_CACHE: "CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++"
   IOS_SIMULATOR: "platform=iOS Simulator,name=iPhone 11,OS=15.4"
   ANDROID_COMPILE_SDK: "31"
