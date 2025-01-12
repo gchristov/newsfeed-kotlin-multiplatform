@@ -11,7 +11,7 @@ env:
   JAVA_DISTRIBUTION: "zulu"
   XCODE_VERSION: "16.2"
   XCODE_CACHE: "CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++"
-  IOS_SIMULATOR: "platform=iOS Simulator,name=iPhone 11,OS=15.4"
+  IOS_SIMULATOR: "platform=iOS Simulator,name=iPhone 16,OS=18.2"
   ANDROID_COMPILE_SDK: "31"
   ANDROID_EMULATOR_ARCHITECTURE: "x86_64"
   GUARDIAN_API_KEY: ${{ secrets.GUARDIAN_API_KEY }}
