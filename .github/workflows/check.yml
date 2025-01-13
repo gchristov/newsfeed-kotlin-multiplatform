@@ -9,9 +9,9 @@ on:
 env:
   JAVA_VERSION: "17"
   JAVA_DISTRIBUTION: "zulu"
-  XCODE_VERSION: "13.3"
+  XCODE_VERSION: "16.2"
   XCODE_CACHE: "CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++"
-  IOS_SIMULATOR: "platform=iOS Simulator,name=iPhone 11,OS=15.4"
+  IOS_SIMULATOR: "platform=iOS Simulator,name=iPhone 16,OS=18.2"
   ANDROID_COMPILE_SDK: "31"
   ANDROID_EMULATOR_ARCHITECTURE: "x86_64"
   GUARDIAN_API_KEY: ${{ secrets.GUARDIAN_API_KEY }}
@@ -62,7 +62,7 @@ jobs:
             **/TEST-*.xml
 
   ios-check-build:
-    runs-on: macos-12
+    runs-on: macos-15
     concurrency:
       group: ${{ github.ref }}-ios-check-build
       cancel-in-progress: true
@@ -111,7 +111,7 @@ jobs:
             **/secrets.properties
 
   ios-check-test:
-    runs-on: macos-12
+    runs-on: macos-15
     concurrency:
       group: ${{ github.ref }}-ios-check-test
       cancel-in-progress: true
@@ -194,13 +194,18 @@ jobs:
             **/secrets.properties
 
   android-check-test:
-    runs-on: macos-11 # Allows Android emulator hardware acceleration
+    runs-on: ubuntu-20.04
     concurrency:
       group: ${{ github.ref }}-android-check-test
       cancel-in-progress: true
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Enable KVM group perms
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
@@ -243,7 +248,7 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
-          script: set -o pipefail && ./gradlew connectedAndroidTest
+          script: ./gradlew connectedAndroidTest
       - name: Artifacts
         uses: actions/upload-artifact@v4
         if: always() # Ensure all artifacts are collected, even after errors
