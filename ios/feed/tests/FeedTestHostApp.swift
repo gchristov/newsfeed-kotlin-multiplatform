@@ -29,18 +29,18 @@ struct FeedTestHostApp: App {
         )
         self.repository.feedResponse = FeedResponseType.obtainFromEnvironment(key: "feedResponse")
         self.repository.feedLoadMoreResponse = FeedResponseType.obtainFromEnvironment(key: "feedLoadMoreResponse")
-        let buildSectionedFeedUseCase = BuildSectionedFeedUseCase(
+        let buildSectionedFeedUseCase = RealBuildSectionedFeedUseCase(
             dispatcher: Dispatchers.shared.Main,
             clock: FakeClock.shared
         )
-        self.getSectionedFeedUseCase = GetSectionedFeedUseCase(
+        self.getSectionedFeedUseCase = RealGetSectionedFeedUseCase(
             feedRepository: repository,
             buildSectionedFeedUseCase: buildSectionedFeedUseCase,
-            mergeSectionedFeedUseCase: MergeSectionedFeedUseCase(dispatcher: Dispatchers.shared.Main)
+            mergeSectionedFeedUseCase: RealMergeSectionedFeedUseCase(dispatcher: Dispatchers.shared.Main)
         )
-        self.redecorateSectionedFeedUseCase = RedecorateSectionedFeedUseCase(
+        self.redecorateSectionedFeedUseCase = RealRedecorateSectionedFeedUseCase(
             feedRepository: repository,
-            flattenSectionedFeedUseCase: FlattenSectionedFeedUseCase(dispatcher: Dispatchers.shared.Main),
+            flattenSectionedFeedUseCase: RealFlattenSectionedFeedUseCase(dispatcher: Dispatchers.shared.Main),
             buildSectionedFeedUseCase: buildSectionedFeedUseCase
         )
     }

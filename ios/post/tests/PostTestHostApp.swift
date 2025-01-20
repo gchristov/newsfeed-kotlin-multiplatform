@@ -23,7 +23,7 @@ struct PostTestHostApp: App {
             postCache: postCache
         )
         self.repository.postResponse = PostResponseType.obtainFromEnvironment()
-        self.decoratePostUseCase = DecoratePostUseCase(postRepository: self.repository, dispatcher: Dispatchers.shared.Main)
+        self.decoratePostUseCase = RealDecoratePostUseCase(postRepository: self.repository, dispatcher: Dispatchers.shared.Main)
     }
     
     var body: some Scene {
