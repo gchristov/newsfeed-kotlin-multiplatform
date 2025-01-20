@@ -8,9 +8,9 @@ data class SectionedFeed(
     val sections: List<Section>
 ) {
     sealed class SectionType {
-        data object ThisWeek : SectionType()
-        data object LastWeek : SectionType()
-        data object ThisMonth : SectionType()
+        object ThisWeek : SectionType()
+        object LastWeek : SectionType()
+        object ThisMonth : SectionType()
         data class Older(
             val date: Instant
         ) : SectionType()

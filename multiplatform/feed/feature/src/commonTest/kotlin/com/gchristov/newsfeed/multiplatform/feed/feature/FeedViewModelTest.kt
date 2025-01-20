@@ -8,7 +8,7 @@ import com.gchristov.newsfeed.multiplatform.feed.data.model.DecoratedFeedPage
 import com.gchristov.newsfeed.multiplatform.feed.data.model.SectionedFeed
 import com.gchristov.newsfeed.multiplatform.feed.data.usecase.BuildSectionedFeedUseCase
 import com.gchristov.newsfeed.multiplatform.feed.data.usecase.FlattenSectionedFeedUseCase
-import com.gchristov.newsfeed.multiplatform.feed.data.usecase.GetSectionedFeedPageUseCase
+import com.gchristov.newsfeed.multiplatform.feed.data.usecase.GetSectionedFeedUseCase
 import com.gchristov.newsfeed.multiplatform.feed.data.usecase.MergeSectionedFeedUseCase
 import com.gchristov.newsfeed.multiplatform.feed.data.usecase.RedecorateSectionedFeedUseCase
 import com.gchristov.newsfeed.multiplatform.feed.testfixtures.FakeFeedRepository
@@ -278,7 +278,7 @@ class FeedViewModelTest : CommonViewModelTestClass() {
             this.feedResponse = feedResponse
             this.feedLoadMoreResponse = feedLoadMoreResponse
         }
-        val getSectionedFeedPageUseCase = GetSectionedFeedPageUseCase(
+        val getSectionedFeedUseCase = GetSectionedFeedUseCase(
             feedRepository = feedRepository,
             buildSectionedFeedUseCase = BuildSectionedFeedUseCase(
                 dispatcher = FakeCoroutineDispatcher,
@@ -297,7 +297,7 @@ class FeedViewModelTest : CommonViewModelTestClass() {
         val viewModel = FeedViewModel(
             dispatcher = FakeCoroutineDispatcher,
             feedRepository = feedRepository,
-            getSectionedFeedPageUseCase = getSectionedFeedPageUseCase,
+            getSectionedFeedUseCase = getSectionedFeedUseCase,
             redecorateSectionedFeedUseCase = redecorateSectionedFeedUseCase
         )
         testBlock(viewModel, feedRepository, postRepository)

@@ -1,13 +1,10 @@
 package com.gchristov.newsfeed.multiplatform.feed.feature
 
-import arrow.core.Either
-import arrow.core.flatMap
 import com.gchristov.newsfeed.multiplatform.common.mvvm.CommonViewModel
 import com.gchristov.newsfeed.multiplatform.feed.data.FeedRepository
 import com.gchristov.newsfeed.multiplatform.feed.data.model.SectionedFeed
 import com.gchristov.newsfeed.multiplatform.feed.data.model.hasNextPage
-import com.gchristov.newsfeed.multiplatform.feed.data.usecase.BuildSectionedFeedUseCase
-import com.gchristov.newsfeed.multiplatform.feed.data.usecase.GetSectionedFeedPageUseCase
+import com.gchristov.newsfeed.multiplatform.feed.data.usecase.GetSectionedFeedUseCase
 import com.gchristov.newsfeed.multiplatform.feed.data.usecase.RedecorateSectionedFeedUseCase
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.FlowPreview
@@ -18,8 +15,7 @@ import kotlinx.coroutines.flow.filterNotNull
 class FeedViewModel(
     dispatcher: CoroutineDispatcher,
     private val feedRepository: FeedRepository,
-    private val getSectionedFeedPageUseCase: GetSectionedFeedPageUseCase,
-    private val buildSectionedFeedUseCase: BuildSectionedFeedUseCase,
+    private val getSectionedFeedUseCase: GetSectionedFeedUseCase,
     private val redecorateSectionedFeedUseCase: RedecorateSectionedFeedUseCase,
 ) : CommonViewModel<FeedViewModel.State>(
     dispatcher = dispatcher,
@@ -65,15 +61,8 @@ class FeedViewModel(
     fun redecorateContent() {
         state.value.sectionedFeed?.let { sectionedFeed ->
             launchUiCoroutine {
-                redecorateSectionedFeedUseCase(RedecorateSectionedFeedUseCase.Dto(sectionedFeed)).fold(
-                    ifLeft = { error ->
-                        error.printStackTrace()
-                        // TODO: Report error
-                    },
-                    ifRight = {
-                        setState { copy(sectionedFeed = it) }
-                    }
-                )
+                val redecorated = redecorateSectionedFeedUseCase(sectionedFeed)
+                setState { copy(sectionedFeed = redecorated) }
             }
         }
     }
@@ -97,71 +86,49 @@ class FeedViewModel(
             return
         }
         launchUiCoroutine {
-            val searchQuery = feedRepository.searchQuery() ?: DEFAULT_SEARCH_QUERY
-            setState {
-                copy(
-                    loading = startFromFirst,
-                    loadingMore = !startFromFirst,
-                    reachedEnd = false,
-                    blockingError = null,
-                    nonBlockingError = null,
-                    searchQuery = searchQuery,
-                )
-            }
-            if (startFromFirst) {
-                // Check if we have a previously cached first page if we're starting from the top
-                feedRepository
-                    .cachedFeedPage()
-                    .flatMap { cachedPage ->
-                        cachedPage?.let {
-                            buildSectionedFeedUseCase(BuildSectionedFeedUseCase.Dto(cachedPage))
-                                .flatMap {
-                                    setState { copy(sectionedFeed = it) }
-                                    launchUiCoroutine { feedRepository.clearCache() }
-                                    Either.Right(Unit)
-                                }
-                        } ?: Either.Right(Unit)
-                    }
-                    .fold(
-                        ifLeft = { error ->
-                            // TODO: Swallow but report the error
-                            error.printStackTrace()
-                        },
-                        ifRight = {
-                            // No-op
-                        }
+            try {
+                val searchQuery = feedRepository.searchQuery() ?: DEFAULT_SEARCH_QUERY
+                setState {
+                    copy(
+                        loading = startFromFirst,
+                        loadingMore = !startFromFirst,
+                        reachedEnd = false,
+                        blockingError = null,
+                        nonBlockingError = null,
+                        searchQuery = searchQuery,
                     )
-            }
-            getSectionedFeedPageUseCase(
-                GetSectionedFeedPageUseCase.Dto(
+                }
+
+                val feedUpdate = getSectionedFeedUseCase(
                     pageId = nextPage,
                     feedQuery = searchQuery,
                     currentFeed = state.value.sectionedFeed,
+                    // Only request cache if we're starting from the first page
+                    onCache = if (startFromFirst) { cache ->
+                        setState { copy(sectionedFeed = cache) }
+                        launchUiCoroutine { feedRepository.clearCache() }
+                    } else null
                 )
-            ).fold(
-                ifLeft = { error ->
-                    error.printStackTrace()
-                    val blocking = if (state.value.sectionedFeed == null) error else null
-                    val nonBlocking = if (blocking == null) error else null
-                    setState {
-                        copy(
-                            loading = false,
-                            loadingMore = false,
-                            blockingError = blocking,
-                            nonBlockingError = nonBlocking
-                        )
-                    }
-                },
-                ifRight = { feed ->
-                    setState {
-                        copy(
-                            loading = false,
-                            loadingMore = false,
-                            sectionedFeed = feed,
-                        )
-                    }
+                setState {
+                    copy(
+                        loading = false,
+                        loadingMore = false,
+                        sectionedFeed = feedUpdate,
+                    )
                 }
-            )
+            } catch (error: Exception) {
+                error.printStackTrace()
+                val blocking = if (state.value.sectionedFeed == null) error else null
+                val nonBlocking = if (blocking == null) error else null
+                setState {
+                    copy(
+                        loading = false,
+                        loadingMore = false,
+                        blockingError = blocking,
+                        nonBlockingError = nonBlocking
+                    )
+                }
+            }
         }
     }
 

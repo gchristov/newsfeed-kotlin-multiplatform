@@ -1,6 +1,5 @@
 package com.gchristov.newsfeed.multiplatform.feed.data.usecase
 
-import arrow.core.Either
 import com.gchristov.newsfeed.multiplatform.feed.data.model.DecoratedFeedItem
 import com.gchristov.newsfeed.multiplatform.feed.data.model.DecoratedFeedPage
 import com.gchristov.newsfeed.multiplatform.feed.data.model.SectionedFeed
@@ -16,21 +15,13 @@ import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
 
-interface BuildSectionedFeedUseCase {
-    suspend operator fun invoke(dto: Dto): Either<Throwable, SectionedFeed>
-
-    data class Dto(val page: DecoratedFeedPage)
-}
-
-class RealBuildSectionedFeedUseCase(
+class BuildSectionedFeedUseCase(
     private val dispatcher: CoroutineDispatcher,
     private val clock: Clock,
-) : BuildSectionedFeedUseCase {
-    override suspend operator fun invoke(
-        dto: BuildSectionedFeedUseCase.Dto
-    ) = withContext(dispatcher) {
-        with(dto) {
-            val sectionsMap = page.items
+) {
+    suspend operator fun invoke(feed: DecoratedFeedPage): SectionedFeed =
+        withContext(dispatcher) {
+            val sectionsMap = feed.items
                 .sortedByDescending { it.date.toEpochMilliseconds() }
                 .groupBy { it.sectionType(clock) }
             val sections = sectionsMap.keys.map {
@@ -39,15 +30,12 @@ class RealBuildSectionedFeedUseCase(
                     feedItems = requireNotNull(sectionsMap[it])
                 )
             }
-            Either.Right(
-                SectionedFeed(
-                    pages = dto.page.raw.pages.toInt(),
-                    currentPage = dto.page.raw.pageId.toInt(),
-                    sections = sections
-                )
+            SectionedFeed(
+                pages = feed.raw.pages.toInt(),
+                currentPage = feed.raw.pageId.toInt(),
+                sections = sections
             )
         }
-    }
 }
 
 private fun DecoratedFeedItem.sectionType(clock: Clock): SectionedFeed.SectionType = when {

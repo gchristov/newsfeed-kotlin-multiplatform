@@ -1,6 +1,5 @@
 package com.gchristov.newsfeed.multiplatform.feed.data
 
-import arrow.core.Either
 import com.gchristov.newsfeed.multiplatform.feed.data.api.ApiFeedResponse
 import com.gchristov.newsfeed.multiplatform.feed.data.model.DecoratedFeedItem
 import com.gchristov.newsfeed.multiplatform.feed.data.model.DecoratedFeedPage
@@ -50,36 +49,35 @@ internal class RealFeedRepository(
         favouriteTimestamp = postRepository.favouriteTimestamp(feedItem.itemId)
     )
 
-    override suspend fun cachedFeedPage() = withContext(dispatcher) {
-        val selectPage = queries.selectFeedPage().executeAsList()
-        if (selectPage.isEmpty()) {
-            return@withContext Either.Right(null)
-        }
-        // We only cache the first feed page, so using the first result is fine here
-        val firstPage = selectPage.first()
-        val page = FeedPage(
-            pageId = firstPage.pageId,
-            pages = firstPage.pages,
-        )
-        val feedItems = selectPage.map {
-            decorateFeedItem(
-                FeedItem(
-                    itemId = it.itemId,
-                    pageId = it.pageId,
-                    apiUrl = it.apiUrl,
-                    date = it.date,
-                    headline = it.headline,
-                    thumbnail = it.thumbnail
-                )
+    override suspend fun cachedFeedPage(): DecoratedFeedPage? =
+        withContext(dispatcher) {
+            val selectPage = queries.selectFeedPage().executeAsList()
+            if (selectPage.isEmpty()) {
+                return@withContext null
+            }
+            // We only cache the first feed page, so using the first result is fine here
+            val firstPage = selectPage.first()
+            val page = FeedPage(
+                pageId = firstPage.pageId,
+                pages = firstPage.pages,
             )
-        }
-        Either.Right(
+            val feedItems = selectPage.map {
+                decorateFeedItem(
+                    FeedItem(
+                        itemId = it.itemId,
+                        pageId = it.pageId,
+                        apiUrl = it.apiUrl,
+                        date = it.date,
+                        headline = it.headline,
+                        thumbnail = it.thumbnail
+                    )
+                )
+            }
             DecoratedFeedPage(
                 raw = page,
                 items = feedItems
             )
-        )
-    }
+        }
 
     override suspend fun clearCache() =
         withContext(dispatcher) {
