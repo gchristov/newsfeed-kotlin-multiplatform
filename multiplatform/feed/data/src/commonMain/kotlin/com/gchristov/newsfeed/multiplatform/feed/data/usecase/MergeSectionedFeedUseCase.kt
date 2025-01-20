@@ -5,10 +5,19 @@ import com.gchristov.newsfeed.multiplatform.feed.data.model.SectionedFeed
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
-class MergeSectionedFeedUseCase(private val dispatcher: CoroutineDispatcher) {
+interface MergeSectionedFeedUseCase {
     suspend operator fun invoke(
         thisFeed: SectionedFeed,
-        newFeed: SectionedFeed
+        newFeed: SectionedFeed,
+    ): SectionedFeed
+}
+
+class RealMergeSectionedFeedUseCase(
+    private val dispatcher: CoroutineDispatcher
+) : MergeSectionedFeedUseCase {
+    override suspend operator fun invoke(
+        thisFeed: SectionedFeed,
+        newFeed: SectionedFeed,
     ): SectionedFeed =
         withContext(dispatcher) {
             SectionedFeed(

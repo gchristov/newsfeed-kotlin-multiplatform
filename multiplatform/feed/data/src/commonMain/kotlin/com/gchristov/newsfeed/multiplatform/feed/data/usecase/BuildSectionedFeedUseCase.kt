@@ -15,11 +15,15 @@ import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
 
-class BuildSectionedFeedUseCase(
+interface BuildSectionedFeedUseCase {
+    suspend operator fun invoke(feed: DecoratedFeedPage): SectionedFeed
+}
+
+class RealBuildSectionedFeedUseCase(
     private val dispatcher: CoroutineDispatcher,
     private val clock: Clock,
-) {
-    suspend operator fun invoke(feed: DecoratedFeedPage): SectionedFeed =
+) : BuildSectionedFeedUseCase {
+    override suspend operator fun invoke(feed: DecoratedFeedPage): SectionedFeed =
         withContext(dispatcher) {
             val sectionsMap = feed.items
                 .sortedByDescending { it.date.toEpochMilliseconds() }

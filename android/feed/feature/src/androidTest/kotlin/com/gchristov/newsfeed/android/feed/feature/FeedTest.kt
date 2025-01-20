@@ -12,6 +12,11 @@ import com.gchristov.newsfeed.multiplatform.feed.data.usecase.BuildSectionedFeed
 import com.gchristov.newsfeed.multiplatform.feed.data.usecase.FlattenSectionedFeedUseCase
 import com.gchristov.newsfeed.multiplatform.feed.data.usecase.GetSectionedFeedUseCase
 import com.gchristov.newsfeed.multiplatform.feed.data.usecase.MergeSectionedFeedUseCase
+import com.gchristov.newsfeed.multiplatform.feed.data.usecase.RealBuildSectionedFeedUseCase
+import com.gchristov.newsfeed.multiplatform.feed.data.usecase.RealFlattenSectionedFeedUseCase
+import com.gchristov.newsfeed.multiplatform.feed.data.usecase.RealGetSectionedFeedUseCase
+import com.gchristov.newsfeed.multiplatform.feed.data.usecase.RealMergeSectionedFeedUseCase
+import com.gchristov.newsfeed.multiplatform.feed.data.usecase.RealRedecorateSectionedFeedUseCase
 import com.gchristov.newsfeed.multiplatform.feed.data.usecase.RedecorateSectionedFeedUseCase
 import com.gchristov.newsfeed.multiplatform.feed.feature.FeedViewModel
 import com.gchristov.newsfeed.multiplatform.feed.testfixtures.FakeFeedRepository
@@ -263,18 +268,18 @@ class FeedTest : CommonComposeTestClass() {
             this.feedResponse = feedResponse
             this.feedLoadMoreResponse = feedLoadMoreResponse
         }
-        val buildSectionedFeedUseCase = BuildSectionedFeedUseCase(
+        val buildSectionedFeedUseCase = RealBuildSectionedFeedUseCase(
             dispatcher = FakeCoroutineDispatcher,
             clock = FakeClock
         )
-        val getSectionedFeedUseCase = GetSectionedFeedUseCase(
+        val getSectionedFeedUseCase = RealGetSectionedFeedUseCase(
             feedRepository = feedRepository,
             buildSectionedFeedUseCase = buildSectionedFeedUseCase,
-            mergeSectionedFeedUseCase = MergeSectionedFeedUseCase(dispatcher = FakeCoroutineDispatcher)
+            mergeSectionedFeedUseCase = RealMergeSectionedFeedUseCase(dispatcher = FakeCoroutineDispatcher)
         )
-        val redecorateSectionedFeedUseCase = RedecorateSectionedFeedUseCase(
+        val redecorateSectionedFeedUseCase = RealRedecorateSectionedFeedUseCase(
             feedRepository = feedRepository,
-            flattenSectionedFeedUseCase = FlattenSectionedFeedUseCase(dispatcher = FakeCoroutineDispatcher),
+            flattenSectionedFeedUseCase = RealFlattenSectionedFeedUseCase(dispatcher = FakeCoroutineDispatcher),
             buildSectionedFeedUseCase = buildSectionedFeedUseCase
         )
         composeRule.setContent {

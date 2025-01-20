@@ -8,6 +8,11 @@ import com.gchristov.newsfeed.multiplatform.feed.data.usecase.BuildSectionedFeed
 import com.gchristov.newsfeed.multiplatform.feed.data.usecase.FlattenSectionedFeedUseCase
 import com.gchristov.newsfeed.multiplatform.feed.data.usecase.GetSectionedFeedUseCase
 import com.gchristov.newsfeed.multiplatform.feed.data.usecase.MergeSectionedFeedUseCase
+import com.gchristov.newsfeed.multiplatform.feed.data.usecase.RealBuildSectionedFeedUseCase
+import com.gchristov.newsfeed.multiplatform.feed.data.usecase.RealFlattenSectionedFeedUseCase
+import com.gchristov.newsfeed.multiplatform.feed.data.usecase.RealGetSectionedFeedUseCase
+import com.gchristov.newsfeed.multiplatform.feed.data.usecase.RealMergeSectionedFeedUseCase
+import com.gchristov.newsfeed.multiplatform.feed.data.usecase.RealRedecorateSectionedFeedUseCase
 import com.gchristov.newsfeed.multiplatform.feed.data.usecase.RedecorateSectionedFeedUseCase
 import com.gchristov.newsfeed.multiplatform.post.data.PostRepository
 import com.russhwolf.settings.Settings
@@ -85,31 +90,33 @@ object MplFeedDataModule : DependencyModule() {
         config = networkConfig,
     )
 
-    private fun provideBuildSectionedFeedUseCase() = BuildSectionedFeedUseCase(
-        dispatcher = Dispatchers.Default,
-        clock = Clock.System
-    )
+    private fun provideBuildSectionedFeedUseCase(): BuildSectionedFeedUseCase =
+        RealBuildSectionedFeedUseCase(
+            dispatcher = Dispatchers.Default,
+            clock = Clock.System,
+        )
 
-    private fun provideMergeSectionedFeedUseCase() = MergeSectionedFeedUseCase(Dispatchers.Default)
+    private fun provideMergeSectionedFeedUseCase(): MergeSectionedFeedUseCase =
+        RealMergeSectionedFeedUseCase(Dispatchers.Default)
 
-    private fun provideFlattenSectionedFeedUseCase() =
-        FlattenSectionedFeedUseCase(Dispatchers.Default)
+    private fun provideFlattenSectionedFeedUseCase(): FlattenSectionedFeedUseCase =
+        RealFlattenSectionedFeedUseCase(Dispatchers.Default)
 
     private fun provideGetSectionedFeedUseCase(
         feedRepository: FeedRepository,
         buildSectionedFeedUseCase: BuildSectionedFeedUseCase,
         mergeSectionedFeedUseCase: MergeSectionedFeedUseCase
-    ) = GetSectionedFeedUseCase(
+    ): GetSectionedFeedUseCase = RealGetSectionedFeedUseCase(
         feedRepository = feedRepository,
         buildSectionedFeedUseCase = buildSectionedFeedUseCase,
-        mergeSectionedFeedUseCase = mergeSectionedFeedUseCase
+        mergeSectionedFeedUseCase = mergeSectionedFeedUseCase,
     )
 
     private fun provideRedecorateSectionedFeedUseCase(
         feedRepository: FeedRepository,
         flattenSectionedFeedUseCase: FlattenSectionedFeedUseCase,
-        buildSectionedFeedUseCase: BuildSectionedFeedUseCase
-    ) = RedecorateSectionedFeedUseCase(
+        buildSectionedFeedUseCase: BuildSectionedFeedUseCase,
+    ): RedecorateSectionedFeedUseCase = RealRedecorateSectionedFeedUseCase(
         feedRepository = feedRepository,
         flattenSectionedFeedUseCase = flattenSectionedFeedUseCase,
         buildSectionedFeedUseCase = buildSectionedFeedUseCase

@@ -8,10 +8,17 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.Instant
 
-class DecoratePostUseCase(
+interface DecoratePostUseCase {
+    suspend operator fun invoke(
+        postId: String,
+        onCache: ((DecoratedPost) -> Unit)? = null,
+    ): DecoratedPost
+}
+
+class RealDecoratePostUseCase(
     private val postRepository: PostRepository,
     private val dispatcher: CoroutineDispatcher
-) {
+) : DecoratePostUseCase {
     /**
      * Obtain a new post from API/repository, decorate and
      * cache it.
@@ -21,10 +28,9 @@ class DecoratePostUseCase(
      * @param postId the ID of the post to obtain
      * @param onCache callback that pulls posts from cache if existing
      */
-    suspend fun getPost(
+    override suspend fun invoke(
         postId: String,
-        // the whole callback is nullable/optional
-        onCache: ((DecoratedPost) -> Unit)? = null
+        onCache: ((DecoratedPost) -> Unit)?
     ): DecoratedPost {
         // We wouldn't even run this if the caller doesn't care about cache
         onCache?.let { cacheCallback ->

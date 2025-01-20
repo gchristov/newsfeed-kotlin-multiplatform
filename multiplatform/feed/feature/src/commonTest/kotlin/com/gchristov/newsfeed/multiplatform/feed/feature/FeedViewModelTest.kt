@@ -10,6 +10,11 @@ import com.gchristov.newsfeed.multiplatform.feed.data.usecase.BuildSectionedFeed
 import com.gchristov.newsfeed.multiplatform.feed.data.usecase.FlattenSectionedFeedUseCase
 import com.gchristov.newsfeed.multiplatform.feed.data.usecase.GetSectionedFeedUseCase
 import com.gchristov.newsfeed.multiplatform.feed.data.usecase.MergeSectionedFeedUseCase
+import com.gchristov.newsfeed.multiplatform.feed.data.usecase.RealBuildSectionedFeedUseCase
+import com.gchristov.newsfeed.multiplatform.feed.data.usecase.RealFlattenSectionedFeedUseCase
+import com.gchristov.newsfeed.multiplatform.feed.data.usecase.RealGetSectionedFeedUseCase
+import com.gchristov.newsfeed.multiplatform.feed.data.usecase.RealMergeSectionedFeedUseCase
+import com.gchristov.newsfeed.multiplatform.feed.data.usecase.RealRedecorateSectionedFeedUseCase
 import com.gchristov.newsfeed.multiplatform.feed.data.usecase.RedecorateSectionedFeedUseCase
 import com.gchristov.newsfeed.multiplatform.feed.testfixtures.FakeFeedRepository
 import com.gchristov.newsfeed.multiplatform.feed.testfixtures.FeedCreator
@@ -278,18 +283,18 @@ class FeedViewModelTest : CommonViewModelTestClass() {
             this.feedResponse = feedResponse
             this.feedLoadMoreResponse = feedLoadMoreResponse
         }
-        val getSectionedFeedUseCase = GetSectionedFeedUseCase(
+        val getSectionedFeedUseCase = RealGetSectionedFeedUseCase(
             feedRepository = feedRepository,
-            buildSectionedFeedUseCase = BuildSectionedFeedUseCase(
+            buildSectionedFeedUseCase = RealBuildSectionedFeedUseCase(
                 dispatcher = FakeCoroutineDispatcher,
                 clock = FakeClock
             ),
-            mergeSectionedFeedUseCase = MergeSectionedFeedUseCase(dispatcher = FakeCoroutineDispatcher)
+            mergeSectionedFeedUseCase = RealMergeSectionedFeedUseCase(dispatcher = FakeCoroutineDispatcher)
         )
-        val redecorateSectionedFeedUseCase = RedecorateSectionedFeedUseCase(
+        val redecorateSectionedFeedUseCase = RealRedecorateSectionedFeedUseCase(
             feedRepository = feedRepository,
-            flattenSectionedFeedUseCase = FlattenSectionedFeedUseCase(dispatcher = FakeCoroutineDispatcher),
-            buildSectionedFeedUseCase = BuildSectionedFeedUseCase(
+            flattenSectionedFeedUseCase = RealFlattenSectionedFeedUseCase(dispatcher = FakeCoroutineDispatcher),
+            buildSectionedFeedUseCase = RealBuildSectionedFeedUseCase(
                 dispatcher = FakeCoroutineDispatcher,
                 clock = FakeClock
             )

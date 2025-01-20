@@ -5,6 +5,7 @@ import com.gchristov.newsfeed.multiplatform.common.test.FakeCoroutineDispatcher
 import com.gchristov.newsfeed.multiplatform.common.test.FakeResponse
 import com.gchristov.newsfeed.multiplatform.post.data.model.DecoratedPost
 import com.gchristov.newsfeed.multiplatform.post.data.usecase.DecoratePostUseCase
+import com.gchristov.newsfeed.multiplatform.post.data.usecase.RealDecoratePostUseCase
 import com.gchristov.newsfeed.multiplatform.post.testfixtures.FakePostRepository
 import com.gchristov.newsfeed.multiplatform.post.testfixtures.PostCreator
 import kotlinx.coroutines.CoroutineScope
@@ -138,7 +139,7 @@ class PostViewModelTest : CommonViewModelTestClass() {
             dispatcher = FakeCoroutineDispatcher,
             postId = PostId,
             postRepository = postRepository,
-            decoratePostUseCase = DecoratePostUseCase(postRepository, FakeCoroutineDispatcher)
+            decoratePostUseCase = RealDecoratePostUseCase(postRepository, FakeCoroutineDispatcher)
         )
         testBlock(viewModel, postRepository)
     }

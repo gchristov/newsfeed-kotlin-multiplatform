@@ -34,7 +34,7 @@ class PostViewModel(
         launchUiCoroutine {
             try {
 
-                val newPost = decoratePostUseCase.getPost(
+                val newPost = decoratePostUseCase(
                     postId = postId,
                     onCache = { cachedPost ->
                         setState { copy(post = cachedPost) }
@@ -64,7 +64,7 @@ class PostViewModel(
         state.value.post?.let { post ->
             launchUiCoroutine {
                 postRepository.toggleFavourite(post.raw.id)
-                val newPost = decoratePostUseCase.getPost(post.raw.id)
+                val newPost = decoratePostUseCase(post.raw.id)
                 setState { copy(post = newPost) }
             }
         }

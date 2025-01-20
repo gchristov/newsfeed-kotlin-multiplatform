@@ -7,6 +7,7 @@ import com.gchristov.newsfeed.multiplatform.common.test.FakeCoroutineDispatcher
 import com.gchristov.newsfeed.multiplatform.common.test.FakeResponse
 import com.gchristov.newsfeed.multiplatform.post.data.model.DecoratedPost
 import com.gchristov.newsfeed.multiplatform.post.data.usecase.DecoratePostUseCase
+import com.gchristov.newsfeed.multiplatform.post.data.usecase.RealDecoratePostUseCase
 import com.gchristov.newsfeed.multiplatform.post.feature.PostViewModel
 import com.gchristov.newsfeed.multiplatform.post.testfixtures.FakePostRepository
 import com.gchristov.newsfeed.multiplatform.post.testfixtures.PostCreator
@@ -143,7 +144,7 @@ class PostTest : CommonComposeTestClass() {
             this.postResponse = postResponse
         }
 
-        val decoratePostUseCase = DecoratePostUseCase(
+        val decoratePostUseCase = RealDecoratePostUseCase(
             postRepository = postRepository,
             dispatcher = FakeCoroutineDispatcher
         )
