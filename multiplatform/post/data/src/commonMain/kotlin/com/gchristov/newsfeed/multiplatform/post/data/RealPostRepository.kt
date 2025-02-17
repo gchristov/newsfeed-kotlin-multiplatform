@@ -1,5 +1,7 @@
 package com.gchristov.newsfeed.multiplatform.post.data
 
+import arrow.core.Either
+import arrow.core.flatMap
 import com.gchristov.newsfeed.multiplatform.post.data.api.ApiPostResponse
 import com.gchristov.newsfeed.multiplatform.post.data.model.DecoratedPost
 import com.gchristov.newsfeed.multiplatform.post.data.model.toPost
@@ -48,24 +50,28 @@ internal class RealPostRepository(
         )
     }
 
-    override suspend fun favouriteTimestamp(postId: String): Long? =
+    override suspend fun favouriteTimestamp(postId: String): Either<Throwable, Long?> =
         withContext(dispatcher) {
             if (sharedPreferences.contains(postId)) {
-                return@withContext sharedPreferences.getLong(
+                val timestamp = sharedPreferences.getLong(
                     key = postId,
                     defaultValue = Clock.System.now().toEpochMilliseconds()
                 )
+                Either.Right(timestamp)
             }
-            null
+            Either.Right(null)
         }
 
-    override suspend fun toggleFavourite(postId: String) =
+    override suspend fun toggleFavourite(postId: String): Either<Throwable, Unit> =
         withContext(dispatcher) {
-            favouriteTimestamp(postId)?.let {
-                sharedPreferences.remove(postId)
-            } ?: run {
-                // Keep track of when the item was favourited
-                sharedPreferences[postId] = Clock.System.now().toEpochMilliseconds()
+            favouriteTimestamp(postId).flatMap { timestamp ->
+                timestamp?.let {
+                    sharedPreferences.remove(postId)
+                } ?: {
+                    // Keep track of when the item was favourited
+                    sharedPreferences[postId] = Clock.System.now().toEpochMilliseconds()
+                }
+                Either.Right(Unit)
             }
         }
 }

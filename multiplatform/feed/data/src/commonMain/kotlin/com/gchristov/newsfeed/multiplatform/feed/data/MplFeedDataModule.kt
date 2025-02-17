@@ -6,11 +6,9 @@ import com.gchristov.newsfeed.multiplatform.common.network.NetworkConfig
 import com.gchristov.newsfeed.multiplatform.common.persistence.SqlDriverProperties
 import com.gchristov.newsfeed.multiplatform.feed.data.usecase.BuildSectionedFeedUseCase
 import com.gchristov.newsfeed.multiplatform.feed.data.usecase.FlattenSectionedFeedUseCase
-import com.gchristov.newsfeed.multiplatform.feed.data.usecase.GetSectionedFeedUseCase
 import com.gchristov.newsfeed.multiplatform.feed.data.usecase.MergeSectionedFeedUseCase
 import com.gchristov.newsfeed.multiplatform.feed.data.usecase.RealBuildSectionedFeedUseCase
 import com.gchristov.newsfeed.multiplatform.feed.data.usecase.RealFlattenSectionedFeedUseCase
-import com.gchristov.newsfeed.multiplatform.feed.data.usecase.RealGetSectionedFeedUseCase
 import com.gchristov.newsfeed.multiplatform.feed.data.usecase.RealMergeSectionedFeedUseCase
 import com.gchristov.newsfeed.multiplatform.feed.data.usecase.RealRedecorateSectionedFeedUseCase
 import com.gchristov.newsfeed.multiplatform.feed.data.usecase.RedecorateSectionedFeedUseCase
@@ -52,13 +50,6 @@ object MplFeedDataModule : DependencyModule() {
             bindProvider { provideBuildSectionedFeedUseCase() }
             bindProvider { provideMergeSectionedFeedUseCase() }
             bindProvider { provideFlattenSectionedFeedUseCase() }
-            bindProvider {
-                provideGetSectionedFeedUseCase(
-                    feedRepository = instance(),
-                    buildSectionedFeedUseCase = instance(),
-                    mergeSectionedFeedUseCase = instance()
-                )
-            }
             bindProvider {
                 provideRedecorateSectionedFeedUseCase(
                     feedRepository = instance(),
@@ -102,21 +93,12 @@ object MplFeedDataModule : DependencyModule() {
     private fun provideFlattenSectionedFeedUseCase(): FlattenSectionedFeedUseCase =
         RealFlattenSectionedFeedUseCase(Dispatchers.Default)
 
-    private fun provideGetSectionedFeedUseCase(
-        feedRepository: FeedRepository,
-        buildSectionedFeedUseCase: BuildSectionedFeedUseCase,
-        mergeSectionedFeedUseCase: MergeSectionedFeedUseCase
-    ): GetSectionedFeedUseCase = RealGetSectionedFeedUseCase(
-        feedRepository = feedRepository,
-        buildSectionedFeedUseCase = buildSectionedFeedUseCase,
-        mergeSectionedFeedUseCase = mergeSectionedFeedUseCase,
-    )
-
     private fun provideRedecorateSectionedFeedUseCase(
         feedRepository: FeedRepository,
         flattenSectionedFeedUseCase: FlattenSectionedFeedUseCase,
         buildSectionedFeedUseCase: BuildSectionedFeedUseCase,
     ): RedecorateSectionedFeedUseCase = RealRedecorateSectionedFeedUseCase(
+        dispatcher = Dispatchers.Default,
         feedRepository = feedRepository,
         flattenSectionedFeedUseCase = flattenSectionedFeedUseCase,
         buildSectionedFeedUseCase = buildSectionedFeedUseCase

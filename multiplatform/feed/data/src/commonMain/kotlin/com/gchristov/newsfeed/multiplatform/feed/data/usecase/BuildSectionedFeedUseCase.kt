@@ -1,5 +1,6 @@
 package com.gchristov.newsfeed.multiplatform.feed.data.usecase
 
+import arrow.core.Either
 import com.gchristov.newsfeed.multiplatform.feed.data.model.DecoratedFeedItem
 import com.gchristov.newsfeed.multiplatform.feed.data.model.DecoratedFeedPage
 import com.gchristov.newsfeed.multiplatform.feed.data.model.SectionedFeed
@@ -16,30 +17,33 @@ import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
 
 interface BuildSectionedFeedUseCase {
-    suspend operator fun invoke(feed: DecoratedFeedPage): SectionedFeed
+    suspend operator fun invoke(feed: DecoratedFeedPage): Either<Throwable, SectionedFeed>
 }
 
 class RealBuildSectionedFeedUseCase(
     private val dispatcher: CoroutineDispatcher,
     private val clock: Clock,
 ) : BuildSectionedFeedUseCase {
-    override suspend operator fun invoke(feed: DecoratedFeedPage): SectionedFeed =
-        withContext(dispatcher) {
-            val sectionsMap = feed.items
-                .sortedByDescending { it.date.toEpochMilliseconds() }
-                .groupBy { it.sectionType(clock) }
-            val sections = sectionsMap.keys.map {
-                SectionedFeed.Section(
-                    type = it,
-                    feedItems = requireNotNull(sectionsMap[it])
-                )
-            }
+    override suspend operator fun invoke(
+        feed: DecoratedFeedPage,
+    ): Either<Throwable, SectionedFeed> = withContext(dispatcher) {
+        val sectionsMap = feed.items
+            .sortedByDescending { it.date.toEpochMilliseconds() }
+            .groupBy { it.sectionType(clock) }
+        val sections = sectionsMap.keys.map {
+            SectionedFeed.Section(
+                type = it,
+                feedItems = requireNotNull(sectionsMap[it])
+            )
+        }
+        Either.Right(
             SectionedFeed(
                 pages = feed.raw.pages.toInt(),
                 currentPage = feed.raw.pageId.toInt(),
                 sections = sections
             )
-        }
+        )
+    }
 }
 
 private fun DecoratedFeedItem.sectionType(clock: Clock): SectionedFeed.SectionType = when {

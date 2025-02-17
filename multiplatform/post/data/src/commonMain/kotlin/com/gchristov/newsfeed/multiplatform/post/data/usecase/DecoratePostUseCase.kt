@@ -67,7 +67,8 @@ class RealDecoratePostUseCase(
     private suspend fun decoratePost(post: Post) = DecoratedPost(
         raw = post,
         date = Instant.parse(post.date),
-        favouriteTimestamp = postRepository.favouriteTimestamp(post.id),
+        // TODO: Fix this
+//        favouriteTimestamp = postRepository.favouriteTimestamp(post.id),
         readingTimeMinutes = calculateReadingTimeMinutes(post)
     )
 

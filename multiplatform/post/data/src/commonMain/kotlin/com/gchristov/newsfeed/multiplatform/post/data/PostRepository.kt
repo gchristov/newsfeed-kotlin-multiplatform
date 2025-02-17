@@ -1,5 +1,6 @@
 package com.gchristov.newsfeed.multiplatform.post.data
 
+import arrow.core.Either
 import com.gchristov.newsfeed.multiplatform.post.data.model.DecoratedPost
 
 interface PostRepository {
@@ -14,7 +15,7 @@ interface PostRepository {
 
     suspend fun cachePost(decoratedPost: DecoratedPost)
 
-    suspend fun favouriteTimestamp(postId: String): Long?
+    suspend fun favouriteTimestamp(postId: String): Either<Throwable, Long?>
 
-    suspend fun toggleFavourite(postId: String)
+    suspend fun toggleFavourite(postId: String): Either<Throwable, Unit>
 }

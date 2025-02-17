@@ -1,5 +1,7 @@
 package com.gchristov.newsfeed.multiplatform.feed.testfixtures
 
+import arrow.core.Either
+import arrow.core.raise.either
 import com.gchristov.newsfeed.multiplatform.common.test.FakeResponse
 import com.gchristov.newsfeed.multiplatform.common.test.execute
 import com.gchristov.newsfeed.multiplatform.feed.data.FeedRepository
@@ -21,36 +23,40 @@ class FakeFeedRepository(
     override suspend fun feedPage(
         pageId: Int,
         feedQuery: String
-    ): DecoratedFeedPage {
+    ): Either<Throwable, DecoratedFeedPage> {
         val fakeResponse = if (_pageIndex == 0) feedResponse else feedLoadMoreResponse
         val indexToLoad = _pageIndex
         if (fakeResponse !is FakeResponse.Error) {
             // Errors should retry loading the same page so do not advance the current index
             _pageIndex++
         }
-        return fakeResponse.execute(requireNotNull(feedPages)[indexToLoad])
+        return Either.Right(fakeResponse.execute(requireNotNull(feedPages)[indexToLoad]))
     }
 
-    override suspend fun redecorateFeedPage(feedPage: DecoratedFeedPage): DecoratedFeedPage {
-        return feedPage.copy(items = feedPage.items.map {
-            it.copy(favouriteTimestamp = postRepository.favouriteTimestamp(it.raw.itemId))
+    override suspend fun redecorateFeedPage(
+        feedPage: DecoratedFeedPage
+    ): Either<Throwable, DecoratedFeedPage> = either {
+        feedPage.copy(items = feedPage.items.map {
+            it.copy(favouriteTimestamp = postRepository.favouriteTimestamp(it.raw.itemId).bind())
         })
     }
 
-    override suspend fun cachedFeedPage(): DecoratedFeedPage? {
-        return feedPageCache
+    override suspend fun cachedFeedPage(): Either<Throwable, DecoratedFeedPage?> {
+        return Either.Right(feedPageCache)
     }
 
-    override suspend fun clearCache() {
+    override suspend fun clearCache(): Either<Throwable, Unit> {
         _cacheCleared = true
+        return Either.Right(Unit)
     }
 
-    override suspend fun saveSearchQuery(searchQuery: String) {
+    override suspend fun saveSearchQuery(searchQuery: String): Either<Throwable, Unit> {
         _lastSearchQuery = searchQuery
+        return Either.Right(Unit)
     }
 
-    override suspend fun searchQuery(): String? {
-        return _lastSearchQuery
+    override suspend fun searchQuery(): Either<Throwable, String> {
+        return Either.Right(_lastSearchQuery ?: "Search query")
     }
 
     fun resetCurrentPage() {
