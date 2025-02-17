@@ -1,19 +1,18 @@
 package com.gchristov.newsfeed.multiplatform.post.feature
 
+import arrow.core.raise.either
 import com.gchristov.newsfeed.multiplatform.common.mvvm.CommonViewModel
 import com.gchristov.newsfeed.multiplatform.post.data.PostRepository
 import com.gchristov.newsfeed.multiplatform.post.data.model.DecoratedPost
-import com.gchristov.newsfeed.multiplatform.post.data.usecase.DecoratePostUseCase
 import kotlinx.coroutines.CoroutineDispatcher
 
 class PostViewModel(
     dispatcher: CoroutineDispatcher,
     private var postId: String,
     private val postRepository: PostRepository,
-    private val decoratePostUseCase: DecoratePostUseCase
 ) : CommonViewModel<PostViewModel.State>(
     dispatcher = dispatcher,
-    initialState = State()
+    initialState = State(),
 ) {
     init {
         loadContent()
@@ -32,40 +31,45 @@ class PostViewModel(
             )
         }
         launchUiCoroutine {
-            try {
+            either {
+                postRepository.cachedPost(postId).bind()?.let { decoratedPost ->
+                    setState { copy(post = decoratedPost) }
+                }
 
-                val newPost = decoratePostUseCase(
-                    postId = postId,
-                    onCache = { cachedPost ->
-                        setState { copy(post = cachedPost) }
+                val newPost = postRepository.post(postId).bind()
+
+                setState {
+                    copy(
+                        loading = false,
+                        post = newPost,
+                    )
+                }
+            }.fold(
+                ifLeft = { error ->
+                    error.printStackTrace()
+                    setState {
+                        copy(
+                            loading = false,
+                            blockingError = error,
+                        )
                     }
-                )
-
-                setState {
-                    copy(
-                        loading = false,
-                        post = newPost
-                    )
-                }
-
-            } catch (error: Exception) {
-                error.printStackTrace()
-                setState {
-                    copy(
-                        loading = false,
-                        blockingError = error
-                    )
-                }
-            }
+                },
+                ifRight = { /* No-op */ },
+            )
         }
     }
 
     fun onToggleFavourite() {
         state.value.post?.let { post ->
             launchUiCoroutine {
-                postRepository.toggleFavourite(post.raw.id)
-                val newPost = decoratePostUseCase(post.raw.id)
-                setState { copy(post = newPost) }
+                either {
+                    postRepository.toggleFavourite(post.raw.id).bind()
+                    val updatedPost = postRepository.cachedPost(post.raw.id).bind()
+                    setState { copy(post = updatedPost) }
+                }.fold(
+                    ifLeft = { it.printStackTrace() },
+                    ifRight = { /* No-op */ }
+                )
             }
         }
     }

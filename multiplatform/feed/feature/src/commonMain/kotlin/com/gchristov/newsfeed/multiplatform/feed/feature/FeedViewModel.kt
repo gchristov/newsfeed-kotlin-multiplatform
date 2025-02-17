@@ -122,7 +122,6 @@ class FeedViewModel(
                     feedRepository.cachedFeedPage().bind()?.let { decoratedFeed ->
                         val cachedSectionedFeed = buildSectionedFeedUseCase(decoratedFeed).bind()
                         setState { copy(sectionedFeed = cachedSectionedFeed) }
-                        feedRepository.clearCache().bind()
                     }
                 }
 
@@ -160,9 +159,7 @@ class FeedViewModel(
                         )
                     }
                 },
-                ifRight = {
-                    // No-op
-                },
+                ifRight = { /* No-op */ },
             )
         }
     }

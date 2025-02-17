@@ -1,13 +1,9 @@
 package com.gchristov.newsfeed.multiplatform.post.feature
 
 import com.gchristov.newsfeed.multiplatform.common.kotlin.di.DependencyModule
-import com.gchristov.newsfeed.multiplatform.post.data.PostRepository
-import com.gchristov.newsfeed.multiplatform.post.data.usecase.DecoratePostUseCase
-import com.gchristov.newsfeed.multiplatform.post.data.usecase.RealDecoratePostUseCase
 import kotlinx.coroutines.Dispatchers
 import org.kodein.di.DI
 import org.kodein.di.bindFactory
-import org.kodein.di.bindProvider
 import org.kodein.di.instance
 
 object MplPostModule : DependencyModule() {
@@ -15,22 +11,14 @@ object MplPostModule : DependencyModule() {
 
     override fun bindDependencies(builder: DI.Builder) {
         builder.apply {
-            bindProvider { provideDecoratePostUseCase(postRepository = instance()) }
+//            bindProvider { provideDecoratePostUseCase(postRepository = instance()) }
             bindFactory { postId: String ->
                 PostViewModel(
                     dispatcher = Dispatchers.Main,
                     postId = postId,
-                    decoratePostUseCase = instance(),
-                    postRepository = instance()
+                    postRepository = instance(),
                 )
             }
         }
     }
-
-    private fun provideDecoratePostUseCase(
-        postRepository: PostRepository
-    ): DecoratePostUseCase = RealDecoratePostUseCase(
-        postRepository = postRepository,
-        dispatcher = Dispatchers.Main
-    )
 }

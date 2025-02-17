@@ -35,6 +35,7 @@ internal class RealFeedRepository(
         ).body()
         either {
             val feedPage = feedResponse.toFeedPage { decorateFeedItem(feedItem = it).bind() }
+            clearCache().bind()
             cacheFeedPage(feedPage)
             feedPage
         }

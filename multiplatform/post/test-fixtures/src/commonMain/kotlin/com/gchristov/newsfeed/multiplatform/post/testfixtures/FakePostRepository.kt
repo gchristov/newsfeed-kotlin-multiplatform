@@ -4,7 +4,6 @@ import arrow.core.Either
 import arrow.core.raise.either
 import com.gchristov.newsfeed.multiplatform.common.test.FakeResponse
 import com.gchristov.newsfeed.multiplatform.common.test.execute
-import com.gchristov.newsfeed.multiplatform.post.data.Post
 import com.gchristov.newsfeed.multiplatform.post.data.PostRepository
 import com.gchristov.newsfeed.multiplatform.post.data.model.DecoratedPost
 import kotlinx.datetime.Clock
@@ -22,20 +21,24 @@ class FakePostRepository(
         }
     }
 
-    override suspend fun post(postId: String, postMetadataFields: String): Post {
-        return postResponse.execute(requireNotNull(post?.raw))
+    override suspend fun post(
+        postId: String,
+        postMetadataFields: String
+    ): Either<Throwable, DecoratedPost> {
+        return Either.Right(postResponse.execute(requireNotNull(post)))
     }
 
-    override suspend fun cachedPost(postId: String): Post? {
-        return postCache?.raw
+    override suspend fun cachedPost(postId: String): Either<Throwable, DecoratedPost?> {
+        return Either.Right(postCache)
     }
 
-    override suspend fun clearCache(postId: String) {
+    override suspend fun clearCache(postId: String): Either<Throwable, Unit> {
         _cacheCleared = true
+        return Either.Right(Unit)
     }
 
-    override suspend fun cachePost(decoratedPost: DecoratedPost) {
-        postCache
+    override suspend fun cachePost(decoratedPost: DecoratedPost): Either<Throwable, Unit> {
+        return Either.Right(Unit)
     }
 
     override suspend fun favouriteTimestamp(postId: String): Either<Throwable, Long?> {
