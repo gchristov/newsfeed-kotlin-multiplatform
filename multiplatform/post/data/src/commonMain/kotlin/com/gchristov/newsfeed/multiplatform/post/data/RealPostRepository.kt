@@ -1,12 +1,10 @@
 package com.gchristov.newsfeed.multiplatform.post.data
 
 import arrow.core.Either
-import arrow.core.flatMap
 import arrow.core.raise.either
 import com.gchristov.newsfeed.multiplatform.post.data.api.ApiPostResponse
 import com.gchristov.newsfeed.multiplatform.post.data.model.DecoratedPost
 import com.gchristov.newsfeed.multiplatform.post.data.model.toPost
-import com.gchristov.newsfeed.multiplatform.post.data.util.ReadingTimeCalculator
 import com.russhwolf.settings.Settings
 import com.russhwolf.settings.contains
 import com.russhwolf.settings.set
@@ -96,8 +94,9 @@ internal class RealPostRepository(
                 defaultValue = Clock.System.now().toEpochMilliseconds()
             )
             Either.Right(timestamp)
+        } else {
+            Either.Right(null)
         }
-        Either.Right(null)
     }
 
     override suspend fun toggleFavourite(
@@ -105,9 +104,9 @@ internal class RealPostRepository(
     ): Either<Throwable, Unit> = withContext(dispatcher) {
         either {
             val timestamp = favouriteTimestamp(postId).bind()
-            timestamp?.let {
+            if (timestamp != null) {
                 sharedPreferences.remove(postId)
-            } ?: {
+            } else {
                 // Keep track of when the item was favourited
                 sharedPreferences[postId] = Clock.System.now().toEpochMilliseconds()
             }
