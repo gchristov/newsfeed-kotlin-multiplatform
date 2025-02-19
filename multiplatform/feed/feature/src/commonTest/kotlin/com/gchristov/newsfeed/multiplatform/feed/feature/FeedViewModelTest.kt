@@ -29,41 +29,35 @@ import kotlin.test.assertTrue
 class FeedViewModelTest : CommonViewModelTestClass() {
 
     @Test
-    fun contentLoadSetsLoadingState() {
-        // Given
-        val response = FakeResponse.LoadsForever
-        // When
-        runTest(feedResponse = response) { viewModel, _, _ ->
-            // Then
-            assertTrue { viewModel.state.value.loading }
-            assertFalse { viewModel.state.value.loadingMore }
-            assertFalse { viewModel.state.value.reachedEnd }
-            assertNull(viewModel.state.value.blockingError)
-            assertNull(viewModel.state.value.nonBlockingError)
-        }
+    fun contentLoadSetsLoadingState() = runTest(
+        feedResponse = FakeResponse.LoadsForever
+    ) { viewModel, _, _ ->
+        assertTrue { viewModel.state.value.loading }
+        assertFalse { viewModel.state.value.loadingMore }
+        assertFalse { viewModel.state.value.reachedEnd }
+        assertNull(viewModel.state.value.blockingError)
+        assertNull(viewModel.state.value.nonBlockingError)
     }
 
     @Test
     fun redecorateContentRedecoratesContent() = runTest { viewModel, _, postRepository ->
-        // Given
         var post = viewModel.state.value.sectionedFeed!!.sections.first().feedItems.first()
         val prevTimestamp = post.favouriteTimestamp
-        // When
+
         postRepository.toggleFavourite(post.raw.itemId)
         viewModel.redecorateContent()
-        // Then
+
         post = viewModel.state.value.sectionedFeed!!.sections.first().feedItems.first()
         assertTrue { post.favouriteTimestamp != prevTimestamp }
     }
 
     @Test
     fun refreshContentSetsLoadingState() = runTest { viewModel, feedRepository, _ ->
-        // Given
         feedRepository.pageIndex = 0
         feedRepository.feedResponse = FakeResponse.LoadsForever
-        // When
+
         viewModel.refreshContent()
-        // Then
+
         assertTrue { viewModel.state.value.loading }
         assertFalse { viewModel.state.value.loadingMore }
         assertFalse { viewModel.state.value.reachedEnd }
@@ -73,36 +67,31 @@ class FeedViewModelTest : CommonViewModelTestClass() {
 
     @Test
     fun loadNextPageReachesEnd() {
-        // Given
         val feed = FeedCreator.singlePageFeed()
+
         runTest(feedPages = feed) { viewModel, _, _ ->
-            // When
             viewModel.loadNextPage(startFromFirst = false)
-            // Then
             assertTrue { viewModel.state.value.reachedEnd }
         }
     }
 
     @Test
-    fun loadNextPageLoadsMore() {
-        // Given
-        val feed = FeedCreator.multiPageFeed()
-        runTest(feedPages = feed) { viewModel, feedRepository, _ ->
-            feedRepository.feedLoadMoreResponse = FakeResponse.LoadsForever
-            // When
-            viewModel.loadNextPage(startFromFirst = false)
-            // Then
-            assertFalse { viewModel.state.value.loading }
-            assertTrue { viewModel.state.value.loadingMore }
-            assertFalse { viewModel.state.value.reachedEnd }
-            assertNull(viewModel.state.value.blockingError)
-            assertNull(viewModel.state.value.nonBlockingError)
-        }
+    fun loadNextPageLoadsMore() = runTest(
+        feedPages = FeedCreator.multiPageFeed()
+    ) { viewModel, feedRepository, _ ->
+        feedRepository.feedLoadMoreResponse = FakeResponse.LoadsForever
+
+        viewModel.loadNextPage(startFromFirst = false)
+
+        assertFalse { viewModel.state.value.loading }
+        assertTrue { viewModel.state.value.loadingMore }
+        assertFalse { viewModel.state.value.reachedEnd }
+        assertNull(viewModel.state.value.blockingError)
+        assertNull(viewModel.state.value.nonBlockingError)
     }
 
     @Test
     fun contentLoadSetsCacheState() {
-        // Given
         val cache = FeedCreator.singlePageFeed().first()
         val response = FakeResponse.LoadsForever
         val expected = SectionedFeed(
@@ -127,12 +116,11 @@ class FeedViewModelTest : CommonViewModelTestClass() {
                 )
             )
         )
-        // When
+
         runTest(
             feedPageCache = cache,
             feedResponse = response
         ) { viewModel, feedRepository, _ ->
-            // Then
             assertTrue { viewModel.state.value.loading }
             assertFalse { viewModel.state.value.loadingMore }
             assertEquals(
@@ -146,7 +134,6 @@ class FeedViewModelTest : CommonViewModelTestClass() {
 
     @Test
     fun contentLoadSetsSuccessState() {
-        // Given
         val feed = FeedCreator.singlePageFeed()
         val expected = SectionedFeed(
             pages = 1,
@@ -170,9 +157,8 @@ class FeedViewModelTest : CommonViewModelTestClass() {
                 )
             )
         )
-        // When
+
         runTest(feedPages = feed) { viewModel, _, _ ->
-            // Then
             assertFalse { viewModel.state.value.loading }
             assertFalse { viewModel.state.value.loadingMore }
             assertEquals(
@@ -186,12 +172,10 @@ class FeedViewModelTest : CommonViewModelTestClass() {
 
     @Test
     fun contentLoadSetsErrorState() {
-        // Given
         val errorMessage = "Error message"
         val response = FakeResponse.Error(errorMessage)
-        // When
+
         runTest(feedResponse = response) { viewModel, _, _ ->
-            // Then
             assertFalse { viewModel.state.value.loading }
             assertFalse { viewModel.state.value.loadingMore }
             assertEquals(
@@ -204,15 +188,14 @@ class FeedViewModelTest : CommonViewModelTestClass() {
 
     @Test
     fun contentLoadMoreSetsErrorState() {
-        // Given
         val feed = FeedCreator.multiPageFeed()
         val errorMessage = "Error message"
         val response = FakeResponse.Error(errorMessage)
+
         runTest(feedPages = feed) { viewModel, feedRepository, _ ->
-            // When
             feedRepository.feedLoadMoreResponse = response
             viewModel.loadNextPage(startFromFirst = false)
-            // Then
+
             assertFalse { viewModel.state.value.loading }
             assertFalse { viewModel.state.value.loadingMore }
             assertNull(viewModel.state.value.blockingError)
@@ -225,14 +208,13 @@ class FeedViewModelTest : CommonViewModelTestClass() {
 
     @Test
     fun dismissNonBlockingErrorDismissesIt() {
-        // Given
         val feed = FeedCreator.multiPageFeed()
         val response = FakeResponse.Error("Error message")
+
         runTest(feedPages = feed) { viewModel, feedRepository, _ ->
-            // When
             feedRepository.feedLoadMoreResponse = response
             viewModel.loadNextPage(startFromFirst = false)
-            // Then
+
             assertNotNull(viewModel.state.value.nonBlockingError)
             viewModel.dismissNonBlockingError()
             assertNull(viewModel.state.value.nonBlockingError)
@@ -240,20 +222,18 @@ class FeedViewModelTest : CommonViewModelTestClass() {
     }
 
     @Test
-    fun searchQueryIsDebounced()  {
-        runTest { viewModel, feedRepository, _ ->
-            viewModel.onSearchTextChanged("te")
-            delay(FeedSearchDebounceIntervalMillis - 200)
-            feedRepository.assertSearchQuery("brexit,fintech")
+    fun searchQueryIsDebounced() = runTest { viewModel, feedRepository, _ ->
+        viewModel.onSearchTextChanged("te")
+        delay(FeedSearchDebounceIntervalMillis - 200)
+        feedRepository.assertSearchQuery("brexit,fintech")
 
-            viewModel.onSearchTextChanged("text")
-            delay(FeedSearchDebounceIntervalMillis - 100)
-            feedRepository.assertSearchQuery("brexit,fintech")
+        viewModel.onSearchTextChanged("text")
+        delay(FeedSearchDebounceIntervalMillis - 100)
+        feedRepository.assertSearchQuery("brexit,fintech")
 
-            viewModel.onSearchTextChanged("text")
-            delay(FeedSearchDebounceIntervalMillis)
-            feedRepository.assertSearchQuery("text")
-        }
+        viewModel.onSearchTextChanged("text")
+        delay(FeedSearchDebounceIntervalMillis)
+        feedRepository.assertSearchQuery("text")
     }
 
     private fun runTest(

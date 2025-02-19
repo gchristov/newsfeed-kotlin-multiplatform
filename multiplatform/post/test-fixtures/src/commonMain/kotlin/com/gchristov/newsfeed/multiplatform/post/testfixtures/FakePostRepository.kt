@@ -12,7 +12,8 @@ import kotlinx.datetime.Instant
 
 class FakePostRepository(
     val post: Post? = null,
-    val postCache: Post? = null,
+    val usePostForCache: Boolean = false,
+    val readingTimeMinutes: Int? = null,
 ) : PostRepository {
     var postResponse: FakeResponse = FakeResponse.CompletesNormally
 
@@ -26,6 +27,7 @@ class FakePostRepository(
             raw = requireNotNull(post),
             date = Instant.parse(requireNotNull(post.date)),
             favouriteTimestamp = favouriteTimestamp(postId).bind(),
+            readingTimeMinutes = readingTimeMinutes,
         )
         return try {
             val response = postResponse.execute(decoratedPost)
@@ -36,11 +38,12 @@ class FakePostRepository(
     }
 
     override suspend fun cachedPost(postId: String): Either<Throwable, DecoratedPost?> = either {
-        val decoratedPost = postCache?.let {
+        val decoratedPost = post?.takeIf { usePostForCache }?.let {
             DecoratedPost(
-                raw = postCache,
-                date = Instant.parse(requireNotNull(postCache.date)),
+                raw = it,
+                date = Instant.parse(requireNotNull(it.date)),
                 favouriteTimestamp = favouriteTimestamp(postId).bind(),
+                readingTimeMinutes = readingTimeMinutes,
             )
         }
         return Either.Right(decoratedPost)
