@@ -8,11 +8,9 @@ class PostUiTest: XCTestCase {
     }
     
     func testLoadingIndicatorShown() throws {
-        // Given
         let response = "loadForever"
-        // When
+        
         runTest(postResponse: response) { robot in
-            // Then
             robot.assertLoadingExists()
             robot.assertAddToFavouritesButtonDoesNotExist()
             robot.assertRemoveFromFavouritesButtonDoesNotExist()
@@ -27,12 +25,10 @@ class PostUiTest: XCTestCase {
     }
     
     func testCacheShown() throws {
-        // Given
-        let cache = "notFavourite"
         let response = "loadForever"
-        // When
+        
         runTest(
-            postCache: cache,
+            usePostForCache: true,
             postResponse: response
         ) { robot in
             robot.assertLoadingExists()
@@ -64,11 +60,9 @@ class PostUiTest: XCTestCase {
     }
     
     func testBlockingErrorShown() throws {
-        // Given
         let response = "error"
-        // When
+        
         runTest(postResponse: response) { robot in
-            // Then
             robot.assertLoadingDoesNotExist()
             robot.assertAddToFavouritesButtonDoesNotExist()
             robot.assertRemoveFromFavouritesButtonDoesNotExist()
@@ -82,52 +76,33 @@ class PostUiTest: XCTestCase {
         }
     }
     
-    func testToggleFavouriteAddsToFavourites() throws {
-        // Given
-        let post = "notFavourite"
-        // When
-        runTest(post: post) { robot in
-            // Then
+    func testToggleFavouriteTogglesFavourite() throws {
+        runTest { robot in
             robot.assertAddToFavouritesButtonExists()
             robot.assertRemoveFromFavouritesButtonDoesNotExist()
-            // When
+            
             robot.clickAddToFavouritesButton()
-            // Then
+            
             robot.assertAddToFavouritesButtonDoesNotExist()
             robot.assertRemoveFromFavouritesButtonExists()
-        }
-    }
-    
-    func testToggleFavouriteRemovesFromFavourites() throws {
-        // Given
-        let post = "favourite"
-        // When
-        runTest(post: post) { robot in
-            // Then
-            robot.assertAddToFavouritesButtonDoesNotExist()
-            robot.assertRemoveFromFavouritesButtonExists()
-            // When
+            
             robot.clickRemoveFromFavouritesButton()
-            // Then
+            
             robot.assertAddToFavouritesButtonExists()
             robot.assertRemoveFromFavouritesButtonDoesNotExist()
         }
     }
     
     private func runTest(
-        post: String = "notFavourite",
-        postCache: String? = nil,
+        usePostForCache: Bool = false,
         postResponse: String = "success",
         block: (PostRobot) -> Void
     ) {
         let app = XCUIApplication()
         app.launchEnvironment = [
-            "post": post,
-            "postResponse": postResponse
+            "postResponse": postResponse,
+            "usePostForCache": usePostForCache.description
         ]
-        if let postCache = postCache {
-            app.launchEnvironment["postCache"] = postCache
-        }
         app.launch()
         block(PostRobot(app: app))
     }
