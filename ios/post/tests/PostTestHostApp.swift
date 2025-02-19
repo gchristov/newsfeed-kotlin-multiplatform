@@ -9,7 +9,7 @@ import NewsfeedMultiplatform
 @main
 struct PostTestHostApp: App {
     private let post: Post
-    private let repository: FakePostRepository
+    private let postRepository: FakePostRepository
     
     init() {
         DependencyInjector.shared.initialise()
@@ -20,12 +20,12 @@ struct PostTestHostApp: App {
             body: "This is a sample post body",
             date: "2022-02-21T00:00:00Z"
         )
-        self.repository = FakePostRepository(
+        self.postRepository = FakePostRepository(
             post: post,
             usePostForCache: UsePostForCacheType.obtainFromEnvironment(),
             readingTimeMinutes: 1
         )
-        self.repository.postResponse = PostResponseType.obtainFromEnvironment()
+        self.postRepository.postResponse = PostResponseType.obtainFromEnvironment()
     }
     
     var body: some Scene {
@@ -34,7 +34,7 @@ struct PostTestHostApp: App {
                 PostScreenContent(viewModel: PostViewModel(
                     dispatcher: Dispatchers.shared.Main,
                     postId: PostId,
-                    postRepository: repository)
+                    postRepository: postRepository)
                 )
             }
         }

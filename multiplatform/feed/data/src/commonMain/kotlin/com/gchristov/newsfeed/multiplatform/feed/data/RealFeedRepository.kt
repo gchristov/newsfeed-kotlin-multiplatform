@@ -28,11 +28,15 @@ internal class RealFeedRepository(
         pageId: Int,
         feedQuery: String,
     ): Either<Throwable, DecoratedFeedPage> = withContext(dispatcher) {
-        // TODO: Does this need to be wrapped with try catch?
-        val feedResponse: ApiFeedResponse = apiService.feed(
-            pageId = pageId,
-            feedQuery = feedQuery
-        ).body()
+        val feedResponse: ApiFeedResponse = try {
+            apiService.feed(
+                pageId = pageId,
+                feedQuery = feedQuery
+            ).body()
+        } catch (error: Throwable) {
+            return@withContext Either.Left(error)
+        }
+
         either {
             val feedPage = feedResponse.toFeedPage { decorateFeedItem(feedItem = it).bind() }
             clearCache().bind()

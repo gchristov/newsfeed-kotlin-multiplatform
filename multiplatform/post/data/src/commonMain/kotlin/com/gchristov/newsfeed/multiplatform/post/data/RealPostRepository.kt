@@ -27,11 +27,15 @@ internal class RealPostRepository(
         postId: String,
         postMetadataFields: String
     ): Either<Throwable, DecoratedPost> = withContext(dispatcher) {
-        // TODO: Does this need to be wrapped with try catch?
-        val postResponse = apiService.post(
-            postUrl = postId,
-            postMetadataFields = postMetadataFields,
-        ).body<ApiPostResponse>()
+        val postResponse = try {
+            apiService.post(
+                postUrl = postId,
+                postMetadataFields = postMetadataFields,
+            ).body<ApiPostResponse>()
+        } catch (error: Throwable) {
+            return@withContext Either.Left(error)
+        }
+
         either {
             val post = decoratePost(postResponse.toPost()).bind()
             clearCache(post.raw.id).bind()
