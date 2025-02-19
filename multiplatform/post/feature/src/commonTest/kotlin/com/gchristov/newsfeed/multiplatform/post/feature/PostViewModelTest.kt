@@ -116,7 +116,7 @@ class PostViewModelTest : CommonViewModelTestClass() {
     }
 
     @Test
-    fun toggleFavourite() {
+    fun toggleFavouriteTogglesFavourite() {
         // Given
         val post = PostCreator.post()
         runTest(post = post) { viewModel, _ ->

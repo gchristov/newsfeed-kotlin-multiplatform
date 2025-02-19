@@ -43,7 +43,7 @@ class FeedViewModel(
     private fun observeSearchQuery() {
         launchUiCoroutine {
             searchQueryFlow
-                .debounce(DEBOUNCE_INTERVAL_MS)
+                .debounce(FeedSearchDebounceIntervalMillis)
                 .filterNotNull()
                 .collect { debouncedText ->
                     feedRepository.saveSearchQuery(debouncedText)
@@ -76,16 +76,7 @@ class FeedViewModel(
     }
 
     fun refreshContent() {
-        // Clear cache when user explicitly requests a refresh
-        launchUiCoroutine {
-            either {
-                feedRepository.clearCache().bind()
-            }.fold(
-                ifLeft = { it.printStackTrace() },
-                ifRight = { /* No-op */ }
-            )
-        }
-        loadNextPage()
+        loadNextPage(startFromFirst = true)
     }
 
     fun loadNextPage(startFromFirst: Boolean = true) {
@@ -180,4 +171,4 @@ class FeedViewModel(
     )
 }
 
-private const val DEBOUNCE_INTERVAL_MS = 500L
+const val FeedSearchDebounceIntervalMillis = 500L

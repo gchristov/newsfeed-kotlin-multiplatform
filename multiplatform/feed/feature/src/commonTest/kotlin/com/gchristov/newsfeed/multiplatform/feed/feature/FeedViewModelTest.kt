@@ -6,16 +6,10 @@ import com.gchristov.newsfeed.multiplatform.common.test.FakeCoroutineDispatcher
 import com.gchristov.newsfeed.multiplatform.common.test.FakeResponse
 import com.gchristov.newsfeed.multiplatform.feed.data.model.DecoratedFeedPage
 import com.gchristov.newsfeed.multiplatform.feed.data.model.SectionedFeed
-import com.gchristov.newsfeed.multiplatform.feed.data.usecase.BuildSectionedFeedUseCase
-import com.gchristov.newsfeed.multiplatform.feed.data.usecase.FlattenSectionedFeedUseCase
-import com.gchristov.newsfeed.multiplatform.feed.data.usecase.GetSectionedFeedUseCase
-import com.gchristov.newsfeed.multiplatform.feed.data.usecase.MergeSectionedFeedUseCase
 import com.gchristov.newsfeed.multiplatform.feed.data.usecase.RealBuildSectionedFeedUseCase
 import com.gchristov.newsfeed.multiplatform.feed.data.usecase.RealFlattenSectionedFeedUseCase
-import com.gchristov.newsfeed.multiplatform.feed.data.usecase.RealGetSectionedFeedUseCase
 import com.gchristov.newsfeed.multiplatform.feed.data.usecase.RealMergeSectionedFeedUseCase
 import com.gchristov.newsfeed.multiplatform.feed.data.usecase.RealRedecorateSectionedFeedUseCase
-import com.gchristov.newsfeed.multiplatform.feed.data.usecase.RedecorateSectionedFeedUseCase
 import com.gchristov.newsfeed.multiplatform.feed.testfixtures.FakeFeedRepository
 import com.gchristov.newsfeed.multiplatform.feed.testfixtures.FeedCreator
 import com.gchristov.newsfeed.multiplatform.post.testfixtures.FakePostRepository
@@ -24,7 +18,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.Instant
-import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -35,26 +28,8 @@ import kotlin.test.assertTrue
 @ExperimentalCoroutinesApi
 class FeedViewModelTest : CommonViewModelTestClass() {
 
-    //TODO: disabled as flaky
-    @Ignore
     @Test
-    fun searchQueryIsDebouncedOnExpectedInterval()  {
-        runTest { viewModel, _, _ ->
-            viewModel.onSearchTextChanged("te")
-            delay(100)
-            assertTrue { viewModel.state.value.searchQuery == "brexit,fintech" }
-
-            viewModel.onSearchTextChanged("text")
-            delay(200)
-            assertTrue { viewModel.state.value.searchQuery == "brexit,fintech" }
-
-            delay(400)
-            assertTrue { viewModel.state.value.searchQuery == "text" }
-        }
-    }
-
-    @Test
-    fun initialLoadingSetsState() {
+    fun contentLoadSetsLoadingState() {
         // Given
         val response = FakeResponse.LoadsForever
         // When
@@ -69,7 +44,7 @@ class FeedViewModelTest : CommonViewModelTestClass() {
     }
 
     @Test
-    fun redecoratingSetsContent() = runTest { viewModel, _, postRepository ->
+    fun redecorateContentRedecoratesContent() = runTest { viewModel, _, postRepository ->
         // Given
         var post = viewModel.state.value.sectionedFeed!!.sections.first().feedItems.first()
         val prevTimestamp = post.favouriteTimestamp
@@ -82,14 +57,13 @@ class FeedViewModelTest : CommonViewModelTestClass() {
     }
 
     @Test
-    fun refreshingContentClearsCacheAndReloads() = runTest { viewModel, feedRepository, _ ->
+    fun refreshContentSetsLoadingState() = runTest { viewModel, feedRepository, _ ->
         // Given
-        feedRepository.resetCurrentPage()
+        feedRepository.pageIndex = 0
         feedRepository.feedResponse = FakeResponse.LoadsForever
         // When
         viewModel.refreshContent()
         // Then
-        feedRepository.assertCacheCleared()
         assertTrue { viewModel.state.value.loading }
         assertFalse { viewModel.state.value.loadingMore }
         assertFalse { viewModel.state.value.reachedEnd }
@@ -127,7 +101,7 @@ class FeedViewModelTest : CommonViewModelTestClass() {
     }
 
     @Test
-    fun onLoadSuccessSetsCache() {
+    fun contentLoadSetsCacheState() {
         // Given
         val cache = FeedCreator.singlePageFeed().first()
         val response = FakeResponse.LoadsForever
@@ -159,7 +133,6 @@ class FeedViewModelTest : CommonViewModelTestClass() {
             feedResponse = response
         ) { viewModel, feedRepository, _ ->
             // Then
-            feedRepository.assertCacheCleared()
             assertTrue { viewModel.state.value.loading }
             assertFalse { viewModel.state.value.loadingMore }
             assertEquals(
@@ -172,7 +145,7 @@ class FeedViewModelTest : CommonViewModelTestClass() {
     }
 
     @Test
-    fun onLoadSuccessSetsCorrectState() {
+    fun contentLoadSetsSuccessState() {
         // Given
         val feed = FeedCreator.singlePageFeed()
         val expected = SectionedFeed(
@@ -212,7 +185,7 @@ class FeedViewModelTest : CommonViewModelTestClass() {
     }
 
     @Test
-    fun onLoadErrorSetsCorrectState() {
+    fun contentLoadSetsErrorState() {
         // Given
         val errorMessage = "Error message"
         val response = FakeResponse.Error(errorMessage)
@@ -230,7 +203,7 @@ class FeedViewModelTest : CommonViewModelTestClass() {
     }
 
     @Test
-    fun onLoadMoreErrorSetsCorrectState() {
+    fun contentLoadMoreSetsErrorState() {
         // Given
         val feed = FeedCreator.multiPageFeed()
         val errorMessage = "Error message"
@@ -251,7 +224,7 @@ class FeedViewModelTest : CommonViewModelTestClass() {
     }
 
     @Test
-    fun dismissingNonBlockingErrorHidesIt() {
+    fun dismissNonBlockingErrorDismissesIt() {
         // Given
         val feed = FeedCreator.multiPageFeed()
         val response = FakeResponse.Error("Error message")
@@ -263,6 +236,23 @@ class FeedViewModelTest : CommonViewModelTestClass() {
             assertNotNull(viewModel.state.value.nonBlockingError)
             viewModel.dismissNonBlockingError()
             assertNull(viewModel.state.value.nonBlockingError)
+        }
+    }
+
+    @Test
+    fun searchQueryIsDebounced()  {
+        runTest { viewModel, feedRepository, _ ->
+            viewModel.onSearchTextChanged("te")
+            delay(FeedSearchDebounceIntervalMillis - 200)
+            feedRepository.assertSearchQuery("brexit,fintech")
+
+            viewModel.onSearchTextChanged("text")
+            delay(FeedSearchDebounceIntervalMillis - 100)
+            feedRepository.assertSearchQuery("brexit,fintech")
+
+            viewModel.onSearchTextChanged("text")
+            delay(FeedSearchDebounceIntervalMillis)
+            feedRepository.assertSearchQuery("text")
         }
     }
 
@@ -283,27 +273,25 @@ class FeedViewModelTest : CommonViewModelTestClass() {
             this.feedResponse = feedResponse
             this.feedLoadMoreResponse = feedLoadMoreResponse
         }
-        val getSectionedFeedUseCase = RealGetSectionedFeedUseCase(
-            feedRepository = feedRepository,
-            buildSectionedFeedUseCase = RealBuildSectionedFeedUseCase(
-                dispatcher = FakeCoroutineDispatcher,
-                clock = FakeClock
-            ),
-            mergeSectionedFeedUseCase = RealMergeSectionedFeedUseCase(dispatcher = FakeCoroutineDispatcher)
+        val buildSectionedFeedUseCase = RealBuildSectionedFeedUseCase(
+            dispatcher = FakeCoroutineDispatcher,
+            clock = FakeClock
+        )
+        val mergeSectionedFeedUseCase = RealMergeSectionedFeedUseCase(
+            dispatcher = FakeCoroutineDispatcher
         )
         val redecorateSectionedFeedUseCase = RealRedecorateSectionedFeedUseCase(
+            dispatcher = FakeCoroutineDispatcher,
             feedRepository = feedRepository,
             flattenSectionedFeedUseCase = RealFlattenSectionedFeedUseCase(dispatcher = FakeCoroutineDispatcher),
-            buildSectionedFeedUseCase = RealBuildSectionedFeedUseCase(
-                dispatcher = FakeCoroutineDispatcher,
-                clock = FakeClock
-            )
+            buildSectionedFeedUseCase = buildSectionedFeedUseCase,
         )
         val viewModel = FeedViewModel(
             dispatcher = FakeCoroutineDispatcher,
             feedRepository = feedRepository,
-            getSectionedFeedUseCase = getSectionedFeedUseCase,
-            redecorateSectionedFeedUseCase = redecorateSectionedFeedUseCase
+            redecorateSectionedFeedUseCase = redecorateSectionedFeedUseCase,
+            buildSectionedFeedUseCase = buildSectionedFeedUseCase,
+            mergeSectionedFeedUseCase = mergeSectionedFeedUseCase,
         )
         testBlock(viewModel, feedRepository, postRepository)
     }

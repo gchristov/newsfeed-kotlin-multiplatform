@@ -130,17 +130,17 @@ internal class RealFeedRepository(
     }
 
     override suspend fun searchQuery(): Either<Throwable, String> = withContext(dispatcher) {
-        val cachedQuery = sharedPreferences.getStringOrNull(key = SEARCH_QUERY_PREFERENCES_KEY)
-        Either.Right(cachedQuery ?: DEFAULT_SEARCH_QUERY)
+        val cachedQuery = sharedPreferences.getStringOrNull(key = SearchQueryKey)
+        Either.Right(cachedQuery ?: DefaultSearchQuery)
     }
 
     override suspend fun saveSearchQuery(
         searchQuery: String
     ): Either<Throwable, Unit> = withContext(dispatcher) {
-        sharedPreferences[SEARCH_QUERY_PREFERENCES_KEY] = searchQuery
+        sharedPreferences[SearchQueryKey] = searchQuery
         Either.Right(Unit)
     }
 }
 
-private const val SEARCH_QUERY_PREFERENCES_KEY = "searchQuery"
-private const val DEFAULT_SEARCH_QUERY = "brexit,fintech"
+private const val SearchQueryKey = "searchQuery"
+const val DefaultSearchQuery = "brexit,fintech"
