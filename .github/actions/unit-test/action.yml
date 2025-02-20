@@ -1,0 +1,27 @@
+name: 'unit-test'
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Gradle
+      uses: ./.github/actions/setup-gradle
+      with:
+        cache-key: unit-test
+    - name: Test
+      shell: bash
+      run: |
+        set -Eeuo pipefail 
+        ./gradlew --no-daemon --continue testDebugUnitTest
+    - name: Generate test report
+      uses: mikepenz/action-junit-report@v4
+      if: always() # Ensure all test reports are collected, even after errors
+      with:
+        report_paths: |
+          **/TEST-*.xml
+        check_name: unit-test-results
+    - name: Artifacts
+      uses: actions/upload-artifact@v4
+      if: always() # Ensure all artifacts are collected, even after errors
+      with:
+        name: Tests
+        path: |
+          **/TEST-*.xml

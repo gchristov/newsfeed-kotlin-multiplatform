@@ -26,28 +26,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Set up Gradle
-        uses: ./.github/actions/setup-gradle
-        with:
-          cache-key: check-unit-test
-      - name: Unit test
-        run: |
-          set -o pipefail && 
-          ./gradlew --no-daemon --continue testDebugUnitTest
-      - name: Generate test report
-        uses: mikepenz/action-junit-report@v4
-        if: always() # Ensure all test reports are collected, even after errors
-        with:
-          report_paths: |
-            **/TEST-*.xml
-          check_name: 'check-unit-test-results'
-      - name: Artifacts
-        uses: actions/upload-artifact@v4
-        if: always() # Ensure all artifacts are collected, even after errors
-        with:
-          name: Unit tests
-          path: |
-            **/TEST-*.xml
+      - name: Test
+        uses: ./.github/actions/unit-test
 
   ios-check-build:
     runs-on: macos-15
