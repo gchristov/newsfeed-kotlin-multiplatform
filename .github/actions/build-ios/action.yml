@@ -1,0 +1,30 @@
+name: 'build-ios'
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Gradle
+      uses: ./.github/actions/setup-gradle
+      with:
+        cache-key: build-ios
+    - name: Set up Xcode
+      uses: ./.github/actions/setup-xcode
+      with:
+        cache-key: build-ios
+    - name: Build iOS
+      shell: bash
+      run: |
+        set -Eeuo pipefail
+        cd ios 
+        xcodebuild CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++ -workspace app.xcworkspace -scheme "app" -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 16,OS=18.2' build | tee xcodebuild.log | xcpretty
+        cd ..
+    - name: Artifacts
+      uses: actions/upload-artifact@v4
+      if: always() # Ensure all artifacts are collected, even after errors
+      with:
+        name: iOS Build
+        path: |
+          ios/xcodebuild.log
+          ~/Library/Developer/Xcode/DerivedData/**/*.app
+          ~/Library/Developer/Xcode/DerivedData/**/*.app.dSYM
+          **/build
+          **/secrets.properties

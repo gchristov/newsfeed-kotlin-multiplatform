@@ -7,11 +7,6 @@ on:
     branches: [ master ]
 
 env:
-  JAVA_VERSION: "17"
-  JAVA_DISTRIBUTION: "zulu"
-  XCODE_VERSION: "16.2"
-  XCODE_CACHE: "CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++"
-  IOS_SIMULATOR: "platform=iOS Simulator,name=iPhone 16,OS=18.2"
   ANDROID_COMPILE_SDK: "31"
   ANDROID_EMULATOR_ARCHITECTURE: "x86_64"
   GUARDIAN_API_KEY: ${{ secrets.GUARDIAN_API_KEY }}
@@ -37,34 +32,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Set up Gradle
-        uses: ./.github/actions/setup-gradle
-        with:
-          cache-key: ios-check-build
-      - name: Set up Xcode version
-        run: sudo xcode-select -s /Applications/Xcode_${{ env.XCODE_VERSION }}.app
-      - name: Set up Xcode
-        uses: irgaly/xcode-cache@v1
-        with:
-          key: ios-check-build-${{ github.workflow }}-${{ github.sha }}
-          restore-keys: ios-check-build-${{ github.workflow }}-
-      - name: Compile iOS appp
-        run: |
-          cd ios &&
-          set -o pipefail && 
-          xcodebuild ${{ env.XCODE_CACHE }} -workspace app.xcworkspace -scheme "app" -sdk iphonesimulator -destination '${{ env.IOS_SIMULATOR }}' build | tee xcodebuild.log | xcpretty &&
-          cd ..
-      - name: Artifacts
-        uses: actions/upload-artifact@v4
-        if: always() # Ensure all artifacts are collected, even after errors
-        with:
-          name: iOS Build
-          path: |
-            ios/xcodebuild.log
-            ~/Library/Developer/Xcode/DerivedData/**/*.app
-            ~/Library/Developer/Xcode/DerivedData/**/*.app.dSYM
-            **/build
-            **/secrets.properties
+      - name: Build iOS
+        uses: ./.github/actions/build-ios
 
   ios-check-test:
     runs-on: macos-15
@@ -74,30 +43,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Set up Gradle
-        uses: ./.github/actions/setup-gradle
-        with:
-          cache-key: ios-check-test
-      - name: Set up Xcode version
-        run: sudo xcode-select -s /Applications/Xcode_${{ env.XCODE_VERSION }}.app
-      - name: Set up Xcode
-        uses: irgaly/xcode-cache@v1
-        with:
-          key: ios-check-test-${{ github.workflow }}-${{ github.sha }}
-          restore-keys: ios-check-test-${{ github.workflow }}-
-      - name: iOS tests
-        run: |
-          cd ios &&
-          set -o pipefail && 
-          xcodebuild ${{ env.XCODE_CACHE }} -workspace app.xcworkspace -scheme "app" -sdk iphonesimulator -destination '${{ env.IOS_SIMULATOR }}' test | tee xcodebuild.log | xcpretty &&
-          cd ..
-      - name: Artifacts
-        uses: actions/upload-artifact@v4
-        if: always() # Ensure all artifacts are collected, even after errors
-        with:
-          name: iOS Tests
-          path: |
-            ios/xcodebuild.log
+      - name: Test iOS
+        uses: ./.github/actions/test-ios
 
   android-check-build:
     runs-on: ubuntu-20.04
