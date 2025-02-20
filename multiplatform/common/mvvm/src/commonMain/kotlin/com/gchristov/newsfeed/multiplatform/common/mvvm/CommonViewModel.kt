@@ -5,6 +5,7 @@ import dev.icerock.moko.mvvm.livedata.MutableLiveData
 import dev.icerock.moko.mvvm.livedata.setValue
 import dev.icerock.moko.mvvm.viewmodel.ViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 /**
@@ -42,7 +43,7 @@ abstract class CommonViewModel<S : Any>(
      * thread is not blocked and all [suspend] operations within [block] will suspend it until they
      * complete, after which execution of [block] will continue synchronously.
      */
-    protected fun launchUiCoroutine(block: suspend () -> Unit) =
+    protected fun launchUiCoroutine(block: suspend CoroutineScope.() -> Unit) =
         viewModelScope.launch(dispatcher) {
             block()
         }

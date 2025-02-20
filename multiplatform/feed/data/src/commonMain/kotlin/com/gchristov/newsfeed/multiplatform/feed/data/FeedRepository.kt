@@ -1,20 +1,21 @@
 package com.gchristov.newsfeed.multiplatform.feed.data
 
+import arrow.core.Either
 import com.gchristov.newsfeed.multiplatform.feed.data.model.DecoratedFeedPage
 
 interface FeedRepository {
     suspend fun feedPage(
         pageId: Int,
         feedQuery: String,
-    ): DecoratedFeedPage
+    ): Either<Throwable, DecoratedFeedPage>
 
-    suspend fun redecorateFeedPage(feedPage: DecoratedFeedPage): DecoratedFeedPage
+    suspend fun redecorateFeedPage(feedPage: DecoratedFeedPage): Either<Throwable, DecoratedFeedPage>
 
-    suspend fun cachedFeedPage(): DecoratedFeedPage?
+    suspend fun cachedFeedPage(): Either<Throwable, DecoratedFeedPage?>
 
-    suspend fun clearCache()
+    suspend fun clearCache(): Either<Throwable, Unit>
 
-    suspend fun saveSearchQuery(searchQuery: String)
+    suspend fun saveSearchQuery(searchQuery: String): Either<Throwable, Unit>
 
-    suspend fun searchQuery(): String?
+    suspend fun searchQuery(): Either<Throwable, String>
 }

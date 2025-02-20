@@ -1,5 +1,7 @@
 package com.gchristov.newsfeed.multiplatform.post.data
 
+import arrow.core.Either
+import arrow.core.raise.either
 import com.gchristov.newsfeed.multiplatform.post.data.api.ApiPostResponse
 import com.gchristov.newsfeed.multiplatform.post.data.model.DecoratedPost
 import com.gchristov.newsfeed.multiplatform.post.data.model.toPost
@@ -10,6 +12,8 @@ import io.ktor.client.call.body
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
+import kotlin.math.truncate
 
 internal class RealPostRepository(
     private val dispatcher: CoroutineDispatcher,
@@ -22,22 +26,58 @@ internal class RealPostRepository(
     override suspend fun post(
         postId: String,
         postMetadataFields: String
-    ): Post = apiService.post(postId, postMetadataFields).body<ApiPostResponse>().toPost()
+    ): Either<Throwable, DecoratedPost> = withContext(dispatcher) {
+        val postResponse = try {
+            apiService.post(
+                postUrl = postId,
+                postMetadataFields = postMetadataFields,
+            ).body<ApiPostResponse>()
+        } catch (error: Throwable) {
+            return@withContext Either.Left(error)
+        }
 
-    override suspend fun cachedPost(postId: String): Post? =
-        withContext(dispatcher) {
-            val post = queries.selectWithId(postId).executeAsOneOrNull() ?: return@withContext null
+        either {
+            val post = decoratePost(postResponse.toPost()).bind()
+            clearCache(post.raw.id).bind()
+            cachePost(post)
             post
         }
+    }
 
-    override suspend fun clearCache(postId: String) =
-        withContext(dispatcher) {
-            queries.transaction {
-                queries.clearTable(postId)
-            }
+    private suspend fun decoratePost(
+        post: Post,
+    ): Either<Throwable, DecoratedPost> = withContext(dispatcher) {
+        either {
+            DecoratedPost(
+                raw = post,
+                date = Instant.parse(post.date),
+                favouriteTimestamp = favouriteTimestamp(post.id).bind(),
+                readingTimeMinutes = calculateReadingTimeMinutes(post).bind(),
+            )
         }
+    }
 
-    override suspend fun cachePost(decoratedPost: DecoratedPost) {
+    override suspend fun cachedPost(
+        postId: String
+    ): Either<Throwable, DecoratedPost?> = withContext(dispatcher) {
+        val post = queries.selectWithId(postId).executeAsOneOrNull()
+        post?.let {
+            decoratePost(post)
+        } ?: Either.Right(null)
+    }
+
+    override suspend fun clearCache(
+        postId: String
+    ): Either<Throwable, Unit> = withContext(dispatcher) {
+        queries.transaction {
+            queries.clearTable(postId)
+        }
+        Either.Right(Unit)
+    }
+
+    override suspend fun cachePost(
+        decoratedPost: DecoratedPost
+    ): Either<Throwable, Unit> = withContext(dispatcher) {
         val post = decoratedPost.raw
         queries.insert(
             id = post.id,
@@ -46,26 +86,60 @@ internal class RealPostRepository(
             body = post.body,
             thumbnail = post.thumbnail,
         )
+        Either.Right(Unit)
     }
 
-    override suspend fun favouriteTimestamp(postId: String): Long? =
-        withContext(dispatcher) {
-            if (sharedPreferences.contains(postId)) {
-                return@withContext sharedPreferences.getLong(
-                    key = postId,
-                    defaultValue = Clock.System.now().toEpochMilliseconds()
-                )
-            }
-            null
+    override suspend fun favouriteTimestamp(
+        postId: String
+    ): Either<Throwable, Long?> = withContext(dispatcher) {
+        if (sharedPreferences.contains(postId)) {
+            val timestamp = sharedPreferences.getLong(
+                key = postId,
+                defaultValue = Clock.System.now().toEpochMilliseconds()
+            )
+            Either.Right(timestamp)
+        } else {
+            Either.Right(null)
         }
+    }
 
-    override suspend fun toggleFavourite(postId: String) =
-        withContext(dispatcher) {
-            favouriteTimestamp(postId)?.let {
+    override suspend fun toggleFavourite(
+        postId: String
+    ): Either<Throwable, Unit> = withContext(dispatcher) {
+        either {
+            val timestamp = favouriteTimestamp(postId).bind()
+            if (timestamp != null) {
                 sharedPreferences.remove(postId)
-            } ?: run {
+            } else {
                 // Keep track of when the item was favourited
                 sharedPreferences[postId] = Clock.System.now().toEpochMilliseconds()
             }
+            Either.Right(Unit)
         }
+    }
+
+    // TODO: Take this out into a separate use-case
+    private suspend fun calculateReadingTimeMinutes(post: Post): Either<Throwable, Int> =
+        withContext(dispatcher) {
+            val bodyWordCount = post.body?.split(" ")?.count() ?: 0
+            val headerWordCount = post.headline?.split(" ")?.count() ?: 0
+            val wordCount = bodyWordCount + headerWordCount
+            calculateReadingTimeMinutes(wordCount)
+        }
+
+    private fun calculateReadingTimeMinutes(totalWordCount: Int): Either<Throwable, Int> {
+        if (totalWordCount <= 0) {
+            return Either.Right(0)
+        }
+
+        val minutesWithDecimals = totalWordCount / 200.toDouble()
+        val fullMinutes = truncate(minutesWithDecimals).toInt()
+
+        val decimalPart = minutesWithDecimals - fullMinutes
+        val extraSeconds = (decimalPart * 0.60) * 100
+        val extraMinutes = if (extraSeconds.toInt() > 30) 1 else 0
+        val totalMinutes = fullMinutes + extraMinutes
+
+        return Either.Right(if (totalMinutes == 0) 1 else totalMinutes)
+    }
 }

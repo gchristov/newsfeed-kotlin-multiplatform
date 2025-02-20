@@ -10,37 +10,36 @@ import NewsfeedMultiplatform
 struct FeedTestHostApp: App {
     private let feedPages: [DecoratedFeedPage]
     private let feedPageCache: DecoratedFeedPage?
-    private let repository: FakeFeedRepository
-    private let getSectionedFeedUseCase: GetSectionedFeedUseCase
+    private let feedRepository: FakeFeedRepository
     private let redecorateSectionedFeedUseCase: RedecorateSectionedFeedUseCase
+    private let buildSectionedFeedUseCase: BuildSectionedFeedUseCase
+    private let mergeSectionedFeedUseCase: MergeSectionedFeedUseCase
     
     init() {
         DependencyInjector.shared.initialise()
         // Mock/fake necessary constructs based on launch environment
         self.feedPages = FeedType.obtainFromEnvironment()
         self.feedPageCache = FeedCacheType.obtainFromEnvironment()
-        self.repository = FakeFeedRepository(
+        self.feedRepository = FakeFeedRepository(
             postRepository: FakePostRepository(
                 post: nil,
-                postCache: nil
+                usePostForCache: false,
+                readingTimeMinutes: 1
             ),
             feedPages: feedPages,
             feedPageCache: feedPageCache
         )
-        self.repository.feedResponse = FeedResponseType.obtainFromEnvironment(key: "feedResponse")
-        self.repository.feedLoadMoreResponse = FeedResponseType.obtainFromEnvironment(key: "feedLoadMoreResponse")
-        let buildSectionedFeedUseCase = BuildSectionedFeedUseCase(
+        self.feedRepository.feedResponse = FeedResponseType.obtainFromEnvironment(key: "feedResponse")
+        self.feedRepository.feedLoadMoreResponse = FeedResponseType.obtainFromEnvironment(key: "feedLoadMoreResponse")
+        self.buildSectionedFeedUseCase = RealBuildSectionedFeedUseCase(
             dispatcher: Dispatchers.shared.Main,
             clock: FakeClock.shared
         )
-        self.getSectionedFeedUseCase = GetSectionedFeedUseCase(
-            feedRepository: repository,
-            buildSectionedFeedUseCase: buildSectionedFeedUseCase,
-            mergeSectionedFeedUseCase: MergeSectionedFeedUseCase(dispatcher: Dispatchers.shared.Main)
-        )
-        self.redecorateSectionedFeedUseCase = RedecorateSectionedFeedUseCase(
-            feedRepository: repository,
-            flattenSectionedFeedUseCase: FlattenSectionedFeedUseCase(dispatcher: Dispatchers.shared.Main),
+        self.mergeSectionedFeedUseCase = RealMergeSectionedFeedUseCase(dispatcher: Dispatchers.shared.Main)
+        self.redecorateSectionedFeedUseCase = RealRedecorateSectionedFeedUseCase(
+            dispatcher: Dispatchers.shared.Main,
+            feedRepository: feedRepository,
+            flattenSectionedFeedUseCase: RealFlattenSectionedFeedUseCase(dispatcher: Dispatchers.shared.Main),
             buildSectionedFeedUseCase: buildSectionedFeedUseCase
         )
     }
@@ -50,18 +49,16 @@ struct FeedTestHostApp: App {
             CustomSwiftUiTestRuleWrapper<FeedScreenContent>(embedWithinNavigation: false) {
                 FeedScreenContent(viewModel: FeedViewModel(
                     dispatcher: Dispatchers.shared.Main,
-                    feedRepository: repository,
-                    getSectionedFeedUseCase: getSectionedFeedUseCase,
-                    redecorateSectionedFeedUseCase: redecorateSectionedFeedUseCase)
+                    feedRepository: feedRepository,
+                    redecorateSectionedFeedUseCase: redecorateSectionedFeedUseCase,
+                    buildSectionedFeedUseCase: buildSectionedFeedUseCase,
+                    mergeSectionedFeedUseCase: mergeSectionedFeedUseCase)
                 )
             }
         }
     }
 }
 
-/*
- Obtains a test post from the launch environment to use during tests
- */
 private enum FeedType: String {
     case empty = "empty"
     case singlePage = "singlePage"
@@ -80,9 +77,6 @@ private enum FeedType: String {
     }
 }
 
-/*
- Obtains a test cache from the launch environment to use during tests
- */
 private enum FeedCacheType: String {
     case singlePage = "singlePage"
     
@@ -100,9 +94,6 @@ private enum FeedCacheType: String {
     }
 }
 
-/*
- Obtains a test response type from the launch environment to use during tests
- */
 private enum FeedResponseType: String {
     case error = "error"
     case success = "success"

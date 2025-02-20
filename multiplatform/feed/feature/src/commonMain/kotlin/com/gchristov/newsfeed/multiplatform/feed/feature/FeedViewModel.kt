@@ -1,10 +1,12 @@
 package com.gchristov.newsfeed.multiplatform.feed.feature
 
+import arrow.core.raise.either
 import com.gchristov.newsfeed.multiplatform.common.mvvm.CommonViewModel
 import com.gchristov.newsfeed.multiplatform.feed.data.FeedRepository
 import com.gchristov.newsfeed.multiplatform.feed.data.model.SectionedFeed
 import com.gchristov.newsfeed.multiplatform.feed.data.model.hasNextPage
-import com.gchristov.newsfeed.multiplatform.feed.data.usecase.GetSectionedFeedUseCase
+import com.gchristov.newsfeed.multiplatform.feed.data.usecase.BuildSectionedFeedUseCase
+import com.gchristov.newsfeed.multiplatform.feed.data.usecase.MergeSectionedFeedUseCase
 import com.gchristov.newsfeed.multiplatform.feed.data.usecase.RedecorateSectionedFeedUseCase
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.FlowPreview
@@ -15,8 +17,9 @@ import kotlinx.coroutines.flow.filterNotNull
 class FeedViewModel(
     dispatcher: CoroutineDispatcher,
     private val feedRepository: FeedRepository,
-    private val getSectionedFeedUseCase: GetSectionedFeedUseCase,
     private val redecorateSectionedFeedUseCase: RedecorateSectionedFeedUseCase,
+    private val buildSectionedFeedUseCase: BuildSectionedFeedUseCase,
+    private val mergeSectionedFeedUseCase: MergeSectionedFeedUseCase,
 ) : CommonViewModel<FeedViewModel.State>(
     dispatcher = dispatcher,
     initialState = State()
@@ -40,7 +43,7 @@ class FeedViewModel(
     private fun observeSearchQuery() {
         launchUiCoroutine {
             searchQueryFlow
-                .debounce(DEBOUNCE_INTERVAL_MS)
+                .debounce(FeedSearchDebounceIntervalMillis)
                 .filterNotNull()
                 .collect { debouncedText ->
                     feedRepository.saveSearchQuery(debouncedText)
@@ -61,33 +64,40 @@ class FeedViewModel(
     fun redecorateContent() {
         state.value.sectionedFeed?.let { sectionedFeed ->
             launchUiCoroutine {
-                val redecorated = redecorateSectionedFeedUseCase(sectionedFeed)
-                setState { copy(sectionedFeed = redecorated) }
+                either {
+                    val redecorated = redecorateSectionedFeedUseCase(sectionedFeed).bind()
+                    setState { copy(sectionedFeed = redecorated) }
+                }.fold(
+                    ifLeft = { it.printStackTrace() },
+                    ifRight = { /* No-op */ }
+                )
             }
         }
     }
 
     fun refreshContent() {
-        // Clear cache when user explicitly requests a refresh
-        launchUiCoroutine { feedRepository.clearCache() }
-        loadNextPage()
+        loadNextPage(startFromFirst = true)
     }
 
     fun loadNextPage(startFromFirst: Boolean = true) {
-        val nextPage = if (startFromFirst) 1 else state.value.sectionedFeed?.currentPage!!.plus(1)
-        val hasNextPage = if (startFromFirst) true else state.value.sectionedFeed?.hasNextPage()!!
+        val currentFeed = state.value.sectionedFeed
+        val nextPage = if (startFromFirst) 1 else currentFeed?.currentPage!!.plus(1)
+        val hasNextPage = if (startFromFirst) true else currentFeed?.hasNextPage()!!
+
         // Check if we have reached the end of the list
         if (!hasNextPage) {
             setState { copy(reachedEnd = true) }
             return
         }
+
         // Do not load more if we're already loading
         if (state.value.loadingMore) {
             return
         }
+
         launchUiCoroutine {
-            try {
-                val searchQuery = feedRepository.searchQuery() ?: DEFAULT_SEARCH_QUERY
+            either {
+                val searchQuery = feedRepository.searchQuery().bind()
                 setState {
                     copy(
                         loading = startFromFirst,
@@ -99,36 +109,49 @@ class FeedViewModel(
                     )
                 }
 
-                val feedUpdate = getSectionedFeedUseCase(
+                if (startFromFirst) {
+                    feedRepository.cachedFeedPage().bind()?.let { decoratedFeed ->
+                        val cachedSectionedFeed = buildSectionedFeedUseCase(decoratedFeed).bind()
+                        setState { copy(sectionedFeed = cachedSectionedFeed) }
+                    }
+                }
+
+                val flatNewFeed = feedRepository.feedPage(
                     pageId = nextPage,
                     feedQuery = searchQuery,
-                    currentFeed = state.value.sectionedFeed,
-                    // Only request cache if we're starting from the first page
-                    onCache = if (startFromFirst) { cache ->
-                        setState { copy(sectionedFeed = cache) }
-                        launchUiCoroutine { feedRepository.clearCache() }
-                    } else null
-                )
+                ).bind()
+                val sectionedNewFeed = buildSectionedFeedUseCase(flatNewFeed).bind()
+
+                val result = if (currentFeed != null && !startFromFirst) {
+                    mergeSectionedFeedUseCase(
+                        thisFeed = currentFeed,
+                        newFeed = sectionedNewFeed
+                    ).bind()
+                } else sectionedNewFeed
+
                 setState {
                     copy(
                         loading = false,
                         loadingMore = false,
-                        sectionedFeed = feedUpdate,
+                        sectionedFeed = result,
                     )
                 }
-            } catch (error: Exception) {
-                error.printStackTrace()
-                val blocking = if (state.value.sectionedFeed == null) error else null
-                val nonBlocking = if (blocking == null) error else null
-                setState {
-                    copy(
-                        loading = false,
-                        loadingMore = false,
-                        blockingError = blocking,
-                        nonBlockingError = nonBlocking
-                    )
-                }
-            }
+            }.fold(
+                ifLeft = { error ->
+                    error.printStackTrace()
+                    val blocking = if (state.value.sectionedFeed == null) error else null
+                    val nonBlocking = if (blocking == null) error else null
+                    setState {
+                        copy(
+                            loading = false,
+                            loadingMore = false,
+                            blockingError = blocking,
+                            nonBlockingError = nonBlocking,
+                        )
+                    }
+                },
+                ifRight = { /* No-op */ },
+            )
         }
     }
 
@@ -143,10 +166,9 @@ class FeedViewModel(
         val blockingError: Throwable? = null,
         val nonBlockingError: Throwable? = null,
         val sectionedFeed: SectionedFeed? = null,
-        val searchQuery: String = DEFAULT_SEARCH_QUERY,
+        val searchQuery: String? = null,
         val searchWidgetState: SearchWidgetState = SearchWidgetState.CLOSED,
     )
 }
 
-private const val DEBOUNCE_INTERVAL_MS = 500L
-private const val DEFAULT_SEARCH_QUERY = "brexit,fintech"
+const val FeedSearchDebounceIntervalMillis = 500L

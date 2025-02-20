@@ -1,12 +1,10 @@
 package com.gchristov.newsfeed.android.post.feature
 
+import com.gchristov.newsfeed.android.common.composetest.CommonComposeTestClass
 import com.gchristov.newsfeed.android.post.testfixtures.PostRobot
 import com.gchristov.newsfeed.android.post.testfixtures.post
-import com.gchristov.newsfeed.android.common.composetest.CommonComposeTestClass
-import com.gchristov.newsfeed.multiplatform.common.test.FakeCoroutineDispatcher
 import com.gchristov.newsfeed.multiplatform.common.test.FakeResponse
-import com.gchristov.newsfeed.multiplatform.post.data.model.DecoratedPost
-import com.gchristov.newsfeed.multiplatform.post.data.usecase.DecoratePostUseCase
+import com.gchristov.newsfeed.multiplatform.post.data.Post
 import com.gchristov.newsfeed.multiplatform.post.feature.PostViewModel
 import com.gchristov.newsfeed.multiplatform.post.testfixtures.FakePostRepository
 import com.gchristov.newsfeed.multiplatform.post.testfixtures.PostCreator
@@ -18,47 +16,34 @@ import org.junit.Test
 class PostTest : CommonComposeTestClass() {
 
     @Test
-    fun loadingIndicatorShown() {
-        // Given
-        val response = FakeResponse.LoadsForever
-        // When
-        runTest(postResponse = response) {
-            // Then
-            assertLoadingExists()
-            assertAddToFavouritesButtonDoesNotExist()
-            assertRemoveFromFavouritesButtonDoesNotExist()
-            assertPostDoesNotExist(
-                title = PostTitle,
-                author = PostAuthor,
-                readingTime = PostReadingTime,
-                body = PostBody
-            )
-            assertBlockingErrorDoesNotExist()
-        }
+    fun loadingIndicatorShown() = runTest(postResponse = FakeResponse.LoadsForever) {
+        assertLoadingExists()
+        assertAddToFavouritesButtonDoesNotExist()
+        assertRemoveFromFavouritesButtonDoesNotExist()
+        assertPostDoesNotExist(
+            title = PostTitle,
+            author = PostAuthor,
+            readingTime = PostReadingTime,
+            body = PostBody
+        )
+        assertBlockingErrorDoesNotExist()
     }
 
     @Test
-    fun cacheShown() {
-        // Given
-        val cache = PostCreator.post(favouriteTimestamp = null)
-        val response = FakeResponse.LoadsForever
-        // When
-        runTest(
-            postCache = cache,
-            postResponse = response
-        ) {
-            // Then
-            assertLoadingExists()
-            assertAddToFavouritesButtonExists()
-            assertRemoveFromFavouritesButtonDoesNotExist()
-            assertPostExists(
-                title = PostTitle,
-                author = PostAuthor,
-                readingTime = PostReadingTime,
-                body = PostBody
-            )
-            assertBlockingErrorDoesNotExist()
-        }
+    fun cacheShown() = runTest(
+        usePostForCache = true,
+        postResponse = FakeResponse.LoadsForever
+    ) {
+        assertLoadingExists()
+        assertAddToFavouritesButtonExists()
+        assertRemoveFromFavouritesButtonDoesNotExist()
+        assertPostExists(
+            title = PostTitle,
+            author = PostAuthor,
+            readingTime = PostReadingTime,
+            body = PostBody
+        )
+        assertBlockingErrorDoesNotExist()
     }
 
     @Test
@@ -76,84 +61,59 @@ class PostTest : CommonComposeTestClass() {
     }
 
     @Test
-    fun blockingErrorShown() {
-        // Given
-        val response = FakeResponse.Error()
-        // When
-        runTest(postResponse = response) {
-            // Then
-            assertLoadingDoesNotExist()
-            assertAddToFavouritesButtonDoesNotExist()
-            assertRemoveFromFavouritesButtonDoesNotExist()
-            assertPostDoesNotExist(
-                title = PostTitle,
-                author = PostAuthor,
-                readingTime = PostReadingTime,
-                body = PostBody
-            )
-            assertBlockingErrorExists()
-        }
+    fun blockingErrorShown() = runTest(postResponse = FakeResponse.Error()) {
+        assertLoadingDoesNotExist()
+        assertAddToFavouritesButtonDoesNotExist()
+        assertRemoveFromFavouritesButtonDoesNotExist()
+        assertPostDoesNotExist(
+            title = PostTitle,
+            author = PostAuthor,
+            readingTime = PostReadingTime,
+            body = PostBody
+        )
+        assertBlockingErrorExists()
     }
 
     @Test
-    fun toggleFavouriteAddsToFavourites() {
-        // Given
-        val post = PostCreator.post(favouriteTimestamp = null)
-        // When
-        runTest(post = post) {
-            // Then
-            assertAddToFavouritesButtonExists()
-            assertRemoveFromFavouritesButtonDoesNotExist()
-            // When
-            clickAddToFavouritesButton()
-            // Then
-            assertAddToFavouritesButtonDoesNotExist()
-            assertRemoveFromFavouritesButtonExists()
-        }
-    }
+    fun toggleFavouriteTogglesFavourite() = runTest {
+        assertAddToFavouritesButtonExists()
+        assertRemoveFromFavouritesButtonDoesNotExist()
 
-    @Test
-    fun toggleFavouriteRemovesFromFavourites() {
-        // Given
-        val post = PostCreator.post(favouriteTimestamp = 123L)
-        // When
-        runTest(post = post) {
-            // Then
-            assertAddToFavouritesButtonDoesNotExist()
-            assertRemoveFromFavouritesButtonExists()
-            // When
-            clickRemoveFromFavouritesButton()
-            // Then
-            assertAddToFavouritesButtonExists()
-            assertRemoveFromFavouritesButtonDoesNotExist()
-        }
+        clickAddToFavouritesButton()
+
+        assertAddToFavouritesButtonDoesNotExist()
+        assertRemoveFromFavouritesButtonExists()
+
+        clickRemoveFromFavouritesButton()
+
+        assertAddToFavouritesButtonExists()
+        assertRemoveFromFavouritesButtonDoesNotExist()
     }
 
     private fun runTest(
-        post: DecoratedPost = PostCreator.post(favouriteTimestamp = null),
-        postCache: DecoratedPost? = null,
+        post: Post = PostCreator.post(
+            title = PostTitle,
+            body = PostBody,
+        ),
+        usePostForCache: Boolean = false,
         postResponse: FakeResponse = FakeResponse.CompletesNormally,
+        readingTimeMinutes: Int = 1,
         testBlock: PostRobot.() -> Unit
     ) {
         // Setup test environment
         val postRepository = FakePostRepository(
             post = post,
-            postCache = postCache
+            usePostForCache = usePostForCache,
+            readingTimeMinutes = readingTimeMinutes,
         ).apply {
             this.postResponse = postResponse
         }
-
-        val decoratePostUseCase = DecoratePostUseCase(
-            postRepository = postRepository,
-            dispatcher = FakeCoroutineDispatcher
-        )
 
         composeRule.setContent {
             val viewModel = PostViewModel(
                 dispatcher = Dispatchers.Main,
                 postId = PostId,
                 postRepository = postRepository,
-                decoratePostUseCase = decoratePostUseCase
             )
             PostScreen(viewModel)
         }

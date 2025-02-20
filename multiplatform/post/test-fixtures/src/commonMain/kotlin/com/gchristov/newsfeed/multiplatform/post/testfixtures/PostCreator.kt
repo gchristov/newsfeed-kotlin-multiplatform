@@ -1,24 +1,18 @@
 package com.gchristov.newsfeed.multiplatform.post.testfixtures
 
 import com.gchristov.newsfeed.multiplatform.post.data.Post
-import com.gchristov.newsfeed.multiplatform.post.data.model.DecoratedPost
-import kotlinx.datetime.Instant
 
 object PostCreator {
-    private const val Date = "2022-02-21T00:00:00Z"
-
-    fun post(favouriteTimestamp: Long? = null): DecoratedPost {
-        return DecoratedPost(
-            raw = Post(
-                id = "post_123",
-                date = Date,
-                headline = "Post Title",
-                body = "This is a sample post body",
-                thumbnail = null,
-            ),
-            date = Instant.parse(Date),
-            favouriteTimestamp = favouriteTimestamp,
-            readingTimeMinutes = 1
-        )
-    }
+    fun post(
+        id: String = "post_123",
+        title: String = "Post Title",
+        body: String = "This is a sample post body",
+        date: String = "2022-02-21T00:00:00Z",
+    ): Post = Post(
+        id = id,
+        date = date,
+        headline = title,
+        body = body,
+        thumbnail = null,
+    )
 }

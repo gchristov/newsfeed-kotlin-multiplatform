@@ -2,6 +2,7 @@ package com.gchristov.newsfeed.multiplatform.post.data.util
 
 import kotlin.math.truncate
 
+// TODO: Inject this, rather than having it global
 object ReadingTimeCalculator {
 
     fun calculateReadingTimeMinutes(totalWordCount: Int): Int {

@@ -3,8 +3,7 @@ package com.gchristov.newsfeed.multiplatform.post.feature
 import com.gchristov.newsfeed.multiplatform.common.mvvmtest.CommonViewModelTestClass
 import com.gchristov.newsfeed.multiplatform.common.test.FakeCoroutineDispatcher
 import com.gchristov.newsfeed.multiplatform.common.test.FakeResponse
-import com.gchristov.newsfeed.multiplatform.post.data.model.DecoratedPost
-import com.gchristov.newsfeed.multiplatform.post.data.usecase.DecoratePostUseCase
+import com.gchristov.newsfeed.multiplatform.post.data.Post
 import com.gchristov.newsfeed.multiplatform.post.testfixtures.FakePostRepository
 import com.gchristov.newsfeed.multiplatform.post.testfixtures.PostCreator
 import kotlinx.coroutines.CoroutineScope
@@ -21,75 +20,70 @@ import kotlin.test.assertTrue
 class PostViewModelTest : CommonViewModelTestClass() {
 
     @Test
-    fun initialLoadingSetsState() {
-        // Given
-        val response = FakeResponse.LoadsForever
-        // When
-        runTest(postResponse = response) { viewModel, _ ->
-            // Then
-            assertTrue { viewModel.state.value.loading }
-            assertNull(viewModel.state.value.blockingError)
-        }
-    }
-
-    @Test
-    fun resetPostReloadsContent() = runTest { viewModel, postRepository ->
-        // Given
-        postRepository.postResponse = FakeResponse.LoadsForever
-        // When
-        viewModel.resetPostId(PostId)
-        // Then
+    fun contentLoadSetsLoadingState() = runTest(
+        postResponse = FakeResponse.LoadsForever
+    ) { viewModel, _ ->
         assertTrue { viewModel.state.value.loading }
         assertNull(viewModel.state.value.blockingError)
     }
 
     @Test
-    fun onLoadSuccessSetsCache() {
-        // Given
-        val cache = PostCreator.post(favouriteTimestamp = null)
+    fun contentLoadSetsCacheState() {
+        val cache = PostCreator.post()
         val response = FakeResponse.LoadsForever
 
-        // When
         runTest(
-            postCache = cache,
+            post = cache,
+            usePostForCache = true,
             postResponse = response
         ) { viewModel, postRepository ->
-            // Then
-            postRepository.assertCacheCleared()
             assertTrue { viewModel.state.value.loading }
             assertEquals(
+                expected = cache.id,
+                actual = viewModel.state.value.postId
+            )
+            assertEquals(
                 expected = cache,
-                actual = viewModel.state.value.post
+                actual = viewModel.state.value.post?.raw
             )
             assertNull(viewModel.state.value.blockingError)
         }
     }
 
     @Test
-    fun onLoadSuccessSetsCorrectState() {
-        // Given
-        val post = PostCreator.post(favouriteTimestamp = null)
-        // When
+    fun contentLoadSetsSuccessState() {
+        val post = PostCreator.post()
+
         runTest(post = post) { viewModel, _ ->
-            // Then
             assertFalse { viewModel.state.value.loading }
             assertEquals(
+                expected = post.id,
+                actual = viewModel.state.value.postId
+            )
+            assertEquals(
                 expected = post,
-                actual = viewModel.state.value.post
+                actual = viewModel.state.value.post?.raw
             )
             assertNull(viewModel.state.value.blockingError)
         }
     }
 
     @Test
-    fun onLoadErrorSetsCorrectState() {
-        // Given
+    fun contentLoadSetsErrorState() {
+        val post = PostCreator.post()
         val errorMessage = "Error message"
         val response = FakeResponse.Error(errorMessage)
-        // When
-        runTest(postResponse = response) { viewModel, _ ->
-            // Then
+
+        runTest(
+            post = post,
+            postResponse = response
+        ) { viewModel, _ ->
             assertFalse { viewModel.state.value.loading }
+            assertEquals(
+                expected = post.id,
+                actual = viewModel.state.value.postId
+            )
+            assertNull(viewModel.state.value.post)
             assertEquals(
                 expected = errorMessage,
                 actual = viewModel.state.value.blockingError?.message
@@ -98,50 +92,51 @@ class PostViewModelTest : CommonViewModelTestClass() {
     }
 
     @Test
-    fun toggleFavouriteAddsToFavourites() {
-        // Given
-        val post = PostCreator.post(favouriteTimestamp = null)
-        runTest(post = post) { viewModel, _ ->
-            // When
-            viewModel.onToggleFavourite()
-            // Then
-            assertNotNull(viewModel.state.value.post?.favouriteTimestamp)
-        }
+    fun resetPostReloadsContent() = runTest { viewModel, postRepository ->
+        val postId = "post_345"
+        postRepository.postResponse = FakeResponse.LoadsForever
+
+        viewModel.resetPostId(postId)
+
+        assertTrue { viewModel.state.value.loading }
+        assertEquals(postId, viewModel.state.value.postId)
+        assertNull(viewModel.state.value.blockingError)
+        assertNull(viewModel.state.value.post)
     }
 
     @Test
-    fun toggleFavouriteRemovesFromFavourites() {
-        // Given
-        val post = PostCreator.post(favouriteTimestamp = 123L)
+    fun toggleFavouriteTogglesFavourite() {
+        val post = PostCreator.post()
+
         runTest(post = post) { viewModel, _ ->
-            // When
             viewModel.onToggleFavourite()
-            // Then
+
+            assertNotNull(viewModel.state.value.post?.favouriteTimestamp)
+
+            viewModel.onToggleFavourite()
+
             assertNull(viewModel.state.value.post?.favouriteTimestamp)
         }
     }
 
     private fun runTest(
-        post: DecoratedPost = PostCreator.post(favouriteTimestamp = null),
-        postCache: DecoratedPost? = null,
+        post: Post = PostCreator.post(),
+        usePostForCache: Boolean = false,
         postResponse: FakeResponse = FakeResponse.CompletesNormally,
         testBlock: suspend CoroutineScope.(viewModel: PostViewModel, FakePostRepository) -> Unit
     ) = runBlocking {
         // Setup test environment
         val postRepository = FakePostRepository(
             post = post,
-            postCache = postCache
+            usePostForCache = usePostForCache,
         ).apply {
             this.postResponse = postResponse
         }
         val viewModel = PostViewModel(
             dispatcher = FakeCoroutineDispatcher,
-            postId = PostId,
+            postId = post.id,
             postRepository = postRepository,
-            decoratePostUseCase = DecoratePostUseCase(postRepository, FakeCoroutineDispatcher)
         )
         testBlock(viewModel, postRepository)
     }
 }
-
-private const val PostId = "post_123"

@@ -8,22 +8,24 @@ import NewsfeedMultiplatform
  */
 @main
 struct PostTestHostApp: App {
-    private let post: DecoratedPost
-    private let postCache: DecoratedPost?
-    private let repository: FakePostRepository
-    private let decoratePostUseCase: DecoratePostUseCase
+    private let post: Post
+    private let postRepository: FakePostRepository
     
     init() {
         DependencyInjector.shared.initialise()
         // Mock/fake necessary constructs based on launch environment
-        self.post = PostType.obtainFromEnvironment()
-        self.postCache = PostCacheType.obtainFromEnvironment()
-        self.repository = FakePostRepository(
-            post: post,
-            postCache: postCache
+        self.post = PostCreator.shared.post(
+            id: "post_123",
+            title: "Post Title",
+            body: "This is a sample post body",
+            date: "2022-02-21T00:00:00Z"
         )
-        self.repository.postResponse = PostResponseType.obtainFromEnvironment()
-        self.decoratePostUseCase = DecoratePostUseCase(postRepository: self.repository, dispatcher: Dispatchers.shared.Main)
+        self.postRepository = FakePostRepository(
+            post: post,
+            usePostForCache: UsePostForCacheType.obtainFromEnvironment(),
+            readingTimeMinutes: 1
+        )
+        self.postRepository.postResponse = PostResponseType.obtainFromEnvironment()
     }
     
     var body: some Scene {
@@ -32,55 +34,28 @@ struct PostTestHostApp: App {
                 PostScreenContent(viewModel: PostViewModel(
                     dispatcher: Dispatchers.shared.Main,
                     postId: PostId,
-                    postRepository: repository,
-                    decoratePostUseCase: decoratePostUseCase)
+                    postRepository: postRepository)
                 )
             }
         }
     }
 }
 
-/*
- Obtains a test post from the launch environment to use during tests
- */
-private enum PostType: String {
-    case notFavourite = "notFavourite"
-    case favourite = "favourite"
+private enum UsePostForCacheType: String {
+    case doNotUseForCache = "false"
+    case useForCache = "true"
     
-    static func obtainFromEnvironment() -> DecoratedPost {
-        let type = PostType.init(rawValue: ProcessInfo.processInfo.environment["post"]!)
+    static func obtainFromEnvironment() -> Bool {
+        let type = UsePostForCacheType.init(rawValue: ProcessInfo.processInfo.environment["usePostForCache"]!)
         switch type {
-        case .favourite:
-            return PostCreator.shared.post(favouriteTimestamp: 123)
+        case .useForCache:
+            return true
         default:
-            return PostCreator.shared.post(favouriteTimestamp: nil)
+            return false
         }
     }
 }
 
-/*
- Obtains a test cache from the launch environment to use during tests
- */
-private enum PostCacheType: String {
-    case notFavourite = "notFavourite"
-    
-    static func obtainFromEnvironment() -> DecoratedPost? {
-        if let cacheType = ProcessInfo.processInfo.environment["postCache"] {
-            let type = PostType.init(rawValue: cacheType)
-            switch type {
-            case .notFavourite:
-                return PostCreator.shared.post(favouriteTimestamp: nil)
-            default:
-                return nil
-            }
-        }
-        return nil
-    }
-}
-
-/*
- Obtains a test response type from the launch environment to use during tests
- */
 private enum PostResponseType: String {
     case error = "error"
     case success = "success"

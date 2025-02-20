@@ -1,53 +1,74 @@
 package com.gchristov.newsfeed.multiplatform.post.testfixtures
 
+import arrow.core.Either
+import arrow.core.raise.either
 import com.gchristov.newsfeed.multiplatform.common.test.FakeResponse
 import com.gchristov.newsfeed.multiplatform.common.test.execute
 import com.gchristov.newsfeed.multiplatform.post.data.Post
 import com.gchristov.newsfeed.multiplatform.post.data.PostRepository
 import com.gchristov.newsfeed.multiplatform.post.data.model.DecoratedPost
 import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 
 class FakePostRepository(
-    val post: DecoratedPost? = null,
-    val postCache: DecoratedPost? = null,
+    val post: Post? = null,
+    val usePostForCache: Boolean = false,
+    val readingTimeMinutes: Int? = null,
 ) : PostRepository {
     var postResponse: FakeResponse = FakeResponse.CompletesNormally
 
-    private var _cacheCleared = false
-    private var _favouritePosts = mutableMapOf<String, Long>().apply {
-        post?.let { post ->
-            post.favouriteTimestamp?.let { put(post.raw.id, it) }
+    private var favouritePosts = mutableMapOf<String, Long>()
+
+    override suspend fun post(
+        postId: String,
+        postMetadataFields: String
+    ): Either<Throwable, DecoratedPost> = either {
+        val decoratedPost = DecoratedPost(
+            raw = requireNotNull(post),
+            date = Instant.parse(requireNotNull(post.date)),
+            favouriteTimestamp = favouriteTimestamp(postId).bind(),
+            readingTimeMinutes = readingTimeMinutes,
+        )
+        return try {
+            val response = postResponse.execute(decoratedPost)
+            Either.Right(response)
+        } catch (error: Throwable) {
+            Either.Left(error)
         }
     }
 
-    override suspend fun post(postId: String, postMetadataFields: String): Post {
-        return postResponse.execute(requireNotNull(post?.raw))
+    override suspend fun cachedPost(postId: String): Either<Throwable, DecoratedPost?> = either {
+        val decoratedPost = post?.takeIf { usePostForCache }?.let {
+            DecoratedPost(
+                raw = it,
+                date = Instant.parse(requireNotNull(it.date)),
+                favouriteTimestamp = favouriteTimestamp(postId).bind(),
+                readingTimeMinutes = readingTimeMinutes,
+            )
+        }
+        return Either.Right(decoratedPost)
     }
 
-    override suspend fun cachedPost(postId: String): Post? {
-        return postCache?.raw
+    override suspend fun clearCache(postId: String): Either<Throwable, Unit> {
+        return Either.Right(Unit)
     }
 
-    override suspend fun clearCache(postId: String) {
-        _cacheCleared = true
+    override suspend fun cachePost(decoratedPost: DecoratedPost): Either<Throwable, Unit> {
+        return Either.Right(Unit)
     }
 
-    override suspend fun cachePost(decoratedPost: DecoratedPost) {
-        postCache
+    override suspend fun favouriteTimestamp(postId: String): Either<Throwable, Long?> {
+        return Either.Right(favouritePosts[postId])
     }
 
-    override suspend fun favouriteTimestamp(postId: String): Long? {
-        return _favouritePosts[postId]
-    }
-
-    override suspend fun toggleFavourite(postId: String) {
-        favouriteTimestamp(postId)?.let {
-            _favouritePosts.remove(postId)
-        } ?: run {
+    override suspend fun toggleFavourite(postId: String): Either<Throwable, Unit> = either {
+        val timestamp = favouriteTimestamp(postId).bind()
+        if (timestamp != null) {
+            favouritePosts.remove(postId)
+        } else {
             // Keep track of when the item was favourited
-            _favouritePosts[postId] = Clock.System.now().toEpochMilliseconds()
+            favouritePosts[postId] = Clock.System.now().toEpochMilliseconds()
         }
+        Either.Right(Unit)
     }
-
-    fun assertCacheCleared() = _cacheCleared
 }

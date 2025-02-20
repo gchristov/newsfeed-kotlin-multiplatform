@@ -19,6 +19,7 @@ moko-mvvm = "0.12.0"
 ktor = "2.3.9"
 kermit = "2.0.3"
 multiplatform-settings = "1.1.1"
+arrow = "1.2.3"
 
 [libraries]
 junit = { module = "junit:junit", version.ref = "junit" }
@@ -54,6 +55,7 @@ sqlDelight-core = { module = "app.cash.sqldelight:primitive-adapters", version.r
 sqlDelight-android = { module = "app.cash.sqldelight:android-driver", version.ref = "sqlDelight" }
 sqlDelight-native = { module = "app.cash.sqldelight:native-driver", version.ref = "sqlDelight" }
 multiplatformSettings = { module = "com.russhwolf:multiplatform-settings", version.ref = "multiplatform-settings" }
+arrow-core = { module = "io.arrow-kt:arrow-core", version.ref = "arrow" }
 
 # Dependencies of the included gradle-plugins
 android-gradlePlugin = { module = "com.android.tools.build:gradle", version.ref = "android-gradlePlugin" }
