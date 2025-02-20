@@ -18,8 +18,8 @@ private fun String.openAsDeepLink(context: Context) {
             data = link
         }
         context.startActivity(intent)
-    } catch (exception: Exception) {
-        exception.printStackTrace()
-        Toast.makeText(context, exception.localizedMessage, Toast.LENGTH_LONG).show()
+    } catch (error: Throwable) {
+        error.printStackTrace()
+        Toast.makeText(context, error.localizedMessage, Toast.LENGTH_LONG).show()
     }
 }

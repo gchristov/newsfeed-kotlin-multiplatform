@@ -8,11 +8,9 @@ class FeedUiTest: XCTestCase {
     }
     
     func testEmptyStateShown() throws {
-        // Given
         let feed = "empty"
-        // When
+
         runTest(feedPages: feed) { robot in
-            // Then
             robot.assertLoadingDoesNotExist()
             robot.assertEmptyStateExists()
             robot.assertSectionDoesNotExist(header: Post1Section)
@@ -26,15 +24,13 @@ class FeedUiTest: XCTestCase {
     }
     
     func testCacheShown() throws {
-        // Given
         let cache = "singlePage"
         let response = "loadForever"
-        // When
+
         runTest(
             feedPageCache: cache,
             feedResponse: response
         ) { robot in
-            // Then
             robot.assertLoadingExists()
             robot.assertEmptyStateDoesNotExist()
             robot.assertSectionExists(header: Post1Section)
@@ -64,11 +60,9 @@ class FeedUiTest: XCTestCase {
     }
     
     func testSinglePageFeedLoadingIndicatorShown() throws {
-        // Given
         let response = "loadForever"
-        // When
+
         runTest(feedResponse: response) { robot in
-            // Then
             robot.assertLoadingExists()
             robot.assertEmptyStateDoesNotExist()
             robot.assertSectionDoesNotExist(header: Post1Section)
@@ -112,15 +106,13 @@ class FeedUiTest: XCTestCase {
     }
     
     func testMultiPageFeedLoadingIndicatorShown() throws {
-        // Given
         let feed = "multiPage"
         let response = "loadForever"
-        // When
+
         runTest(
             feedPages: feed,
             feedLoadMoreResponse: response
         ) { robot in
-            // Then
             robot.assertLoadingExists()
             robot.assertEmptyStateDoesNotExist()
             robot.assertSectionExists(header: Post1Section)
@@ -134,11 +126,9 @@ class FeedUiTest: XCTestCase {
     }
     
     func testMultiPageFeedShown() throws {
-        // Given
         let feed = "multiPage"
-        // When
+
         runTest(feedPages: feed) { robot in
-            // Then
             robot.assertLoadingDoesNotExist()
             robot.assertEmptyStateDoesNotExist()
             robot.assertSectionExists(header: Post1Section)
@@ -168,11 +158,9 @@ class FeedUiTest: XCTestCase {
     }
 
     func testBlockingErrorShown() throws {
-        // Given
         let response = "error"
-        // When
+
         runTest(feedResponse: response) { robot in
-            // Then
             robot.assertLoadingDoesNotExist()
             robot.assertEmptyStateDoesNotExist()
             robot.assertSectionDoesNotExist(header: Post1Section)
@@ -186,15 +174,13 @@ class FeedUiTest: XCTestCase {
     }
     
     func testNonBlockingErrorShown() throws {
-        // Given
         let feed = "multiPage"
         let response = "error"
-        // When
+
         runTest(
             feedPages: feed,
             feedLoadMoreResponse: response
         ) { robot in
-            // Then
             robot.assertLoadingDoesNotExist()
             robot.assertEmptyStateDoesNotExist()
             robot.assertSectionExists(header: Post1Section)
@@ -208,14 +194,11 @@ class FeedUiTest: XCTestCase {
     }
 
     func testFeedItemClickOpensPost() throws {
-        // Given
         let post = Post1Title
+
         runTest { robot in
-            // Then
             robot.assertBackButtonDoesNotExist()
-            // When
             robot.clickPost(title: post)
-            // Then
             robot.assertBackButtonExists()
         }
     }
