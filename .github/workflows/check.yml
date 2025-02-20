@@ -26,22 +26,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Set up Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: ${{ env.JAVA_DISTRIBUTION }}
-          java-version: ${{ env.JAVA_VERSION }}
       - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v3 # By default, cache is only saved on the 'master' branch
-      - name: Set up Konan
-        uses: actions/cache@v4
-        id: check-unit-test-konan
-        with:
-          path: '~/.konan/**'
-          key: check-unit-test-konan
-      - name: Set up secrets
-        run: |
-          bash secrets.sh
+        uses: ./.github/actions/setup-gradle
       - name: Unit test
         run: |
           set -o pipefail && 
@@ -69,22 +55,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Set up Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: ${{ env.JAVA_DISTRIBUTION }}
-          java-version: ${{ env.JAVA_VERSION }}
       - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v3 # By default, cache is only saved on the 'master' branch
-      - name: Set up Konan
-        uses: actions/cache@v4
-        id: ios-check-build-konan
-        with:
-          path: '~/.konan/**'
-          key: ios-check-build-konan
-      - name: Set up secrets
-        run: |
-          bash secrets.sh
+        uses: ./.github/actions/setup-gradle
       - name: Set up Xcode version
         run: sudo xcode-select -s /Applications/Xcode_${{ env.XCODE_VERSION }}.app
       - name: Set up Xcode
@@ -118,22 +90,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Set up Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: ${{ env.JAVA_DISTRIBUTION }}
-          java-version: ${{ env.JAVA_VERSION }}
       - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v3 # By default, cache is only saved on the 'master' branch
-      - name: Set up Konan
-        uses: actions/cache@v4
-        id: ios-check-test-konan
-        with:
-          path: '~/.konan/**'
-          key: ios-check-test-konan
-      - name: Set up secrets
-        run: |
-          bash secrets.sh
+        uses: ./.github/actions/setup-gradle
       - name: Set up Xcode version
         run: sudo xcode-select -s /Applications/Xcode_${{ env.XCODE_VERSION }}.app
       - name: Set up Xcode
@@ -163,22 +121,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Set up Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: ${{ env.JAVA_DISTRIBUTION }}
-          java-version: ${{ env.JAVA_VERSION }}
       - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v3 # By default, cache is only saved on the 'master' branch
-      - name: Set up Konan
-        uses: actions/cache@v4
-        id: android-check-build-konan
-        with:
-          path: '~/.konan/**'
-          key: android-check-build-konan
-      - name: Set up secrets
-        run: |
-          bash secrets.sh
+        uses: ./.github/actions/setup-gradle
       - name: Compile Android app
         run: |
           set -o pipefail && 
@@ -206,22 +150,8 @@ jobs:
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
-      - name: Set up Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: ${{ env.JAVA_DISTRIBUTION }}
-          java-version: ${{ env.JAVA_VERSION }}
       - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v3 # By default, cache is only saved on the 'master' branch
-      - name: Set up Konan
-        uses: actions/cache@v4
-        id: android-check-test-konan
-        with:
-          path: '~/.konan/**'
-          key: android-check-test-konan
-      - name: Set up secrets
-        run: |
-          bash secrets.sh
+        uses: ./.github/actions/setup-gradle
       - name: Set up AVD
         uses: actions/cache@v4
         id: avd-cache
