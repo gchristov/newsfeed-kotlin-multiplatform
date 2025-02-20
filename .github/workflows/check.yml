@@ -54,23 +54,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Set up Gradle
-        uses: ./.github/actions/setup-gradle
-        with:
-          cache-key: android-check-build
-      - name: Compile Android app
-        run: |
-          set -o pipefail && 
-          ./gradlew android:app:assembleDebug
-      - name: Artifacts
-        uses: actions/upload-artifact@v4
-        if: always() # Ensure all artifacts are collected, even after errors
-        with:
-          name: Android Build
-          path: |
-            **/*.apk
-            **/build
-            **/secrets.properties
+      - name: Build Android
+        uses: ./.github/actions/build-android
 
   android-check-test:
     runs-on: ubuntu-20.04
