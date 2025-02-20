@@ -14,10 +14,10 @@ runs:
       uses: gradle/actions/setup-gradle@v3 # By default, cache is only saved on the 'master' branch
     - name: Set up Konan
       uses: actions/cache@v4
-      id: ${{ inputs.cache-key }}-konan
+      id: {{ inputs.cache-key }}-konan
       with:
         path: '~/.konan/**'
-        key: ${{ inputs.cache-key }}-konan
+        key: {{ inputs.cache-key }}-konan
     - name: Set up secrets
       shell: bash
       run: |
