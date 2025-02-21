@@ -11,10 +11,10 @@ env:
   GUARDIAN_API_URL: ${{ secrets.GUARDIAN_API_URL }}
 
 jobs:
-  check-unit-test:
+  unit-test:
     runs-on: ubuntu-20.04
     concurrency:
-      group: ${{ github.ref }}-check-unit-test
+      group: ${{ github.ref }}-unit-test
       cancel-in-progress: true
     steps:
       - name: Checkout
@@ -22,10 +22,10 @@ jobs:
       - name: Test
         uses: ./.github/actions/unit-test
 
-  ios-check-build:
+  build-ios:
     runs-on: macos-15
     concurrency:
-      group: ${{ github.ref }}-ios-check-build
+      group: ${{ github.ref }}-build-ios
       cancel-in-progress: true
     steps:
       - name: Checkout
@@ -33,10 +33,10 @@ jobs:
       - name: Build iOS
         uses: ./.github/actions/build-ios
 
-  ios-check-test:
+  test-ios:
     runs-on: macos-15
     concurrency:
-      group: ${{ github.ref }}-ios-check-test
+      group: ${{ github.ref }}-test-ios
       cancel-in-progress: true
     steps:
       - name: Checkout
@@ -44,10 +44,10 @@ jobs:
       - name: Test iOS
         uses: ./.github/actions/test-ios
 
-  android-check-build:
+  build-android:
     runs-on: ubuntu-20.04
     concurrency:
-      group: ${{ github.ref }}-android-check-build
+      group: ${{ github.ref }}-build-android
       cancel-in-progress: true
     steps:
       - name: Checkout
@@ -55,10 +55,10 @@ jobs:
       - name: Build Android
         uses: ./.github/actions/build-android
 
-  android-check-test:
+  test-android:
     runs-on: ubuntu-20.04
     concurrency:
-      group: ${{ github.ref }}-android-check-test
+      group: ${{ github.ref }}-test-android
       cancel-in-progress: true
     steps:
       - name: Checkout

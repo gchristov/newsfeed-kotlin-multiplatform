@@ -12,10 +12,10 @@ env:
   MONITORING_SLACK_URL: ${{ secrets.MONITORING_SLACK_URL }}
 
 jobs:
-  check-unit-test:
+  unit-test:
     runs-on: ubuntu-20.04
     concurrency:
-      group: ${{ github.ref }}-check-unit-test
+      group: ${{ github.ref }}-unit-test
       cancel-in-progress: true
     steps:
       - name: Checkout
@@ -34,10 +34,10 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ env.MONITORING_SLACK_URL }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
 
-  ios-check-build:
+  build-ios:
     runs-on: macos-15
     concurrency:
-      group: ${{ github.ref }}-ios-check-build
+      group: ${{ github.ref }}-build-ios
       cancel-in-progress: true
     steps:
       - name: Checkout
@@ -56,10 +56,10 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ env.MONITORING_SLACK_URL }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
 
-  ios-check-test:
+  test-ios:
     runs-on: macos-15
     concurrency:
-      group: ${{ github.ref }}-ios-check-test
+      group: ${{ github.ref }}-test-ios
       cancel-in-progress: true
     steps:
       - name: Checkout
@@ -78,10 +78,10 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ env.MONITORING_SLACK_URL }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
 
-  android-check-build:
+  build-android:
     runs-on: ubuntu-20.04
     concurrency:
-      group: ${{ github.ref }}-android-check-build
+      group: ${{ github.ref }}-build-android
       cancel-in-progress: true
     steps:
       - name: Checkout
@@ -100,10 +100,10 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ env.MONITORING_SLACK_URL }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
 
-  android-check-test:
+  test-android:
     runs-on: ubuntu-20.04
     concurrency:
-      group: ${{ github.ref }}-android-check-test
+      group: ${{ github.ref }}-test-android
       cancel-in-progress: true
     steps:
       - name: Checkout
