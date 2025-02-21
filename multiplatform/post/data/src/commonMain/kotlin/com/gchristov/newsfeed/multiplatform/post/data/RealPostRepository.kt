@@ -27,17 +27,12 @@ internal class RealPostRepository(
         postId: String,
         postMetadataFields: String
     ): Either<Throwable, DecoratedPost> = withContext(dispatcher) {
-        val postResponse = try {
-            apiService.post(
+        either {
+            val postRsp = apiService.post(
                 postUrl = postId,
                 postMetadataFields = postMetadataFields,
-            ).body<ApiPostResponse>()
-        } catch (error: Throwable) {
-            return@withContext Either.Left(error)
-        }
-
-        either {
-            val post = decoratePost(postResponse.toPost()).bind()
+            ).bind().body<ApiPostResponse>()
+            val post = decoratePost(postRsp.toPost()).bind()
             clearCache(post.raw.id).bind()
             cachePost(post)
             post

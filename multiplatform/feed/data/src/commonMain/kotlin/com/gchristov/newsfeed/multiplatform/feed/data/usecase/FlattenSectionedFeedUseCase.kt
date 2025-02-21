@@ -8,19 +8,21 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
 interface FlattenSectionedFeedUseCase {
-    suspend operator fun invoke(feed: SectionedFeed): Either<Throwable, DecoratedFeedPage>
+    suspend operator fun invoke(dto: Dto): Either<Throwable, DecoratedFeedPage>
+
+    data class Dto(val feed: SectionedFeed)
 }
 
 class RealFlattenSectionedFeedUseCase(
     private val dispatcher: CoroutineDispatcher,
 ) : FlattenSectionedFeedUseCase {
     override suspend operator fun invoke(
-        feed: SectionedFeed,
+        dto: FlattenSectionedFeedUseCase.Dto,
     ): Either<Throwable, DecoratedFeedPage> = withContext(dispatcher) {
-        val items = feed.sections.flatMap { it.feedItems }
+        val items = dto.feed.sections.flatMap { it.feedItems }
         val page = FeedPage(
-            pageId = feed.currentPage.toLong(),
-            pages = feed.pages.toLong(),
+            pageId = dto.feed.currentPage.toLong(),
+            pages = dto.feed.pages.toLong(),
         )
         Either.Right(
             DecoratedFeedPage(

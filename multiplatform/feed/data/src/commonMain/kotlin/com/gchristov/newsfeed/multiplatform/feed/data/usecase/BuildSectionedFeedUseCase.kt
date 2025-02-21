@@ -17,7 +17,9 @@ import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
 
 interface BuildSectionedFeedUseCase {
-    suspend operator fun invoke(feed: DecoratedFeedPage): Either<Throwable, SectionedFeed>
+    suspend operator fun invoke(dto: Dto): Either<Throwable, SectionedFeed>
+
+    data class Dto(val feed: DecoratedFeedPage)
 }
 
 class RealBuildSectionedFeedUseCase(
@@ -25,9 +27,9 @@ class RealBuildSectionedFeedUseCase(
     private val clock: Clock,
 ) : BuildSectionedFeedUseCase {
     override suspend operator fun invoke(
-        feed: DecoratedFeedPage,
+        dto: BuildSectionedFeedUseCase.Dto
     ): Either<Throwable, SectionedFeed> = withContext(dispatcher) {
-        val sectionsMap = feed.items
+        val sectionsMap = dto.feed.items
             .sortedByDescending { it.date.toEpochMilliseconds() }
             .groupBy { it.sectionType(clock) }
         val sections = sectionsMap.keys.map {
@@ -38,8 +40,8 @@ class RealBuildSectionedFeedUseCase(
         }
         Either.Right(
             SectionedFeed(
-                pages = feed.raw.pages.toInt(),
-                currentPage = feed.raw.pageId.toInt(),
+                pages = dto.feed.raw.pages.toInt(),
+                currentPage = dto.feed.raw.pageId.toInt(),
                 sections = sections
             )
         )
