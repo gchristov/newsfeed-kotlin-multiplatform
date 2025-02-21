@@ -7,36 +7,37 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
 interface MergeSectionedFeedUseCase {
-    suspend operator fun invoke(
-        thisFeed: SectionedFeed,
-        newFeed: SectionedFeed,
-    ): Either<Throwable, SectionedFeed>
+    suspend operator fun invoke(dto: Dto): Either<Throwable, SectionedFeed>
+
+    data class Dto(
+        val thisFeed: SectionedFeed,
+        val newFeed: SectionedFeed,
+    )
 }
 
 class RealMergeSectionedFeedUseCase(
     private val dispatcher: CoroutineDispatcher
 ) : MergeSectionedFeedUseCase {
     override suspend operator fun invoke(
-        thisFeed: SectionedFeed,
-        newFeed: SectionedFeed,
+        dto: MergeSectionedFeedUseCase.Dto
     ): Either<Throwable, SectionedFeed> = withContext(dispatcher) {
         val feed = SectionedFeed(
-            pages = newFeed.pages,
-            currentPage = newFeed.currentPage,
+            pages = dto.newFeed.pages,
+            currentPage = dto.newFeed.currentPage,
             sections = mutableListOf<SectionedFeed.Section>().apply {
-                if (thisFeed.sections.isEmpty()) {
+                if (dto.thisFeed.sections.isEmpty()) {
                     // No existing sections so need to merge - just add new sections
-                    addAll(newFeed.sections)
-                } else if (newFeed.sections.isEmpty()) {
+                    addAll(dto.newFeed.sections)
+                } else if (dto.newFeed.sections.isEmpty()) {
                     // No new sections so need to merge - just add existing sections
-                    addAll(thisFeed.sections)
+                    addAll(dto.thisFeed.sections)
                 } else {
                     // Add all existing sections
-                    addAll(thisFeed.sections)
+                    addAll(dto.thisFeed.sections)
                     // Merge the last and first sections together if they are from the same type, otherwise
                     // append the new sections
-                    val lastOldSection = thisFeed.sections.last()
-                    val firstNewSection = newFeed.sections.first()
+                    val lastOldSection = dto.thisFeed.sections.last()
+                    val firstNewSection = dto.newFeed.sections.first()
                     if (lastOldSection.type == firstNewSection.type) {
                         val mergedLastOldSection = SectionedFeed.Section(
                             type = lastOldSection.type,
@@ -45,10 +46,10 @@ class RealMergeSectionedFeedUseCase(
                                 addAll(firstNewSection.feedItems)
                             }
                         )
-                        set(thisFeed.sections.lastIndex, mergedLastOldSection)
-                        addAll(newFeed.sections.subList(1, newFeed.sections.size))
+                        set(dto.thisFeed.sections.lastIndex, mergedLastOldSection)
+                        addAll(dto.newFeed.sections.subList(1, dto.newFeed.sections.size))
                     } else {
-                        addAll(newFeed.sections)
+                        addAll(dto.newFeed.sections)
                     }
                 }
             }

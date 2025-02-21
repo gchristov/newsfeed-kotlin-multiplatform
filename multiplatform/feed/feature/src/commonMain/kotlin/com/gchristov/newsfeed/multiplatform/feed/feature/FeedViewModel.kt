@@ -65,7 +65,9 @@ class FeedViewModel(
         state.value.sectionedFeed?.let { sectionedFeed ->
             launchUiCoroutine {
                 either {
-                    val redecorated = redecorateSectionedFeedUseCase(sectionedFeed).bind()
+                    val redecorated = redecorateSectionedFeedUseCase(
+                        RedecorateSectionedFeedUseCase.Dto(sectionedFeed)
+                    ).bind()
                     setState { copy(sectionedFeed = redecorated) }
                 }.fold(
                     ifLeft = { it.printStackTrace() },
@@ -111,7 +113,8 @@ class FeedViewModel(
 
                 if (startFromFirst) {
                     feedRepository.cachedFeedPage().bind()?.let { decoratedFeed ->
-                        val cachedSectionedFeed = buildSectionedFeedUseCase(decoratedFeed).bind()
+                        val cachedSectionedFeed =
+                            buildSectionedFeedUseCase(BuildSectionedFeedUseCase.Dto(decoratedFeed)).bind()
                         setState { copy(sectionedFeed = cachedSectionedFeed) }
                     }
                 }
@@ -120,12 +123,15 @@ class FeedViewModel(
                     pageId = nextPage,
                     feedQuery = searchQuery,
                 ).bind()
-                val sectionedNewFeed = buildSectionedFeedUseCase(flatNewFeed).bind()
+                val sectionedNewFeed =
+                    buildSectionedFeedUseCase(BuildSectionedFeedUseCase.Dto(flatNewFeed)).bind()
 
                 val result = if (currentFeed != null && !startFromFirst) {
                     mergeSectionedFeedUseCase(
-                        thisFeed = currentFeed,
-                        newFeed = sectionedNewFeed
+                        MergeSectionedFeedUseCase.Dto(
+                            thisFeed = currentFeed,
+                            newFeed = sectionedNewFeed
+                        )
                     ).bind()
                 } else sectionedNewFeed
 
