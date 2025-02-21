@@ -1,0 +1,123 @@
+name: staging-check
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+env:
+  GUARDIAN_API_KEY: ${{ secrets.GUARDIAN_API_KEY }}
+  GUARDIAN_API_URL: ${{ secrets.GUARDIAN_API_URL }}
+  MONITORING_SLACK_URL: ${{ secrets.MONITORING_SLACK_URL }}
+
+jobs:
+  check-unit-test:
+    runs-on: ubuntu-20.04
+    concurrency:
+      group: ${{ github.ref }}-check-unit-test
+      cancel-in-progress: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Test
+        uses: ./.github/actions/unit-test
+      - name: Slack report
+        uses: slackapi/slack-github-action@v1.27.0
+        if: always() # Ensure report is sent, even after errors
+        with:
+          payload: |
+            {
+              "text": "🌓️️ Nightly job <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|${{ github.job }}> ${{ job.status }}"
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ env.MONITORING_SLACK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+
+  ios-check-build:
+    runs-on: macos-15
+    concurrency:
+      group: ${{ github.ref }}-ios-check-build
+      cancel-in-progress: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Build iOS
+        uses: ./.github/actions/build-ios
+      - name: Slack report
+        uses: slackapi/slack-github-action@v1.27.0
+        if: always() # Ensure report is sent, even after errors
+        with:
+          payload: |
+            {
+              "text": "🌓️️ Nightly job <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|${{ github.job }}> ${{ job.status }}"
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ env.MONITORING_SLACK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+
+  ios-check-test:
+    runs-on: macos-15
+    concurrency:
+      group: ${{ github.ref }}-ios-check-test
+      cancel-in-progress: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Test iOS
+        uses: ./.github/actions/test-ios
+      - name: Slack report
+        uses: slackapi/slack-github-action@v1.27.0
+        if: always() # Ensure report is sent, even after errors
+        with:
+          payload: |
+            {
+              "text": "🌓️️ Nightly job <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|${{ github.job }}> ${{ job.status }}"
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ env.MONITORING_SLACK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+
+  android-check-build:
+    runs-on: ubuntu-20.04
+    concurrency:
+      group: ${{ github.ref }}-android-check-build
+      cancel-in-progress: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Build Android
+        uses: ./.github/actions/build-android
+      - name: Slack report
+        uses: slackapi/slack-github-action@v1.27.0
+        if: always() # Ensure report is sent, even after errors
+        with:
+          payload: |
+            {
+              "text": "🌓️️ Nightly job <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|${{ github.job }}> ${{ job.status }}"
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ env.MONITORING_SLACK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+
+  android-check-test:
+    runs-on: ubuntu-20.04
+    concurrency:
+      group: ${{ github.ref }}-android-check-test
+      cancel-in-progress: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Test Android
+        uses: ./.github/actions/test-android
+      - name: Slack report
+        uses: slackapi/slack-github-action@v1.27.0
+        if: always() # Ensure report is sent, even after errors
+        with:
+          payload: |
+            {
+              "text": "🌓️️ Nightly job <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|${{ github.job }}> ${{ job.status }}"
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ env.MONITORING_SLACK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK

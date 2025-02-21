@@ -1,10 +1,10 @@
-name: check
+name: staging-check
 
 on:
   push:
-    branches: [ master ]
+    branches: [ dev ]
   pull_request:
-    branches: [ master ]
+    branches: [ dev ]
 
 env:
   GUARDIAN_API_KEY: ${{ secrets.GUARDIAN_API_KEY }}
