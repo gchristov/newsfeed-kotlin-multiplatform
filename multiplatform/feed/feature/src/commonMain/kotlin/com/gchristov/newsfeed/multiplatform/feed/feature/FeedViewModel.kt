@@ -41,7 +41,7 @@ class FeedViewModel(
      */
     @OptIn(FlowPreview::class)
     private fun observeSearchQuery() {
-        launchUiCoroutine {
+        launchCoroutine {
             searchQueryFlow
                 .debounce(FeedSearchDebounceIntervalMillis)
                 .filterNotNull()
@@ -63,7 +63,7 @@ class FeedViewModel(
 
     fun redecorateContent() {
         state.value.sectionedFeed?.let { sectionedFeed ->
-            launchUiCoroutine {
+            launchCoroutine {
                 either {
                     val redecorated = redecorateSectionedFeedUseCase(
                         RedecorateSectionedFeedUseCase.Dto(sectionedFeed)
@@ -97,7 +97,7 @@ class FeedViewModel(
             return
         }
 
-        launchUiCoroutine {
+        launchCoroutine {
             either {
                 val searchQuery = feedRepository.searchQuery().bind()
                 setState {

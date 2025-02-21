@@ -35,7 +35,7 @@ class PostViewModel(
                 blockingError = null,
             )
         }
-        launchUiCoroutine {
+        launchCoroutine {
             either {
                 postRepository.cachedPost(state.value.postId).bind()?.let { decoratedPost ->
                     setState { copy(post = decoratedPost) }
@@ -65,7 +65,7 @@ class PostViewModel(
     }
 
     fun onToggleFavourite() {
-        launchUiCoroutine {
+        launchCoroutine {
             either {
                 postRepository.toggleFavourite(state.value.postId).bind()
                 loadContent()

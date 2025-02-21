@@ -28,17 +28,12 @@ internal class RealFeedRepository(
         pageId: Int,
         feedQuery: String,
     ): Either<Throwable, DecoratedFeedPage> = withContext(dispatcher) {
-        val feedResponse: ApiFeedResponse = try {
-            apiService.feed(
+        either {
+            val feedRsp = apiService.feed(
                 pageId = pageId,
                 feedQuery = feedQuery
-            ).body()
-        } catch (error: Throwable) {
-            return@withContext Either.Left(error)
-        }
-
-        either {
-            val feedPage = feedResponse.toFeedPage { decorateFeedItem(feedItem = it).bind() }
+            ).bind().body<ApiFeedResponse>()
+            val feedPage = feedRsp.toFeedPage { decorateFeedItem(feedItem = it).bind() }
             clearCache().bind()
             cacheFeedPage(feedPage)
             feedPage

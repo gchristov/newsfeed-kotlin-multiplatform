@@ -2,7 +2,6 @@ package com.gchristov.newsfeed.multiplatform.feed.data.model
 
 import com.gchristov.newsfeed.multiplatform.feed.data.FeedItem
 import com.gchristov.newsfeed.multiplatform.feed.data.FeedPage
-import com.gchristov.newsfeed.multiplatform.feed.data.api.ApiFeedItem
 import com.gchristov.newsfeed.multiplatform.feed.data.api.ApiFeedResponse
 import kotlinx.datetime.Instant
 
@@ -31,7 +30,7 @@ internal inline fun ApiFeedResponse.toFeedPage(itemDecorator: (FeedItem) -> Deco
     )
 }
 
-private fun ApiFeedItem.toFeedItem(pageId: Int): FeedItem = FeedItem(
+private fun ApiFeedResponse.ApiFeedItem.toFeedItem(pageId: Int): FeedItem = FeedItem(
     itemId = id,
     pageId = pageId.toLong(),
     apiUrl = apiUrl,

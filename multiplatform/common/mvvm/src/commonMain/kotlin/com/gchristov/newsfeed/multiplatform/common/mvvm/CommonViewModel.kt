@@ -9,15 +9,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 /**
- * @param dispatcher Used in [launchUiCoroutine] to launch new UI coroutines. Such coroutines will
+ * @param dispatcher Used in [launchCoroutine] to launch a new coroutine. The coroutine will
  * be launched on the [dispatcher] context in order to run sequential blocking operations. Most
  * common value for this should be [Dispatchers.Main], and during tests [UnconfinedTestispatcher].
- * @param bgDispatcher Used in [launchBgCoroutine] to launch new coroutines that run on a background
- * thread using [bgDispatcher] context in order to run sequential blocking operations. Most
- * common value for this should be [Dispatchers.Default], and during tests [UnconfinedTestispatcher].
  */
 abstract class CommonViewModel<S : Any>(
-    // No default values provided to reinforce them to be correctly set during tests.
     private val dispatcher: CoroutineDispatcher,
     initialState: S
 ) : ViewModel() {
@@ -43,7 +39,7 @@ abstract class CommonViewModel<S : Any>(
      * thread is not blocked and all [suspend] operations within [block] will suspend it until they
      * complete, after which execution of [block] will continue synchronously.
      */
-    protected fun launchUiCoroutine(block: suspend CoroutineScope.() -> Unit) =
+    protected fun launchCoroutine(block: suspend CoroutineScope.() -> Unit) =
         viewModelScope.launch(dispatcher) {
             block()
         }

@@ -12,17 +12,17 @@ data class ApiFeedResponse(
         val currentPage: Int,
         val results: List<ApiFeedItem>
     )
-}
 
-@Serializable
-data class ApiFeedItem(
-    val id: String,
-    val apiUrl: String,
-    val webPublicationDate: String,
-    val fields: ApiPostFields? = null,
-) {
     @Serializable
-    data class ApiPostFields(
+    data class ApiFeedItem(
+        val id: String,
+        val apiUrl: String,
+        val webPublicationDate: String,
+        val fields: ApiFeedItemFields? = null,
+    )
+
+    @Serializable
+    data class ApiFeedItemFields(
         val headline: String? = null,
         val thumbnail: String? = null,
     )
