@@ -1,0 +1,67 @@
+name: staging-check
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+env:
+  GUARDIAN_API_KEY: ${{ secrets.GUARDIAN_API_KEY }}
+  GUARDIAN_API_URL: ${{ secrets.GUARDIAN_API_URL }}
+
+jobs:
+  unit-test:
+    runs-on: ubuntu-20.04
+    concurrency:
+      group: ${{ github.ref }}-unit-test
+      cancel-in-progress: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Test
+        uses: ./.github/actions/unit-test
+
+  build-ios:
+    runs-on: macos-15
+    concurrency:
+      group: ${{ github.ref }}-build-ios
+      cancel-in-progress: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Build iOS
+        uses: ./.github/actions/build-ios
+
+  test-ios:
+    runs-on: macos-15
+    concurrency:
+      group: ${{ github.ref }}-test-ios
+      cancel-in-progress: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Test iOS
+        uses: ./.github/actions/test-ios
+
+  build-android:
+    runs-on: ubuntu-20.04
+    concurrency:
+      group: ${{ github.ref }}-build-android
+      cancel-in-progress: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Build Android
+        uses: ./.github/actions/build-android
+
+  test-android:
+    runs-on: ubuntu-20.04
+    concurrency:
+      group: ${{ github.ref }}-test-android
+      cancel-in-progress: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Test Android
+        uses: ./.github/actions/test-android

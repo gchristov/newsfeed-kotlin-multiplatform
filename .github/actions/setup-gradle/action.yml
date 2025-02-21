@@ -1,0 +1,24 @@
+name: 'setup-gradle'
+inputs:
+  cache-key:
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: "zulu"
+        java-version: "17"
+    - name: Set up Gradle
+      uses: gradle/actions/setup-gradle@v3 # By default, cache is only saved on the 'master' branch
+    - name: Set up Konan
+      uses: actions/cache@v4
+      with:
+        path: '~/.konan/**'
+        key: ${{ inputs.cache-key }}-konan
+    - name: Set up secrets
+      shell: bash
+      run: |
+        set -Eeuo pipefail 
+        bash tools/scripts/secrets.sh

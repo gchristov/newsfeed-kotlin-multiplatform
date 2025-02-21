@@ -1,0 +1,22 @@
+name: 'build-android'
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Gradle
+      uses: ./.github/actions/setup-gradle
+      with:
+        cache-key: build-android
+    - name: Build Android
+      shell: bash
+      run: |
+        set -Eeuo pipefail 
+        ./gradlew android:app:assembleDebug
+    - name: Artifacts
+      uses: actions/upload-artifact@v4
+      if: always() # Ensure all artifacts are collected, even after errors
+      with:
+        name: Android Build
+        path: |
+          **/*.apk
+          **/build
+          **/secrets.properties
