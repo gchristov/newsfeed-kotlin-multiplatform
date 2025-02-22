@@ -5,6 +5,7 @@ import arrow.core.raise.either
 import com.gchristov.newsfeed.multiplatform.post.data.api.ApiPostResponse
 import com.gchristov.newsfeed.multiplatform.post.data.model.DecoratedPost
 import com.gchristov.newsfeed.multiplatform.post.data.model.toPost
+import com.gchristov.newsfeed.multiplatform.post.data.usecase.EstimateReadingTimeMinutesUseCase
 import com.russhwolf.settings.Settings
 import com.russhwolf.settings.contains
 import com.russhwolf.settings.set
@@ -13,12 +14,12 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
-import kotlin.math.truncate
 
 internal class RealPostRepository(
     private val dispatcher: CoroutineDispatcher,
     private val apiService: PostApi,
     private val sharedPreferences: Settings,
+    private val estimateReadingTimeMinutesUseCase: EstimateReadingTimeMinutesUseCase,
     database: PostSqlDelightDatabase
 ) : PostRepository {
     private val queries = database.postSqlDelightDatabaseQueries
@@ -47,7 +48,7 @@ internal class RealPostRepository(
                 raw = post,
                 date = Instant.parse(post.date),
                 favouriteTimestamp = favouriteTimestamp(post.id).bind(),
-                readingTimeMinutes = calculateReadingTimeMinutes(post).bind(),
+                readingTimeMinutes = estimateReadingTimeMinutes(post).bind(),
             )
         }
     }
@@ -113,28 +114,10 @@ internal class RealPostRepository(
         }
     }
 
-    // TODO: Take this out into a separate use-case
-    private suspend fun calculateReadingTimeMinutes(post: Post): Either<Throwable, Int> =
-        withContext(dispatcher) {
-            val bodyWordCount = post.body?.split(" ")?.count() ?: 0
-            val headerWordCount = post.headline?.split(" ")?.count() ?: 0
-            val wordCount = bodyWordCount + headerWordCount
-            calculateReadingTimeMinutes(wordCount)
-        }
-
-    private fun calculateReadingTimeMinutes(totalWordCount: Int): Either<Throwable, Int> {
-        if (totalWordCount <= 0) {
-            return Either.Right(0)
-        }
-
-        val minutesWithDecimals = totalWordCount / 200.toDouble()
-        val fullMinutes = truncate(minutesWithDecimals).toInt()
-
-        val decimalPart = minutesWithDecimals - fullMinutes
-        val extraSeconds = (decimalPart * 0.60) * 100
-        val extraMinutes = if (extraSeconds.toInt() > 30) 1 else 0
-        val totalMinutes = fullMinutes + extraMinutes
-
-        return Either.Right(if (totalMinutes == 0) 1 else totalMinutes)
+    private suspend fun estimateReadingTimeMinutes(
+        post: Post
+    ): Either<Throwable, Int> = withContext(dispatcher) {
+        val allText = post.headline + " " + post.body
+        estimateReadingTimeMinutesUseCase(EstimateReadingTimeMinutesUseCase.Dto(allText))
     }
 }

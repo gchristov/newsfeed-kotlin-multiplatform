@@ -4,9 +4,12 @@ import com.gchristov.newsfeed.multiplatform.common.kotlin.di.DependencyModule
 import com.gchristov.newsfeed.multiplatform.common.network.NetworkClient
 import com.gchristov.newsfeed.multiplatform.common.network.NetworkConfig
 import com.gchristov.newsfeed.multiplatform.common.persistence.SqlDriverProperties
+import com.gchristov.newsfeed.multiplatform.post.data.usecase.EstimateReadingTimeMinutesUseCase
+import com.gchristov.newsfeed.multiplatform.post.data.usecase.RealEstimateReadingTimeMinutesUseCase
 import com.russhwolf.settings.Settings
 import kotlinx.coroutines.Dispatchers
 import org.kodein.di.DI
+import org.kodein.di.bindProvider
 import org.kodein.di.bindSingleton
 import org.kodein.di.instance
 
@@ -32,21 +35,25 @@ object MplPostDataModule : DependencyModule() {
                                 databaseName = "post.db"
                             )
                         )
-                    )
+                    ),
+                    estimateReadingTimeMinutesUseCase = instance(),
                 )
             }
+            bindProvider { provideEstimateReadingTimeMinutesUseCase() }
         }
     }
 
     private fun providePostRepository(
         api: PostApi,
         sharedPreferences: Settings,
-        database: PostSqlDelightDatabase
+        database: PostSqlDelightDatabase,
+        estimateReadingTimeMinutesUseCase: EstimateReadingTimeMinutesUseCase,
     ): PostRepository = RealPostRepository(
         dispatcher = Dispatchers.Default,
         apiService = api,
         sharedPreferences = sharedPreferences,
-        database = database
+        database = database,
+        estimateReadingTimeMinutesUseCase = estimateReadingTimeMinutesUseCase,
     )
 
     private fun providePostApi(
@@ -56,4 +63,7 @@ object MplPostDataModule : DependencyModule() {
         client = networkClient,
         config = networkConfig,
     )
+
+    private fun provideEstimateReadingTimeMinutesUseCase(): EstimateReadingTimeMinutesUseCase =
+        RealEstimateReadingTimeMinutesUseCase(Dispatchers.Default)
 }
