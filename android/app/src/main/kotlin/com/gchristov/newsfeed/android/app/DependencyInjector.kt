@@ -2,6 +2,7 @@ package com.gchristov.newsfeed.android.app
 
 import android.content.Context
 import com.gchristov.newsfeed.android.common.navigation.NavigationModule
+import com.gchristov.newsfeed.multiplatform.common.firebase.MplCommonFirebaseModule
 import com.gchristov.newsfeed.multiplatform.common.kotlin.AppContext
 import com.gchristov.newsfeed.multiplatform.common.kotlin.MplCommonKotlinModule
 import com.gchristov.newsfeed.multiplatform.common.kotlin.di.DependencyInjector
@@ -27,6 +28,7 @@ internal fun DependencyInjector.initialise(context: Context) {
         add(MplCommonKotlinModule)
         add(MplCommonNetworkModule)
         add(MplCommonPersistenceModule)
+        add(MplCommonFirebaseModule)
         add(MplFeedModule)
         add(MplFeedDataModule)
         add(MplPostModule)

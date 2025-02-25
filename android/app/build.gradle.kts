@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.newsfeed.android.applicationBinary)
+    alias(libs.plugins.newsfeed.android.firebase) // Firebase plugin can only be applied for Android applications
 }
 
 android {

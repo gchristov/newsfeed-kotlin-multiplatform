@@ -11,6 +11,7 @@ android {
 kotlin {
     sourceSets {
         commonMain.dependencies {
+            api(projects.multiplatform.common.firebase)
             api(projects.multiplatform.feed.data)
             api(projects.multiplatform.feed.testFixtures)
             api(projects.multiplatform.post.testFixtures) // Needed for fake post repository

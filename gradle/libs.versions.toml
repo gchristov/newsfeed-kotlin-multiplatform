@@ -20,6 +20,9 @@ ktor = "2.3.9"
 kermit = "2.0.3"
 multiplatform-settings = "1.1.1"
 arrow = "1.2.3"
+gitlive = "2.1.0"
+google-services = "4.4.2"
+google-firebase = "33.9.0"
 
 [libraries]
 junit = { module = "junit:junit", version.ref = "junit" }
@@ -56,6 +59,8 @@ sqlDelight-android = { module = "app.cash.sqldelight:android-driver", version.re
 sqlDelight-native = { module = "app.cash.sqldelight:native-driver", version.ref = "sqlDelight" }
 multiplatformSettings = { module = "com.russhwolf:multiplatform-settings", version.ref = "multiplatform-settings" }
 arrow-core = { module = "io.arrow-kt:arrow-core", version.ref = "arrow" }
+gitlive-firebase-firestore = { module = "dev.gitlive:firebase-firestore", version.ref = "gitlive" }
+google-firebase = { module = "com.google.firebase:firebase-bom", version.ref = "google-firebase" }
 
 # Dependencies of the included gradle-plugins
 android-gradlePlugin = { module = "com.android.tools.build:gradle", version.ref = "android-gradlePlugin" }
@@ -69,11 +74,13 @@ kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref 
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 buildKonfig = { id = "com.codingfeline.buildkonfig", version.ref = "buildKonfig" }
 sqlDelight = { id = "app.cash.sqldelight", version.ref = "sqlDelight" }
+google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
 
 # Plugins defined by this project
 newsfeed-android-base = { id = "android-base-plugin", version = "unspecified" }
 newsfeed-android-module = { id = "android-module-plugin", version = "unspecified" }
 newsfeed-android-compose = { id = "android-compose-plugin", version = "unspecified" }
+newsfeed-android-firebase = { id = "android-firebase-plugin", version = "unspecified" }
 newsfeed-android-feature = { id = "android-feature-plugin", version = "unspecified" }
 newsfeed-android-applicationBinary = { id = "android-application-binary-plugin", version = "unspecified" }
 newsfeed-mpl-base = { id = "mpl-base-plugin", version = "unspecified" }

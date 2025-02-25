@@ -1,21 +1,19 @@
 package com.gchristov.newsfeed.gradleplugins.android
 
-import com.gchristov.newsfeed.gradleplugins.libs
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.dependencies
 
-class AndroidModulePlugin : Plugin<Project> {
+class AndroidFirebasePlugin : Plugin<Project> {
     override fun apply(target: Project) {
-        with (target) {
+        with(target) {
             with (plugins) {
-                apply("com.android.library")
-                apply(libs.findPlugin("newsfeed-android-base").get().get().pluginId)
+                apply("com.google.gms.google-services")
             }
             // Add dependencies after plugins are set to avoid missing "implementation" errors
             afterEvaluate {
                 dependencies {
-                    add("api", project(":android:common:test"))
+                    add("api", project(":android:common:firebase"))
                 }
             }
         }

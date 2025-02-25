@@ -16,7 +16,7 @@ internal fun BaseExtension.configureAndroid() {
         resources.excludes.add("META-INF/LGPL2.1")
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_20
+        targetCompatibility = JavaVersion.VERSION_20
     }
 }

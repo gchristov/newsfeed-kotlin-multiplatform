@@ -20,6 +20,11 @@ gradlePlugin {
         implementationClass =
             "com.gchristov.newsfeed.gradleplugins.android.AndroidComposePlugin"
     }
+    plugins.register("android-firebase-plugin") {
+        id = "android-firebase-plugin"
+        implementationClass =
+            "com.gchristov.newsfeed.gradleplugins.android.AndroidFirebasePlugin"
+    }
     plugins.register("android-feature-plugin") {
         id = "android-feature-plugin"
         implementationClass =
