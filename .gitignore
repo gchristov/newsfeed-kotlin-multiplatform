@@ -22,3 +22,4 @@ ios/feed-test-fixtures/feed-test-fixtures.xcodeproj/xcuserdata
 ios/post-test-fixtures/post-test-fixtures.xcodeproj/xcuserdata
 secrets.properties
 google-services.json
+GoogleService-Info.plist

@@ -16,7 +16,6 @@ kotlin {
      https://touchlab.co/multiple-kotlin-frameworks-in-application/
      */
     val exportedDependencies = listOf(
-        libs.kotlinx.coroutines.core, // Needed for coroutine dispatchers
         projects.multiplatform.common.kotlin,
         projects.multiplatform.common.test,
         projects.multiplatform.feed.feature,
@@ -34,10 +33,8 @@ kotlin {
     ).forEach {
         it.binaries.framework {
             baseName = "NewsfeedMultiplatform"
-            // Both dynamic frameworks and -lsqlite3 are required for SQLDelight, otherwise we get linker errors
-            // TODO: Adding -lsqlite3 to Other Linked Flags in Xcode fixes the issue and we can use a static lib then
-            linkerOpts("-lsqlite3")
-            isStatic = false
+            // Toggling this to false will cause missing FirebaseCore errors
+            isStatic = true
             exportedDependencies.forEach { dependency -> export(dependency) }
         }
     }
@@ -45,6 +42,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             exportedDependencies.forEach { api(it) }
+            implementation(libs.kotlinx.coroutines.core) // Needed for coroutine dispatchers
         }
     }
 }

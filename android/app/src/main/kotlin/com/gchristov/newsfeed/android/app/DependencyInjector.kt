@@ -20,7 +20,6 @@ import com.gchristov.newsfeed.multiplatform.post.feature.MplPostModule
  *
  * When making changes, consider also updating the multiplatform/umbrella module.
  */
-
 internal fun DependencyInjector.initialise(context: Context) {
     AppContext = context
     val modules = mutableListOf<DependencyModule>().apply {

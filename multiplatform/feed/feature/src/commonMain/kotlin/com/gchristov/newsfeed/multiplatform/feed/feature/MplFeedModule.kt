@@ -18,7 +18,6 @@ object MplFeedModule : DependencyModule() {
                     redecorateSectionedFeedUseCase = instance(),
                     buildSectionedFeedUseCase = instance(),
                     mergeSectionedFeedUseCase = instance(),
-                    firestore = instance(),
                 )
             }
         }

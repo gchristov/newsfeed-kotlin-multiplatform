@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 55;
+	objectVersion = 77;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -100,7 +100,6 @@
 				};
 			};
 			buildConfigurationList = 4644B904278520EB0067B224 /* Build configuration list for PBXProject "common-design" */;
-			compatibilityVersion = "Xcode 13.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -108,6 +107,7 @@
 				Base,
 			);
 			mainGroup = 4644B900278520EB0067B224;
+			preferredProjectObjectVersion = 77;
 			productRefGroup = 4644B90B278520EB0067B224 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -286,11 +286,14 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.gchristov.newsfeed.commondesign;
 				PRODUCT_NAME = CommonDesign;
 				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -318,10 +321,13 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.gchristov.newsfeed.commondesign;
 				PRODUCT_NAME = CommonDesign;
 				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
