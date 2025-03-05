@@ -4,5 +4,9 @@ set -e
 # Should be invoked from the root of the project as all paths are relative.
 
 # network credentials (the > is intentional to support concurrent writes)
-echo GUARDIAN_API_KEY="$GUARDIAN_API_KEY" > multiplatform/common/network/secrets.properties
+echo GUARDIAN_API_KEY="$GUARDIAN_API_KEY" >> multiplatform/common/network/secrets.properties
 echo GUARDIAN_API_URL="$GUARDIAN_API_URL" >> multiplatform/common/network/secrets.properties
+
+# Firebase credentials
+echo "$GOOGLE_SERVICES_JSON" >> android/app/google-services.json
+echo "$GOOGLE_SERVICE_INFO_PLIST" >> ios/app/GoogleService-Info.plist
