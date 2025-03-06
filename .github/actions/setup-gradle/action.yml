@@ -9,7 +9,7 @@ runs:
       uses: actions/setup-java@v4
       with:
         distribution: "zulu"
-        java-version: "20"
+        java-version: "20" # When changing the Java version make sure to also update jvmToolchain
     - name: Set up Gradle
       uses: gradle/actions/setup-gradle@v3 # By default, cache is only saved on the 'master' branch
     - name: Set up Konan

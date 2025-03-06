@@ -1,7 +1,6 @@
 package com.gchristov.newsfeed.gradleplugins
 
 import com.android.build.gradle.BaseExtension
-import org.gradle.api.JavaVersion
 
 internal fun BaseExtension.configureAndroid() {
     compileSdkVersion(34)
@@ -14,9 +13,5 @@ internal fun BaseExtension.configureAndroid() {
     packagingOptions {
         resources.excludes.add("META-INF/AL2.0")
         resources.excludes.add("META-INF/LGPL2.1")
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_20
-        targetCompatibility = JavaVersion.VERSION_20
     }
 }
