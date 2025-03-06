@@ -1,5 +1,6 @@
 package com.gchristov.newsfeed.multiplatform.umbrella
 
+import com.gchristov.newsfeed.multiplatform.common.firebase.MplCommonFirebaseModule
 import com.gchristov.newsfeed.multiplatform.common.kotlin.MplCommonKotlinModule
 import com.gchristov.newsfeed.multiplatform.common.kotlin.di.DependencyInjector
 import com.gchristov.newsfeed.multiplatform.common.kotlin.di.DependencyModule
@@ -19,11 +20,13 @@ import com.gchristov.newsfeed.multiplatform.post.feature.PostViewModel
  *
  * When making changes, consider also updating android/app module.
  */
+@Suppress("unused")
 fun DependencyInjector.initialise() {
     val modules = mutableListOf<DependencyModule>().apply {
         add(MplCommonKotlinModule)
         add(MplCommonNetworkModule)
         add(MplCommonPersistenceModule)
+        add(MplCommonFirebaseModule)
         add(MplFeedModule)
         add(MplFeedDataModule)
         add(MplPostModule)
@@ -33,7 +36,9 @@ fun DependencyInjector.initialise() {
 }
 
 /** Helper for injecting a [FeedViewModel] */
+@Suppress("unused")
 fun DependencyInjector.injectFeedViewModel(): FeedViewModel = inject()
 
 /** Helper for injecting a [PostViewModel] */
+@Suppress("unused")
 fun DependencyInjector.injectPostViewModel(postId: String): PostViewModel = inject(postId)

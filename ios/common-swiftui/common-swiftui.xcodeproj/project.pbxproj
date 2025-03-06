@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 55;
+	objectVersion = 77;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -221,7 +221,6 @@
 				};
 			};
 			buildConfigurationList = 464126D7272318950094BF9B /* Build configuration list for PBXProject "common-swiftui" */;
-			compatibilityVersion = "Xcode 13.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -234,6 +233,7 @@
 				4644B8E327850ECB0067B224 /* XCRemoteSwiftPackageReference "SwiftUI-Introspect" */,
 				464180F627D6769A0070F9F7 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
 			);
+			preferredProjectObjectVersion = 77;
 			productRefGroup = 464126DE272318950094BF9B /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -428,10 +428,13 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.gchristov.newsfeed.commonswiftui;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -458,10 +461,13 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.gchristov.newsfeed.commonswiftui;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

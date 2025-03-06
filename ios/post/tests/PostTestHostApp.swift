@@ -32,7 +32,7 @@ struct PostTestHostApp: App {
         WindowGroup {
             CustomSwiftUiTestRuleWrapper<PostScreenContent>(embedWithinNavigation: true) {
                 PostScreenContent(viewModel: PostViewModel(
-                    dispatcher: Dispatchers.shared.Main,
+                    dispatcher: Dispatcher.shared.Main,
                     postId: PostId,
                     postRepository: postRepository)
                 )

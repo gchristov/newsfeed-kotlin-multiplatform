@@ -8,7 +8,7 @@ import org.gradle.kotlin.dsl.dependencies
 class AndroidModulePlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with (target) {
-            with (pluginManager) {
+            with (plugins) {
                 apply("com.android.library")
                 apply(libs.findPlugin("newsfeed-android-base").get().get().pluginId)
             }

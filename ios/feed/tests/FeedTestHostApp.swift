@@ -32,14 +32,14 @@ struct FeedTestHostApp: App {
         self.feedRepository.feedResponse = FeedResponseType.obtainFromEnvironment(key: "feedResponse")
         self.feedRepository.feedLoadMoreResponse = FeedResponseType.obtainFromEnvironment(key: "feedLoadMoreResponse")
         self.buildSectionedFeedUseCase = RealBuildSectionedFeedUseCase(
-            dispatcher: Dispatchers.shared.Main,
+            dispatcher: Dispatcher.shared.Main,
             clock: FakeClock.shared
         )
-        self.mergeSectionedFeedUseCase = RealMergeSectionedFeedUseCase(dispatcher: Dispatchers.shared.Main)
+        self.mergeSectionedFeedUseCase = RealMergeSectionedFeedUseCase(dispatcher: Dispatcher.shared.Main)
         self.redecorateSectionedFeedUseCase = RealRedecorateSectionedFeedUseCase(
-            dispatcher: Dispatchers.shared.Main,
+            dispatcher: Dispatcher.shared.Main,
             feedRepository: feedRepository,
-            flattenSectionedFeedUseCase: RealFlattenSectionedFeedUseCase(dispatcher: Dispatchers.shared.Main),
+            flattenSectionedFeedUseCase: RealFlattenSectionedFeedUseCase(dispatcher: Dispatcher.shared.Main),
             buildSectionedFeedUseCase: buildSectionedFeedUseCase
         )
     }
@@ -48,7 +48,7 @@ struct FeedTestHostApp: App {
         WindowGroup {
             CustomSwiftUiTestRuleWrapper<FeedScreenContent>(embedWithinNavigation: false) {
                 FeedScreenContent(viewModel: FeedViewModel(
-                    dispatcher: Dispatchers.shared.Main,
+                    dispatcher: Dispatcher.shared.Main,
                     feedRepository: feedRepository,
                     redecorateSectionedFeedUseCase: redecorateSectionedFeedUseCase,
                     buildSectionedFeedUseCase: buildSectionedFeedUseCase,
