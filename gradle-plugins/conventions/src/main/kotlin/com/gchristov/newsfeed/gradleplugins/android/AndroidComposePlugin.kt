@@ -11,9 +11,8 @@ class AndroidComposePlugin : Plugin<Project> {
         with(target) {
             extensions.configure<BaseExtension> {
                 buildFeatures.compose = true
-                composeOptions {
-                    kotlinCompilerExtensionVersion =
-                        libs.findVersion("androidX-compose-compiler").get().requiredVersion
+                with (plugins) {
+                    apply(libs.findPlugin("kotlin-compose").get().get().pluginId)
                 }
             }
         }

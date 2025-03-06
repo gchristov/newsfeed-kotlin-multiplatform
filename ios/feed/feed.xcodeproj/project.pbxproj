@@ -13,6 +13,8 @@
 		4642A9EF27257553005B31ED /* CommonSwiftUi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4642A9EE27257553005B31ED /* CommonSwiftUi.framework */; };
 		4642A9F027257553005B31ED /* CommonSwiftUi.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4642A9EE27257553005B31ED /* CommonSwiftUi.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4675586C2BAD894D00CB625D /* FeedRobot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4675586A2BAD88FA00CB625D /* FeedRobot.swift */; };
+		46805BAB2D7A41910005AC41 /* Post.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46805BAA2D7A41910005AC41 /* Post.framework */; };
+		46805BAC2D7A41910005AC41 /* Post.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 46805BAA2D7A41910005AC41 /* Post.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4680F47A27A7209E007DA70E /* FeedTestHostApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4680F47927A7209E007DA70E /* FeedTestHostApp.swift */; };
 		4680F4A027A73F63007DA70E /* FeedUiTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4680F49627A73EFA007DA70E /* FeedUiTest.swift */; };
 		46FC01B82D6FD3A600B2C9B1 /* Feed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 464126A42722DD760094BF9B /* Feed.framework */; };
@@ -55,6 +57,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				46805BAC2D7A41910005AC41 /* Post.framework in Embed Frameworks */,
 				46FC01B92D6FD3A600B2C9B1 /* Feed.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -69,6 +72,7 @@
 		4642A9EE27257553005B31ED /* CommonSwiftUi.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CommonSwiftUi.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4675586A2BAD88FA00CB625D /* FeedRobot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedRobot.swift; sourceTree = "<group>"; };
 		46805BA52D77019F0005AC41 /* Post.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Post.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		46805BAA2D7A41910005AC41 /* Post.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Post.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4680F47727A7209E007DA70E /* FeedTestHost.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FeedTestHost.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4680F47927A7209E007DA70E /* FeedTestHostApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedTestHostApp.swift; sourceTree = "<group>"; };
 		4680F49427A73EFA007DA70E /* FeedUiTest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FeedUiTest.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -92,6 +96,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				46805BAB2D7A41910005AC41 /* Post.framework in Frameworks */,
 				46FC01B82D6FD3A600B2C9B1 /* Feed.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -137,6 +142,7 @@
 		464126CE2723093B0094BF9B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				46805BAA2D7A41910005AC41 /* Post.framework */,
 				46805BA52D77019F0005AC41 /* Post.framework */,
 				46FC01A62D6FC88D00B2C9B1 /* CommonFirebase.framework */,
 				46FC019C2D6FB3AD00B2C9B1 /* CommonFirebase.framework */,
