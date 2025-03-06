@@ -11,12 +11,12 @@
 		4642A9F22725755D005B31ED /* CommonSwiftUi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4642A9F12725755D005B31ED /* CommonSwiftUi.framework */; };
 		4642A9F32725755D005B31ED /* CommonSwiftUi.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4642A9F12725755D005B31ED /* CommonSwiftUi.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4675586E2BAD8A3400CB625D /* PostRobot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4675586D2BAD8A3400CB625D /* PostRobot.swift */; };
-		46805BA42D77014D0005AC41 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 46805BA32D77014D0005AC41 /* FirebaseAnalytics */; };
+		46805BC82D7A5BA80005AC41 /* CommonFirebase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46805BC72D7A5BA80005AC41 /* CommonFirebase.framework */; };
+		46805BC92D7A5BA80005AC41 /* CommonFirebase.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 46805BC72D7A5BA80005AC41 /* CommonFirebase.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		46AA1202279EF2EC0066D1A0 /* PostTestHostApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46AA1201279EF2EC0066D1A0 /* PostTestHostApp.swift */; };
 		46AA1227279EFBE30066D1A0 /* Post.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 464126C1272308AD0094BF9B /* Post.framework */; platformFilter = ios; };
 		46AA1228279EFBE30066D1A0 /* Post.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 464126C1272308AD0094BF9B /* Post.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		46AA122F27A2BC350066D1A0 /* PostUiTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46AA1217279EF4910066D1A0 /* PostUiTest.swift */; };
-		46FC01B02D6FCD0100B2C9B1 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 46FC01AF2D6FCD0100B2C9B1 /* FirebaseFirestore */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,6 +43,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				46805BC92D7A5BA80005AC41 /* CommonFirebase.framework in Embed Frameworks */,
 				4642A9F32725755D005B31ED /* CommonSwiftUi.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -66,6 +67,7 @@
 		464126CC272309260094BF9B /* PostScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostScreen.swift; sourceTree = "<group>"; };
 		4642A9F12725755D005B31ED /* CommonSwiftUi.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CommonSwiftUi.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4675586D2BAD8A3400CB625D /* PostRobot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostRobot.swift; sourceTree = "<group>"; };
+		46805BC72D7A5BA80005AC41 /* CommonFirebase.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CommonFirebase.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		46AA11FF279EF2EC0066D1A0 /* PostTestHost.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PostTestHost.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		46AA1201279EF2EC0066D1A0 /* PostTestHostApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostTestHostApp.swift; sourceTree = "<group>"; };
 		46AA1215279EF4910066D1A0 /* PostUiTest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PostUiTest.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -81,9 +83,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				46805BC82D7A5BA80005AC41 /* CommonFirebase.framework in Frameworks */,
 				4642A9F22725755D005B31ED /* CommonSwiftUi.framework in Frameworks */,
-				46FC01B02D6FCD0100B2C9B1 /* FirebaseFirestore in Frameworks */,
-				46805BA42D77014D0005AC41 /* FirebaseAnalytics in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -136,6 +137,7 @@
 		464126E92723190A0094BF9B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				46805BC72D7A5BA80005AC41 /* CommonFirebase.framework */,
 				46FC01992D6FB2B100B2C9B1 /* CommonFirebase.framework */,
 				46FC01802D6FAABE00B2C9B1 /* CommonFirebase.framework */,
 				46FC01712D6F10C500B2C9B1 /* CommonFirebase.framework */,
@@ -185,8 +187,6 @@
 			);
 			name = Post;
 			packageProductDependencies = (
-				46FC01AF2D6FCD0100B2C9B1 /* FirebaseFirestore */,
-				46805BA32D77014D0005AC41 /* FirebaseAnalytics */,
 			);
 			productName = post;
 			productReference = 464126C1272308AD0094BF9B /* Post.framework */;
@@ -261,7 +261,6 @@
 			mainGroup = 464126B7272308AD0094BF9B;
 			packageReferences = (
 				464126EE2723197F0094BF9B /* XCRemoteSwiftPackageReference "LetterAvatarKit" */,
-				46FC01AE2D6FCD0100B2C9B1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 464126C2272308AD0094BF9B /* Products */;
@@ -718,28 +717,7 @@
 				version = 1.2.5;
 			};
 		};
-		46FC01AE2D6FCD0100B2C9B1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
-			requirement = {
-				kind = exactVersion;
-				version = 11.9.0;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		46805BA32D77014D0005AC41 /* FirebaseAnalytics */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 46FC01AE2D6FCD0100B2C9B1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseAnalytics;
-		};
-		46FC01AF2D6FCD0100B2C9B1 /* FirebaseFirestore */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 46FC01AE2D6FCD0100B2C9B1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseFirestore;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 464126B8272308AD0094BF9B /* Project object */;
 }
