@@ -20,7 +20,7 @@ runs:
         path: |
           ~/.android/avd/*
           ~/.android/adb*
-        key: avd-31
+        key: avd-31-4g
     - name: Generate AVD cache snapshot
       if: steps.avd-cache.outputs.cache-hit != 'true'
       uses: reactivecircus/android-emulator-runner@v2
@@ -28,6 +28,7 @@ runs:
         api-level: 31
         arch: x86_64
         disk-size: 4G
+        emulator-boot-timeout: 120
         force-avd-creation: false
         emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
         disable-animations: false
@@ -38,6 +39,7 @@ runs:
         api-level: 31
         arch: x86_64
         disk-size: 4G
+        emulator-boot-timeout: 120
         force-avd-creation: false
         emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
         disable-animations: true
