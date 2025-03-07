@@ -13,5 +13,6 @@ runs:
     - name: Set up Xcode
       uses: irgaly/xcode-cache@v1
       with:
-        key: ${{ inputs.cache-key }}-${{ github.workflow }}-${{ github.sha }}
-        restore-keys: ${{ inputs.cache-key }}-${{ github.workflow }}-
+        key: xcode-cache-derived-data-${{ inputs.cache-key }}-${{ github.workflow }}-${{ github.sha }}
+        restore-keys: xcode-cache-derived-data-${{ inputs.cache-key }}-${{ github.workflow }}
+        swiftpm-cache-key: swiftpm-cache-key-${{ inputs.cache-key }}-${{ hashFiles( {swiftpm-package-resolved-file} ) }}
