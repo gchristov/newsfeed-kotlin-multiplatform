@@ -15,4 +15,4 @@ runs:
       with:
         key: xcode-cache-derived-data-${{ inputs.cache-key }}-${{ github.workflow }}-${{ github.sha }}
         restore-keys: xcode-cache-derived-data-${{ inputs.cache-key }}-${{ github.workflow }}
-        swiftpm-cache-key: swiftpm-cache-key-${{ inputs.cache-key }}-${{ hashFiles( {swiftpm-package-resolved-file} ) }}
+        swiftpm-cache-key: swiftpm-cache-key-${{ inputs.cache-key }}-${{ hashFiles( '**/Package.resolved' ) }}
