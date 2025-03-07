@@ -4,8 +4,6 @@ runs:
   steps:
     - name: Set up Gradle
       uses: ./.github/actions/setup-gradle
-      with:
-        cache-key: unit-test
     - name: Test
       shell: bash
       run: |

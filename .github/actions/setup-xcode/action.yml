@@ -1,7 +1,4 @@
 name: 'setup-xcode'
-inputs:
-  cache-key:
-    required: true
 runs:
   using: "composite"
   steps:

@@ -1,7 +1,4 @@
 name: 'setup-gradle'
-inputs:
-  cache-key:
-    required: true
 runs:
   using: "composite"
   steps:
@@ -16,7 +13,7 @@ runs:
       uses: actions/cache@v4
       with:
         path: '~/.konan/**'
-        key: ${{ inputs.cache-key }}-konan
+        key: ${{ github.job }}-konan
     - name: Set up secrets
       shell: bash
       run: |
