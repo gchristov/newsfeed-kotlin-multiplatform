@@ -20,3 +20,4 @@ runs:
           **/*.apk
           **/build
           **/secrets.properties
+          **/google-services.json
