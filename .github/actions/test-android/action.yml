@@ -27,7 +27,7 @@ runs:
       with:
         api-level: 31
         arch: x86_64
-        disk-size: 2048M
+        disk-size: 4G
         force-avd-creation: false
         emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
         disable-animations: false
@@ -37,7 +37,7 @@ runs:
       with:
         api-level: 31
         arch: x86_64
-        disk-size: 2048M
+        disk-size: 4G
         force-avd-creation: false
         emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
         disable-animations: true
