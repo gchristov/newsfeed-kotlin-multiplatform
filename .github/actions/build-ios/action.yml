@@ -4,12 +4,8 @@ runs:
   steps:
     - name: Set up Gradle
       uses: ./.github/actions/setup-gradle
-      with:
-        cache-key: build-ios
     - name: Set up Xcode
       uses: ./.github/actions/setup-xcode
-      with:
-        cache-key: build-ios
     - name: Build iOS
       shell: bash
       run: |
@@ -28,3 +24,4 @@ runs:
           ~/Library/Developer/Xcode/DerivedData/**/*.app.dSYM
           **/build
           **/secrets.properties
+          **/GoogleService-Info.plist

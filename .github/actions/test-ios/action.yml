@@ -4,12 +4,8 @@ runs:
   steps:
     - name: Set up Gradle
       uses: ./.github/actions/setup-gradle
-      with:
-        cache-key: test-ios
     - name: Set up Xcode
       uses: ./.github/actions/setup-xcode
-      with:
-        cache-key: test-ios
     - name: Test iOS
       shell: bash
       run: |

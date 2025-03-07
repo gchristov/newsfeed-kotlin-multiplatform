@@ -4,8 +4,6 @@ runs:
   steps:
     - name: Set up Gradle
       uses: ./.github/actions/setup-gradle
-      with:
-        cache-key: build-android
     - name: Build Android
       shell: bash
       run: |
@@ -20,3 +18,4 @@ runs:
           **/*.apk
           **/build
           **/secrets.properties
+          **/google-services.json
