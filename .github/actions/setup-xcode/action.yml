@@ -12,4 +12,4 @@ runs:
       with:
         key: xcode-cache-derived-data-${{ github.job }}-${{ github.workflow }}-${{ github.sha }}
         restore-keys: xcode-cache-derived-data-${{ github.job }}-${{ github.workflow }}
-        swiftpm-cache-key: swiftpm-cache-key-${{ github.job }}-${{ hashFiles( '**/Package.resolved' ) }}
+        swiftpm-cache-key: swiftpm-cache-key-${{ github.job }}-${{ github.workflow }}-${{ hashFiles( '**/Package.resolved' ) }}
