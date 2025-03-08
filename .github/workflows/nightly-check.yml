@@ -1,8 +1,10 @@
 name: nightly-check
 
 on:
-  schedule:
-    - cron: '0 0 * * *'
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
 
 env:
   GUARDIAN_API_KEY: ${{ secrets.GUARDIAN_API_KEY }}
