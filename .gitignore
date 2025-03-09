@@ -24,3 +24,9 @@ secrets.properties
 google-services.json
 GoogleService-Info.plist
 .kotlin
+ios/.build
+*.xcworkspace
+Info.plist
+*.pbxproj
+*.xcodeproj
+Derived/
