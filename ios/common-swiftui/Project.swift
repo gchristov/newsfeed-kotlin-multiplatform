@@ -1,10 +1,10 @@
 import ProjectDescription
 
 let project = Project(
-    name: "common-swiftui-tuist",
+    name: "CommonSwiftUi-Tuist",
     settings: .settings(configurations: [
-        .debug(name: "Debug", xcconfig: "Common-SwiftUI-Project.xcconfig"),
-        .release(name: "Release", xcconfig: "Common-SwiftUI-Project.xcconfig"),
+        .debug(name: "Debug", xcconfig: "Configs/Project.xcconfig"),
+        .release(name: "Release", xcconfig: "Configs/Project.xcconfig"),
     ]),
     targets: [
         .target(
@@ -12,7 +12,7 @@ let project = Project(
             destinations: .iOS,
             product: .framework,
             bundleId: "com.gchristov.newsfeed.commonswiftui",
-            sources: ["common-swiftui/**"],
+            sources: ["Sources/**"],
             dependencies: [
                 .project(target: "CommonDesign", path: "../common-design"),
                 .external(name: "LetterAvatarKit"),
@@ -22,8 +22,8 @@ let project = Project(
             settings: .settings(
                 base: ["OTHER_LDFLAGS": "$(inherited) -ObjC"], // Needed for SDWebImageSwiftUI
                 configurations: [
-                    .debug(name: "Debug", xcconfig: "Common-SwiftUI-Target.xcconfig"),
-                    .debug(name: "Release", xcconfig: "Common-SwiftUI-Target.xcconfig"),
+                    .debug(name: "Debug", xcconfig: "Configs/Target.xcconfig"),
+                    .debug(name: "Release", xcconfig: "Configs/Target.xcconfig"),
                 ])
         ),
     ]

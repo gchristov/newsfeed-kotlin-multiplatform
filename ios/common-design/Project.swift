@@ -1,10 +1,10 @@
 import ProjectDescription
 
 let project = Project(
-    name: "common-design-tuist",
+    name: "CommonDesign-Tuist",
     settings: .settings(configurations: [
-        .debug(name: "Debug", xcconfig: "Common-Design-Project.xcconfig"),
-        .release(name: "Release", xcconfig: "Common-Design-Project.xcconfig"),
+        .debug(name: "Debug", xcconfig: "Configs/Project.xcconfig"),
+        .release(name: "Release", xcconfig: "Configs/Project.xcconfig"),
     ]),
     targets: [
         .target(
@@ -12,11 +12,11 @@ let project = Project(
             destinations: .iOS,
             product: .framework,
             bundleId: "com.gchristov.newsfeed.commondesign",
-            sources: ["common-design/**"],
-            resources: ["resources/**"],
+            sources: ["Sources/**"],
+            resources: ["Resources/**"],
             settings: .settings(configurations: [
-                .debug(name: "Debug", xcconfig: "Common-Design-Target.xcconfig"),
-                .debug(name: "Release", xcconfig: "Common-Design-Target.xcconfig"),
+                .debug(name: "Debug", xcconfig: "Configs/Target.xcconfig"),
+                .debug(name: "Release", xcconfig: "Configs/Target.xcconfig"),
             ])
         ),
     ]
