@@ -35,5 +35,29 @@ cd "$SRCROOT/../.."
                 .debug(name: "Release", xcconfig: "Configs/Target.xcconfig"),
             ])
         ),
+        .target(
+            name: "PostUiTestHost",
+            destinations: .iOS,
+            product: .app,
+            bundleId: "com.gchristov.newsfeed.post.uitesthost",
+            sources: ["tests/Host/**"],
+            dependencies: [
+                .project(target: "Post", path: "../post"),
+            ],
+            settings: .settings(configurations: [
+                .debug(name: "Debug", xcconfig: "Configs/UiTestHost-Target.xcconfig"),
+                .debug(name: "Release", xcconfig: "Configs/UiTestHost-Target.xcconfig"),
+            ])
+        ),
+        .target(
+            name: "PostUiTests",
+            destinations: .iOS,
+            product: .uiTests,
+            bundleId: "com.gchristov.newsfeed.post.uitests",
+            sources: ["tests/Sources/**"],
+            dependencies: [
+                .target(name: "PostUiTestHost"),
+            ]
+        )
     ]
 )
