@@ -10,3 +10,4 @@ echo GUARDIAN_API_URL="$GUARDIAN_API_URL" >> multiplatform/common/network/secret
 # Firebase credentials
 echo "$GOOGLE_SERVICES_JSON" >> android/app/google-services.json
 echo "$GOOGLE_SERVICE_INFO_PLIST" >> ios/app/GoogleService-Info.plist
+echo "$GOOGLE_SERVICE_INFO_PLIST" >> ios/app/Resources/GoogleService-Info.plist
