@@ -11,6 +11,7 @@ runs:
       run: |
         set -Eeuo pipefail
         cd ios
+        tuist install
         tuist build App
         cd ..
     - name: Artifacts

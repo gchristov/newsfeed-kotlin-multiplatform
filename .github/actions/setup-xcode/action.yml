@@ -19,3 +19,7 @@ runs:
         set -Eeuo pipefail 
         brew tap tuist/tuist
         brew install --formula tuist@4.43.2
+        cd ios
+        tuist install
+        tuist generate
+        cd ..
