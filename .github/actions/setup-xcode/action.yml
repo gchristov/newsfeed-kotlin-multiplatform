@@ -18,5 +18,4 @@ runs:
       run: |
         set -Eeuo pipefail 
         brew tap tuist/tuist
-        brew install --formula tuist
-        tuist generate
+        brew install --formula tuist@4.43.2
