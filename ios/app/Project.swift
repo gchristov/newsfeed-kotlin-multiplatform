@@ -13,6 +13,7 @@ let project = Project(
             product: .app,
             bundleId: "com.gchristov.newsfeed",
             infoPlist: InfoPlist.extendingDefault(with: [
+                "CFBundleDisplayName": "Newsfeed",
                 "UIMainStoryboardFile": "",
                 "UILaunchStoryboardName": "LaunchScreen"
             ]),
