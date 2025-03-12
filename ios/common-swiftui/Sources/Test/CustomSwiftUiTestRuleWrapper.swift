@@ -18,6 +18,8 @@ public struct CustomSwiftUiTestRuleWrapper<Content>: View where Content: View {
             NavigationView {
                 content().environmentObject(theme)
             }
+            // Remove split style in landscape
+            .navigationViewStyle(StackNavigationViewStyle())
         } else {
             content().environmentObject(theme)
         }
