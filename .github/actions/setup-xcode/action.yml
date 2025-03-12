@@ -7,12 +7,6 @@ runs:
       run: |
         set -Eeuo pipefail
         sudo xcode-select -s /Applications/Xcode_16.2.app
-#    - name: Set up Xcode
-#      uses: irgaly/xcode-cache@v1
-#      with:
-#        key: xcode-cache-derived-data-${{ github.job }}-${{ github.workflow }}-${{ github.sha }}
-#        restore-keys: xcode-cache-derived-data-${{ github.job }}-${{ github.workflow }}
-#        swiftpm-cache-key: swiftpm-cache-key-${{ github.job }}-${{ github.workflow }}-${{ hashFiles( '**/Package.resolved' ) }}
     - name: Set up Tuist
       shell: bash
       run: |
