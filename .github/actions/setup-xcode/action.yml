@@ -13,7 +13,17 @@ runs:
         set -Eeuo pipefail 
         HOMEBREW_NO_AUTO_UPDATE=1 brew tap tuist/tuist
         HOMEBREW_NO_AUTO_UPDATE=1 brew install --formula tuist@4.43.2
+    - name: Install Tuist dependencies
+      shell: bash
+      run: |
+        set -Eeuo pipefail 
         cd ios
         tuist install
+        cd ..
+    - name: Generate Tuist project
+      shell: bash
+      run: |
+        set -Eeuo pipefail 
+        cd ios
         tuist generate
         cd ..
