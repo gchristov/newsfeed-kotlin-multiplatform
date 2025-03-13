@@ -155,7 +155,7 @@ private struct FeedEmpty: View {
     
     var body: some View {
         AppText(
-            text: "No results found.\nPlease try another search term",
+            text: "No results found. Please\ntry another search term",
             color: theme.contentColors.secondary.opacity(0.6),
             textAlignment: .center
         )
