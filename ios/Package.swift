@@ -13,7 +13,7 @@ import PackageDescription
 #endif
 
 let package = Package(
-    name: "tuist-test",
+    name: "Newsfeed",
     dependencies: [
         .package(url: "https://github.com/vpeschenkov/LetterAvatarKit", exact: "1.2.5"),
         .package(url: "https://github.com/SDWebImage/SDWebImageSwiftUI", exact: "3.0.0"),

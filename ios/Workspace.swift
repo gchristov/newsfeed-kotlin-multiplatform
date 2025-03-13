@@ -1,12 +1,12 @@
 import ProjectDescription
 
 let workspace = Workspace(
-    name: "app-tuist",
+    name: "Newsfeed",
     projects: [
-        "common-swiftui",
-        "common-design",
-        "post",
-        "feed",
-        "app",
+        "CommonSwiftUi",
+        "CommonDesign",
+        "Post",
+        "Feed",
+        "App",
     ]
 )
