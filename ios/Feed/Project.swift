@@ -12,21 +12,11 @@ let project = Project(
             destinations: .iOS,
             product: .framework,
             bundleId: "com.gchristov.newsfeed.feed",
+            deploymentTargets: .iOS("15.0"),
             sources: ["Sources/**"],
-            scripts: [
-                TargetScript.pre(
-                    script: """
-# Shared KMM compilation needed here in addition to the main app because Xcode compiles 
-# projects based on dependencies so this module might be compiled before anything else, 
-# in which case we might get Xcode errors about missing KMM modules
-echo "Building shared KMM module for target $TARGET_NAME"
-cd "$SRCROOT/../.."
-./gradlew :multiplatform:umbrella:embedAndSignAppleFrameworkForXcode
-""",
-                    name: "Build Kotlin multiplatform")
-            ],
             dependencies: [
                 .project(target: "CommonSwiftUi", path: "../CommonSwiftUi"),
+                .project(target: "CommonKotlinMultiplatform", path: "../CommonKotlinMultiplatform"),
                 .project(target: "Post", path: "../Post"),
             ],
             settings: .settings(
@@ -40,6 +30,7 @@ cd "$SRCROOT/../.."
             destinations: .iOS,
             product: .app,
             bundleId: "com.gchristov.newsfeed.feed.uitesthost",
+            deploymentTargets: .iOS("15.0"),
             sources: ["Tests/Host/**"],
             dependencies: [
                 .project(target: "Feed", path: "../Feed"),
@@ -55,6 +46,7 @@ cd "$SRCROOT/../.."
             destinations: .iOS,
             product: .uiTests,
             bundleId: "com.gchristov.newsfeed.feed.uitests",
+            deploymentTargets: .iOS("15.0"),
             sources: ["Tests/Sources/**"],
             dependencies: [
                 .target(name: "FeedUiTestHost"),

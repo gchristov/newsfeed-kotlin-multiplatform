@@ -12,6 +12,7 @@ let project = Project(
             destinations: .iOS,
             product: .app,
             bundleId: "com.gchristov.newsfeed",
+            deploymentTargets: .iOS("15.0"),
             infoPlist: InfoPlist.extendingDefault(with: [
                 "CFBundleDisplayName": "Newsfeed",
                 "UIMainStoryboardFile": "",
@@ -19,19 +20,8 @@ let project = Project(
             ]),
             sources: ["Sources/**"],
             resources: ["Resources/**"],
-            scripts: [
-                TargetScript.pre(
-                    script: """
-# Shared KMM compilation needed here in addition to the main app because Xcode compiles 
-# projects based on dependencies so this module might be compiled before anything else, 
-# in which case we might get Xcode errors about missing KMM modules
-echo "Building shared KMM module for target $TARGET_NAME"
-cd "$SRCROOT/../.."
-./gradlew :multiplatform:umbrella:embedAndSignAppleFrameworkForXcode
-""",
-                    name: "Build Kotlin multiplatform")
-            ],
             dependencies: [
+                .project(target: "CommonKotlinMultiplatform", path: "../CommonKotlinMultiplatform"),
                 .project(target: "Feed", path: "../Feed"),
                 .project(target: "Post", path: "../Post"),
             ],
