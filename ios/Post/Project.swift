@@ -1,5 +1,9 @@
 import ProjectDescription
 
+let baseSettings: SettingsDictionary = [
+    "DEBUG_INFORMATION_FORMAT" : "dwarf-with-dsym"
+]
+
 let project = Project(
     name: "Post",
     settings: .settings(configurations: [
@@ -20,10 +24,13 @@ let project = Project(
                 .external(name: "FirebaseAnalytics"),
                 .external(name: "FirebaseFirestore"),
             ],
-            settings: .settings(configurations: [
-                .debug(name: "Debug", xcconfig: "Configs/Target.xcconfig"),
-                .debug(name: "Release", xcconfig: "Configs/Target.xcconfig"),
-            ])
+            settings: .settings(
+                base: baseSettings,
+                configurations: [
+                    .debug(name: "Debug", xcconfig: "Configs/Target.xcconfig"),
+                    .debug(name: "Release", xcconfig: "Configs/Target.xcconfig"),
+                ]
+            )
         ),
         .target(
             name: "PostUiTestHost",
@@ -35,10 +42,12 @@ let project = Project(
             dependencies: [
                 .project(target: "Post", path: "../Post"),
             ],
-            settings: .settings(configurations: [
-                .debug(name: "Debug", xcconfig: "Configs/UiTestHost-Target.xcconfig"),
-                .debug(name: "Release", xcconfig: "Configs/UiTestHost-Target.xcconfig"),
-            ])
+            settings: .settings(
+                configurations: [
+                    .debug(name: "Debug", xcconfig: "Configs/UiTestHost-Target.xcconfig"),
+                    .debug(name: "Release", xcconfig: "Configs/UiTestHost-Target.xcconfig"),
+                ]
+            )
         ),
         .target(
             name: "PostUiTests",

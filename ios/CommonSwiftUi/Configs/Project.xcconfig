@@ -44,8 +44,6 @@ SDKROOT=iphoneos
 VERSIONING_SYSTEM=apple-generic
 VERSION_INFO_PREFIX=
 
-DEBUG_INFORMATION_FORMAT[config=Debug]=dwarf
-DEBUG_INFORMATION_FORMAT[config=Release]=dwarf-with-dsym
 ENABLE_NS_ASSERTIONS[config=Release]=NO
 ENABLE_TESTABILITY[config=Debug]=YES
 GCC_DYNAMIC_NO_PIC[config=Debug]=NO

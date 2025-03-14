@@ -19,4 +19,4 @@ runs:
       with:
         name: iOS Tests
         path: |
-          ios/xcodebuild.log
+          ~/**/tuist/logs/*.log

@@ -1,5 +1,10 @@
 import ProjectDescription
 
+let baseSettings: SettingsDictionary = [
+    "OTHER_LDFLAGS": "$(inherited) -ObjC", // Needed for SDWebImageSwiftUI
+    "DEBUG_INFORMATION_FORMAT" : "dwarf-with-dsym"
+]
+
 let project = Project(
     name: "CommonSwiftUi",
     settings: .settings(configurations: [
@@ -21,11 +26,12 @@ let project = Project(
                 .external(name: "Introspect"),
             ],
             settings: .settings(
-                base: ["OTHER_LDFLAGS": "$(inherited) -ObjC"], // Needed for SDWebImageSwiftUI
+                base: baseSettings,
                 configurations: [
                     .debug(name: "Debug", xcconfig: "Configs/Target.xcconfig"),
                     .debug(name: "Release", xcconfig: "Configs/Target.xcconfig"),
-                ])
+                ]
+            )
         ),
     ]
 )

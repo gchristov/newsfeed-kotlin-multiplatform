@@ -1,5 +1,9 @@
 import ProjectDescription
 
+let baseSettings: SettingsDictionary = [
+    "DEBUG_INFORMATION_FORMAT" : "dwarf-with-dsym"
+]
+
 let project = Project(
     name: "CommonDesign",
     settings: .settings(configurations: [
@@ -15,10 +19,13 @@ let project = Project(
             deploymentTargets: .iOS("15.0"),
             sources: ["Sources/**"],
             resources: ["Resources/**"],
-            settings: .settings(configurations: [
-                .debug(name: "Debug", xcconfig: "Configs/Target.xcconfig"),
-                .debug(name: "Release", xcconfig: "Configs/Target.xcconfig"),
-            ])
+            settings: .settings(
+                base: baseSettings,
+                configurations: [
+                    .debug(name: "Debug", xcconfig: "Configs/Target.xcconfig"),
+                    .debug(name: "Release", xcconfig: "Configs/Target.xcconfig"),
+                ]
+            )
         ),
     ]
 )

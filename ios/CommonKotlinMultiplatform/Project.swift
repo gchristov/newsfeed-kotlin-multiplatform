@@ -1,5 +1,9 @@
 import ProjectDescription
 
+let baseSettings: SettingsDictionary = [
+    "DEBUG_INFORMATION_FORMAT" : "dwarf-with-dsym"
+]
+
 let project = Project(
     name: "CommonKotlinMultiplatform",
     targets: [
@@ -15,8 +19,13 @@ let project = Project(
 cd "$SRCROOT/../.."
 ./gradlew :multiplatform:umbrella:embedAndSignAppleFrameworkForXcode
 """,
-                    name: "Build Kotlin multiplatform")
-            ]
+                    name: "Build Kotlin multiplatform",
+                    basedOnDependencyAnalysis: false
+                )
+            ],
+            settings: .settings(
+                base: baseSettings
+            )
         )
     ]
 )
