@@ -19,4 +19,4 @@ runs:
       with:
         name: iOS Tests
         path: |
-          ~/**/tuist/logs/*.log
+          /Users/**/tuist/logs/*.log

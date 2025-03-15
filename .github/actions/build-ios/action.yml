@@ -19,9 +19,9 @@ runs:
       with:
         name: iOS Build
         path: |
-          ~/**/tuist/logs/*.log
-          ~/**/Xcode/DerivedData/**/*.app
-          ~/**/Xcode/DerivedData/**/*.dSYM
+          /Users/**/tuist/logs/*.log
+          /Users/**/Xcode/DerivedData/**/*.app
+          /Users/**/Xcode/DerivedData/**/*.dSYM
           **/build
           **/secrets.properties
           **/GoogleService-Info.plist

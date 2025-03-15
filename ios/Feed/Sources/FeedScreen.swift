@@ -9,7 +9,6 @@ import CommonSwiftUi
 public struct FeedScreen: View {
     public init() {
         // No-op
-        var test = 1
     }
     
     public var body: some View {
