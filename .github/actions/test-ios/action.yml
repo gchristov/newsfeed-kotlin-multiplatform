@@ -11,7 +11,7 @@ runs:
       run: |
         set -Eeuo pipefail
         cd ios 
-        xcodebuild CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++ -workspace app.xcworkspace -scheme "app" -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 16,OS=18.2' test | tee xcodebuild.log | xcpretty
+        tuist test
         cd ..
     - name: Artifacts
       uses: actions/upload-artifact@v4
@@ -19,4 +19,4 @@ runs:
       with:
         name: iOS Tests
         path: |
-          ios/xcodebuild.log
+          /Users/runner/.local/state/tuist/**/*.log

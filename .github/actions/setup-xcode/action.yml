@@ -7,9 +7,23 @@ runs:
       run: |
         set -Eeuo pipefail
         sudo xcode-select -s /Applications/Xcode_16.2.app
-    - name: Set up Xcode
-      uses: irgaly/xcode-cache@v1
-      with:
-        key: xcode-cache-derived-data-${{ github.job }}-${{ github.workflow }}-${{ github.sha }}
-        restore-keys: xcode-cache-derived-data-${{ github.job }}-${{ github.workflow }}
-        swiftpm-cache-key: swiftpm-cache-key-${{ github.job }}-${{ github.workflow }}-${{ hashFiles( '**/Package.resolved' ) }}
+    - name: Set up Tuist
+      shell: bash
+      run: |
+        set -Eeuo pipefail 
+        HOMEBREW_NO_AUTO_UPDATE=1 brew tap tuist/tuist
+        HOMEBREW_NO_AUTO_UPDATE=1 brew install --formula tuist@4.43.2
+    - name: Install Tuist dependencies
+      shell: bash
+      run: |
+        set -Eeuo pipefail 
+        cd ios
+        tuist install
+        cd ..
+    - name: Generate Tuist project
+      shell: bash
+      run: |
+        set -Eeuo pipefail 
+        cd ios
+        tuist generate
+        cd ..

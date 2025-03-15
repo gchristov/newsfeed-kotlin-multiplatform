@@ -10,8 +10,8 @@ runs:
       shell: bash
       run: |
         set -Eeuo pipefail
-        cd ios 
-        xcodebuild CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++ -workspace app.xcworkspace -scheme "app" -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 16,OS=18.2' build | tee xcodebuild.log | xcpretty
+        cd ios
+        tuist build App
         cd ..
     - name: Artifacts
       uses: actions/upload-artifact@v4
@@ -19,9 +19,9 @@ runs:
       with:
         name: iOS Build
         path: |
-          ios/xcodebuild.log
-          ~/Library/Developer/Xcode/DerivedData/**/*.app
-          ~/Library/Developer/Xcode/DerivedData/**/*.app.dSYM
+          /Users/runner/.local/state/tuist/**/*.log
+          /Users/**/Xcode/DerivedData/**/*.app
+          /Users/**/Xcode/DerivedData/**/*.dSYM
           **/build
           **/secrets.properties
           **/GoogleService-Info.plist
