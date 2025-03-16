@@ -22,6 +22,7 @@ arrow = "1.2.3"
 gitlive = "2.1.0"
 google-services = "4.4.2"
 google-firebase = "33.9.0"
+google-crashlytics = "3.0.3"
 
 [libraries]
 junit = { module = "junit:junit", version.ref = "junit" }
@@ -59,6 +60,7 @@ multiplatformSettings = { module = "com.russhwolf:multiplatform-settings", versi
 arrow-core = { module = "io.arrow-kt:arrow-core", version.ref = "arrow" }
 gitlive-firebase-firestore = { module = "dev.gitlive:firebase-firestore", version.ref = "gitlive" }
 google-firebase = { module = "com.google.firebase:firebase-bom", version.ref = "google-firebase" }
+google-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
 
 # Dependencies of the included gradle-plugins
 android-gradlePlugin = { module = "com.android.tools.build:gradle", version.ref = "android-gradlePlugin" }
@@ -74,6 +76,7 @@ kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "ko
 buildKonfig = { id = "com.codingfeline.buildkonfig", version.ref = "buildKonfig" }
 sqlDelight = { id = "app.cash.sqldelight", version.ref = "sqlDelight" }
 google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
+google-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "google-crashlytics" }
 
 # Plugins defined by this project
 newsfeed-android-base = { id = "android-base-plugin", version = "unspecified" }

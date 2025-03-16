@@ -8,4 +8,5 @@ plugins {
     alias(libs.plugins.buildKonfig).apply(false)
     alias(libs.plugins.sqlDelight).apply(false)
     alias(libs.plugins.google.services).apply(false)
+    alias(libs.plugins.google.crashlytics).apply(false)
 }

@@ -10,4 +10,5 @@ android {
 
 dependencies {
     api(platform(libs.google.firebase))
+    implementation(libs.google.crashlytics)
 }
