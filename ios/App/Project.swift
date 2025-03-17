@@ -1,6 +1,7 @@
 import ProjectDescription
 
 let baseSettings: SettingsDictionary = [
+    "OTHER_LDFLAGS": "$(inherited) -ObjC", // Needed for Crashlytics
     "DEBUG_INFORMATION_FORMAT" : "dwarf-with-dsym"
 ]
 
@@ -20,14 +21,29 @@ let project = Project(
             infoPlist: InfoPlist.extendingDefault(with: [
                 "CFBundleDisplayName": "Newsfeed",
                 "UIMainStoryboardFile": "",
-                "UILaunchStoryboardName": "LaunchScreen"
+                "UILaunchStoryboardName": "LaunchScreen",
+                "NSApplicationCrashOnExceptions": "Yes"
             ]),
             sources: ["Sources/**"],
             resources: ["Resources/**"],
+            scripts: [
+                TargetScript.post(
+                    script: "${SRCROOT}/../Tuist/.build/checkouts/firebase-ios-sdk/Crashlytics/run",
+                    name: "Upload Crashlytics dsym",
+                    inputPaths: [
+                        "${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}",
+                        "${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${PRODUCT_NAME}",
+                        "${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Info.plist",
+                        "$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/GoogleService-Info.plist",
+                        "$(TARGET_BUILD_DIR)/$(EXECUTABLE_PATH)"
+                    ]
+                )
+            ],
             dependencies: [
                 .project(target: "CommonKotlinMultiplatform", path: "../CommonKotlinMultiplatform"),
                 .project(target: "Feed", path: "../Feed"),
                 .project(target: "Post", path: "../Post"),
+                .external(name: "FirebaseCrashlytics"),
             ],
             settings: .settings(
                 base: baseSettings,

@@ -2,14 +2,25 @@
 import PackageDescription
 
 #if TUIST
-    import struct ProjectDescription.PackageSettings
+import struct ProjectDescription.PackageSettings
 
-    let packageSettings = PackageSettings(
-        // Customize the product types for specific package product
-        // Default is .staticFramework
-        // productTypes: ["Alamofire": .framework,]
-        productTypes: [:]
-    )
+let packageSettings = PackageSettings(
+    // Customize the product types for specific package product
+    // Default is .staticFramework
+    productTypes: [
+        "Firebase": .framework,
+        "FirebaseCore": .framework,
+        "FirebaseCoreExtension": .framework,
+        "FirebaseCoreInternal": .framework,
+        "FirebaseFirestore": .framework,
+        // Only included in the main App target, so can remain static. Making dynamic produces linker errors.
+        "FirebaseCrashlytics": .staticFramework,
+        "GoogleUtilities-Logger": .framework,
+        "GoogleUtilities-Environment": .framework,
+        "GoogleUtilities-NSData": .framework,
+        "nanopb": .framework,
+    ]
+)
 #endif
 
 let package = Package(
