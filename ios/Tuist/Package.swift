@@ -13,6 +13,7 @@ let packageSettings = PackageSettings(
         "FirebaseCoreExtension": .framework,
         "FirebaseCoreInternal": .framework,
         "FirebaseFirestore": .framework,
+        "FirebaseFirestoreTarget": .framework,
         // Only included in the main App target, so can remain static. Making dynamic produces linker errors.
         "FirebaseCrashlytics": .staticFramework,
         "GoogleUtilities-Logger": .framework,

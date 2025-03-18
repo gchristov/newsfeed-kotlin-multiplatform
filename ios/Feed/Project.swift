@@ -22,6 +22,7 @@ let project = Project(
                 .project(target: "CommonSwiftUi", path: "../CommonSwiftUi"),
                 .project(target: "CommonKotlinMultiplatform", path: "../CommonKotlinMultiplatform"),
                 .project(target: "Post", path: "../Post"),
+                .external(name: "FirebaseFirestore"),
             ],
             settings: .settings(
                 base: baseSettings,
