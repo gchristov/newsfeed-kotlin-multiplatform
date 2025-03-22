@@ -21,11 +21,24 @@ let packageSettings = PackageSettings(
         "FirebaseCrashlyticsSwift": .framework,
         "FirebaseInstallations": .framework,
         "FirebaseRemoteConfigInterop": .framework,
+        "FirebaseAnalytics": .framework,
+        "FirebaseAnalyticsTarget": .framework,
+        "FirebaseAnalyticsWrapper": .framework,
+        
         "GoogleUtilities-Logger": .framework,
         "GoogleUtilities-Environment": .framework,
         "GoogleUtilities-NSData": .framework,
         "GoogleUtilities-UserDefaults": .framework,
+        "GoogleUtilities-AppDelegateSwizzler": .framework,
+        "GoogleUtilities-MethodSwizzler": .framework,
+        "GoogleUtilities-Network": .framework,
+        "GoogleUtilities-Reachability": .framework,
+        
+        "GoogleAppMeasurement": .framework,
+        "GoogleAppMeasurementTarget": .framework,
+        "GoogleAppMeasurementIdentitySupport": .framework,
         "GoogleDataTransport": .framework,
+        
         "Promises": .framework,
         "nanopb": .framework,
     ]

@@ -14,6 +14,7 @@ let project = Project(
             bundleId: "com.gchristov.newsfeed.commonfirebase",
             deploymentTargets: .iOS("15.0"),
             dependencies: [
+                .external(name: "FirebaseAnalytics"),
                 .external(name: "FirebaseCrashlytics"),
                 .external(name: "FirebaseFirestore"),
             ],
