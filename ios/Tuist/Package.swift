@@ -8,17 +8,25 @@ let packageSettings = PackageSettings(
     // Customize the product types for specific package product
     // Default is .staticFramework
     productTypes: [
+        "FBLPromises": .framework,
         "Firebase": .framework,
+        "FirebaseAppCheckInterop": .framework,
         "FirebaseCore": .framework,
         "FirebaseCoreExtension": .framework,
         "FirebaseCoreInternal": .framework,
         "FirebaseFirestore": .framework,
         "FirebaseFirestoreTarget": .framework,
-        // Only included in the main App target, so can remain static. Making dynamic produces linker errors.
-        "FirebaseCrashlytics": .staticFramework,
+        "FirebaseSessions": .framework,
+        "FirebaseCrashlytics": .framework,
+        "FirebaseCrashlyticsSwift": .framework,
+        "FirebaseInstallations": .framework,
+        "FirebaseRemoteConfigInterop": .framework,
         "GoogleUtilities-Logger": .framework,
         "GoogleUtilities-Environment": .framework,
         "GoogleUtilities-NSData": .framework,
+        "GoogleUtilities-UserDefaults": .framework,
+        "GoogleDataTransport": .framework,
+        "Promises": .framework,
         "nanopb": .framework,
     ]
 )

@@ -1,7 +1,6 @@
 import ProjectDescription
 
 let baseSettings: SettingsDictionary = [
-    "OTHER_LDFLAGS": "$(inherited) -ObjC", // Needed for Crashlytics
     "DEBUG_INFORMATION_FORMAT" : "dwarf-with-dsym"
 ]
 
@@ -40,10 +39,10 @@ let project = Project(
                 )
             ],
             dependencies: [
+                .project(target: "CommonFirebase", path: "../CommonFirebase"),
                 .project(target: "CommonKotlinMultiplatform", path: "../CommonKotlinMultiplatform"),
                 .project(target: "Feed", path: "../Feed"),
                 .project(target: "Post", path: "../Post"),
-                .external(name: "FirebaseCrashlytics"),
             ],
             settings: .settings(
                 base: baseSettings,

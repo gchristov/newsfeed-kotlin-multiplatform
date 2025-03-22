@@ -12,6 +12,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             api(libs.gitlive.firebase.firestore)
+            implementation(libs.kermit.crashlytics)
         }
     }
 }
