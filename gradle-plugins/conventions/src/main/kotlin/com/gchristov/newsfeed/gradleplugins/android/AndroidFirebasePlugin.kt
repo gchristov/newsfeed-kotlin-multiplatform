@@ -9,6 +9,7 @@ class AndroidFirebasePlugin : Plugin<Project> {
         with(target) {
             with (plugins) {
                 apply("com.google.gms.google-services")
+                apply("com.google.firebase.crashlytics")
             }
             // Add dependencies after plugins are set to avoid missing "implementation" errors
             afterEvaluate {

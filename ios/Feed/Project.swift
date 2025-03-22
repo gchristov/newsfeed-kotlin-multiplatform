@@ -1,6 +1,7 @@
 import ProjectDescription
 
 let baseSettings: SettingsDictionary = [
+    "OTHER_LDFLAGS": "$(inherited) -lsqlite3", // Needed for Firebase
     "DEBUG_INFORMATION_FORMAT" : "dwarf-with-dsym"
 ]
 
@@ -21,6 +22,7 @@ let project = Project(
             dependencies: [
                 .project(target: "CommonSwiftUi", path: "../CommonSwiftUi"),
                 .project(target: "CommonKotlinMultiplatform", path: "../CommonKotlinMultiplatform"),
+                .project(target: "CommonFirebase", path: "../CommonFirebase"),
                 .project(target: "Post", path: "../Post"),
             ],
             settings: .settings(

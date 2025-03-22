@@ -2,6 +2,8 @@ package com.gchristov.newsfeed.multiplatform.feed.data
 
 import arrow.core.Either
 import arrow.core.raise.either
+import com.gchristov.newsfeed.multiplatform.common.kotlin.di.DependencyInjector
+import com.gchristov.newsfeed.multiplatform.common.kotlin.di.inject
 import com.gchristov.newsfeed.multiplatform.feed.data.api.ApiFeedResponse
 import com.gchristov.newsfeed.multiplatform.feed.data.model.DecoratedFeedItem
 import com.gchristov.newsfeed.multiplatform.feed.data.model.DecoratedFeedPage
@@ -9,6 +11,7 @@ import com.gchristov.newsfeed.multiplatform.feed.data.model.toFeedPage
 import com.gchristov.newsfeed.multiplatform.post.data.PostRepository
 import com.russhwolf.settings.Settings
 import com.russhwolf.settings.set
+import dev.gitlive.firebase.firestore.FirebaseFirestore
 import io.ktor.client.call.body
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
@@ -24,11 +27,18 @@ internal class RealFeedRepository(
 ) : FeedRepository {
     private val queries = database.feedSqlDelightDatabaseQueries
 
+    // TODO: Remove eventually
+    private val firestore: FirebaseFirestore = DependencyInjector.inject()
+
     override suspend fun feedPage(
         pageId: Int,
         feedQuery: String,
     ): Either<Throwable, DecoratedFeedPage> = withContext(dispatcher) {
         either {
+            println("About to test Firestore")
+            val document = firestore.document("preferences/user1").get()
+            println("Got Firestore document: exists=${document.exists}, theme=${document.get<String>("theme")}")
+
             val feedRsp = apiService.feed(
                 pageId = pageId,
                 feedQuery = feedQuery
