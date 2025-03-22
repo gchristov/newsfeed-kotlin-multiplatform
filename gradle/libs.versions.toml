@@ -64,6 +64,7 @@ arrow-core = { module = "io.arrow-kt:arrow-core", version.ref = "arrow" }
 gitlive-firebase-firestore = { module = "dev.gitlive:firebase-firestore", version.ref = "gitlive" }
 google-firebase = { module = "com.google.firebase:firebase-bom", version.ref = "google-firebase" }
 google-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
+google-analytics = { module = "com.google.firebase:firebase-analytics" }
 
 # Dependencies of the included gradle-plugins
 android-gradlePlugin = { module = "com.android.tools.build:gradle", version.ref = "android-gradlePlugin" }
