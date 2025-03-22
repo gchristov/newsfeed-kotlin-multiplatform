@@ -1,5 +1,6 @@
 package com.gchristov.newsfeed.multiplatform.common.firebase
 
+import co.touchlab.crashkios.crashlytics.enableCrashlytics
 import co.touchlab.kermit.ExperimentalKermitApi
 import co.touchlab.kermit.Logger
 import co.touchlab.kermit.crashlytics.CrashlyticsLogWriter
@@ -17,7 +18,10 @@ object MplCommonFirebaseModule : DependencyModule() {
 
     @OptIn(ExperimentalKermitApi::class)
     override fun bindDependencies(builder: DI.Builder) {
+        // Enable Kermit for Crashlytics
         Logger.addLogWriter(CrashlyticsLogWriter())
+        // Enable CrashKiOS
+        enableCrashlytics()
 
         builder.apply {
             bindSingleton { provideFirebaseApp() }

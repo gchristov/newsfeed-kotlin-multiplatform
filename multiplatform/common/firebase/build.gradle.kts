@@ -12,7 +12,8 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             api(libs.gitlive.firebase.firestore)
-            implementation(libs.kermit.crashlytics)
+            implementation(libs.touchlab.kermit.crashlytics)
+            implementation(libs.touchlab.crashkios)
         }
     }
 }

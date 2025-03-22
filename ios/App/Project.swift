@@ -27,12 +27,28 @@ let project = Project(
             resources: ["Resources/**"],
             scripts: [
                 TargetScript.post(
-                    script: "${SRCROOT}/../Tuist/.build/checkouts/firebase-ios-sdk/Crashlytics/run",
-                    name: "Upload Crashlytics dsym",
+                    script: """
+DWARF_DSYM_FILES=$(find "$DWARF_DSYM_FOLDER_PATH" -type d -name "*.framework.dSYM" -o -name "*.app.dSYM")
+
+if [ -n "$DWARF_DSYM_FILES" ]; then
+    for dsym_file in $DWARF_DSYM_FILES; do
+        echo "Uploading dSYM: $dsym_file"
+
+        # Construct the Crashlytics/run command
+        "${SRCROOT}/../Tuist/.build/checkouts/firebase-ios-sdk/Crashlytics/run" \
+            -dsp "$dsym_file"
+
+        if [ $? -ne 0 ]; then
+            echo "Error uploading dSYM: $dsym_file"
+        fi
+    done
+else
+    echo "No dSYM files found."
+fi
+""",
+                    name: "Upload dSYMs to Crashlytics",
                     inputPaths: [
-                        "${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}",
-                        "${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${PRODUCT_NAME}",
-                        "${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Info.plist",
+                        "$(DWARF_DSYM_FOLDER_PATH)",
                         "$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/GoogleService-Info.plist",
                         "$(TARGET_BUILD_DIR)/$(EXECUTABLE_PATH)"
                     ]

@@ -65,9 +65,6 @@ class PostViewModel(
     }
 
     fun onToggleFavourite() {
-        // TODO: Remove this
-        throw RuntimeException("Test Crash") // Force a crash
-
         launchCoroutine {
             either {
                 postRepository.toggleFavourite(state.value.postId).bind()
