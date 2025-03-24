@@ -37,11 +37,15 @@ internal class RealPostRepository(
         postMetadataFields: String
     ): Either<Throwable, DecoratedPost> = withContext(dispatcher) {
         either {
-            println("About to test analytics")
-            analytics.logEvent("test")
             println("About to test Firestore")
             val document = firestore.document("preferences/user1").get()
-            println("Got Firestore document: exists=${document.exists}, theme=${document.get<String>("theme")}")
+            println(
+                "Got Firestore document: exists=${document.exists}, theme=${
+                    document.get<String>(
+                        "theme"
+                    )
+                }"
+            )
 
             val postRsp = apiService.post(
                 postUrl = postId,
@@ -116,6 +120,8 @@ internal class RealPostRepository(
     override suspend fun toggleFavourite(
         postId: String
     ): Either<Throwable, Unit> = withContext(dispatcher) {
+        analytics.logEvent("toggle-favourite", mapOf("id" to postId))
+
         either {
             val timestamp = favouriteTimestamp(postId).bind()
             if (timestamp != null) {
