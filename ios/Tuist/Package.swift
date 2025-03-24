@@ -10,11 +10,12 @@ let packageSettings = PackageSettings(
     productTypes: [
         // The Google Firebase dependencies are mostly static frameworks. Linking them individually in a
         // multi-module iOS setup is practically impossible at the moment as it produces a number of linker
-        // issues (like symbol duplicating or missing libraries) which don't have an obvious solution. We
-        // therefore link them under a common umbrella static framework which is linked to upstream projects.
+        // issues (like symbol duplication or missing libraries) which don't have an easy solution. We
+        // therefore link them under a common umbrella static framework which is upstream projects link to,
+        // rather than to the direct Firebase dependencies.
         //
-        // When adding new dependencies try to have them as dynamic rather than static to avoid symbol
-        // duplication issues.
+        // When adding new Firebase dependencies have them as dynamic rather than static if possible to
+        // avoid symbol duplication issues.
         "FBLPromises": .framework,
         "Firebase": .framework,
         "FirebaseAppCheckInterop": .framework,
