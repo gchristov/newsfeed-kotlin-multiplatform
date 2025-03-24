@@ -62,6 +62,7 @@ sqlDelight-native = { module = "app.cash.sqldelight:native-driver", version.ref 
 multiplatformSettings = { module = "com.russhwolf:multiplatform-settings", version.ref = "multiplatform-settings" }
 arrow-core = { module = "io.arrow-kt:arrow-core", version.ref = "arrow" }
 gitlive-firebase-firestore = { module = "dev.gitlive:firebase-firestore", version.ref = "gitlive" }
+gitlive-firebase-analytics = { module = "dev.gitlive:firebase-analytics", version.ref = "gitlive" }
 google-firebase = { module = "com.google.firebase:firebase-bom", version.ref = "google-firebase" }
 google-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
 google-analytics = { module = "com.google.firebase:firebase-analytics" }

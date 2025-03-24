@@ -1,7 +1,6 @@
 import ProjectDescription
 
 let baseSettings: SettingsDictionary = [
-    "OTHER_LDFLAGS": "$(inherited) -lsqlite3", // Needed for Firebase
     "DEBUG_INFORMATION_FORMAT" : "dwarf-with-dsym"
 ]
 

@@ -1,7 +1,7 @@
 import ProjectDescription
 
 let baseSettings: SettingsDictionary = [
-    "OTHER_LDFLAGS": "$(inherited) -ObjC", // Needed for Firebase
+    "DEBUG_INFORMATION_FORMAT" : "dwarf-with-dsym"
 ]
 
 let project = Project(

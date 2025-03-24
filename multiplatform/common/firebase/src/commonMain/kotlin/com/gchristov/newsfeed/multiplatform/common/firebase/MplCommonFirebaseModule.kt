@@ -7,6 +7,8 @@ import co.touchlab.kermit.crashlytics.CrashlyticsLogWriter
 import com.gchristov.newsfeed.multiplatform.common.kotlin.di.DependencyModule
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.FirebaseApp
+import dev.gitlive.firebase.analytics.FirebaseAnalytics
+import dev.gitlive.firebase.analytics.analytics
 import dev.gitlive.firebase.firestore.FirebaseFirestore
 import dev.gitlive.firebase.firestore.firestore
 import org.kodein.di.DI
@@ -26,10 +28,13 @@ object MplCommonFirebaseModule : DependencyModule() {
         builder.apply {
             bindSingleton { provideFirebaseApp() }
             bindSingleton { provideFirestore(app = instance()) }
+            bindSingleton { provideAnalytics(app = instance()) }
         }
     }
 
     private fun provideFirestore(app: FirebaseApp): FirebaseFirestore = Firebase.firestore(app)
+
+    private fun provideAnalytics(app: FirebaseApp): FirebaseAnalytics = Firebase.analytics(app)
 }
 
 internal expect fun provideFirebaseApp(): FirebaseApp
