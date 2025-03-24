@@ -21,6 +21,7 @@ let project = Project(
             dependencies: [
                 .project(target: "CommonSwiftUi", path: "../CommonSwiftUi"),
                 .project(target: "CommonKotlinMultiplatform", path: "../CommonKotlinMultiplatform"),
+                .project(target: "CommonFirebase", path: "../CommonFirebase"),
                 .project(target: "Post", path: "../Post"),
             ],
             settings: .settings(

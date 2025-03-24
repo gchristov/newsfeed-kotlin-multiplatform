@@ -4,6 +4,7 @@ let baseSettings: SettingsDictionary = [
     "DEBUG_INFORMATION_FORMAT" : "dwarf-with-dsym"
 ]
 
+// Umrella module for Kotlin Multiplatform to ensure the code is compiled only once
 let project = Project(
     name: "CommonKotlinMultiplatform",
     targets: [

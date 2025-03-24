@@ -21,7 +21,7 @@ sqldelight {
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            api(projects.multiplatform.common.firebase)
+            implementation(projects.multiplatform.common.firebase)
         }
     }
 }

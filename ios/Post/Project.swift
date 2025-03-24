@@ -21,8 +21,7 @@ let project = Project(
             dependencies: [
                 .project(target: "CommonSwiftUi", path: "../CommonSwiftUi"),
                 .project(target: "CommonKotlinMultiplatform", path: "../CommonKotlinMultiplatform"),
-                .external(name: "FirebaseAnalytics"),
-                .external(name: "FirebaseFirestore"),
+                .project(target: "CommonFirebase", path: "../CommonFirebase"),
             ],
             settings: .settings(
                 base: baseSettings,

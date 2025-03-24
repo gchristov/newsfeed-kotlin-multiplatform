@@ -5,6 +5,8 @@ let workspace = Workspace(
     projects: [
         "CommonSwiftUi",
         "CommonDesign",
+        "CommonFirebase",
+        "CommonKotlinMultiplatform",
         "Post",
         "Feed",
         "App",

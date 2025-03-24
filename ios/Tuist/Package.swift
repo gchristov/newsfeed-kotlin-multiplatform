@@ -2,14 +2,61 @@
 import PackageDescription
 
 #if TUIST
-    import struct ProjectDescription.PackageSettings
+import struct ProjectDescription.PackageSettings
 
-    let packageSettings = PackageSettings(
-        // Customize the product types for specific package product
-        // Default is .staticFramework
-        // productTypes: ["Alamofire": .framework,]
-        productTypes: [:]
-    )
+let packageSettings = PackageSettings(
+    // Customize the product types for specific package product
+    // Default is .staticFramework
+    productTypes: [
+        // The Google Firebase dependencies are mostly static frameworks. Linking them individually in a
+        // multi-module iOS setup is practically impossible at the moment as it produces a number of linker
+        // issues (like symbol duplication or missing libraries) which don't have an easy solution. We
+        // therefore link them under a common umbrella static framework which is upstream projects link to,
+        // rather than to the direct Firebase dependencies.
+        //
+        // When adding new Firebase dependencies have them as dynamic rather than static if possible to
+        // avoid symbol duplication issues.
+        "FBLPromises": .framework,
+        "Firebase": .framework,
+        "FirebaseAppCheckInterop": .framework,
+        "FirebaseCore": .framework,
+        "FirebaseCoreExtension": .framework,
+        "FirebaseCoreInternal": .framework,
+        "FirebaseFirestore": .framework,
+        "FirebaseFirestoreTarget": .framework,
+        "FirebaseSessions": .framework,
+        "FirebaseCrashlytics": .framework,
+        "FirebaseCrashlyticsSwift": .framework,
+        "FirebaseInstallations": .framework,
+        "FirebaseRemoteConfigInterop": .framework,
+        "FirebaseAnalytics": .framework,
+        // Having the below as dynamic frameworks produces missing library linker errors and there
+        // didn't seem to be an easy workaround, so they are left as static. Doesn't seem to cause
+        // issues.
+        "FirebaseAnalyticsTarget": .staticFramework,
+        "FirebaseAnalyticsWrapper": .staticFramework,
+        
+        "GoogleUtilities-Logger": .framework,
+        "GoogleUtilities-Environment": .framework,
+        "GoogleUtilities-NSData": .framework,
+        "GoogleUtilities-UserDefaults": .framework,
+        // Having the below as dynamic frameworks produces missing library linker errors and there
+        // didn't seem to be an easy workaround, so they are left as static. Doesn't seem to cause
+        // issues.
+        "GoogleUtilities-AppDelegateSwizzler": .staticFramework,
+        "GoogleUtilities-MethodSwizzler": .framework,
+        "GoogleUtilities-Network": .framework,
+        "GoogleUtilities-Reachability": .framework,
+        
+        "GoogleAppMeasurement": .framework,
+        "GoogleAppMeasurementTarget": .framework,
+        "GoogleAppMeasurementIdentitySupport": .framework,
+        "GoogleDataTransport": .framework,
+        
+        "Promises": .framework,
+        "nanopb": .framework,
+    ]
+)
 #endif
 
 let package = Package(

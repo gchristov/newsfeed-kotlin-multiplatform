@@ -11,6 +11,7 @@ import com.gchristov.newsfeed.multiplatform.post.data.usecase.EstimateReadingTim
 import com.russhwolf.settings.Settings
 import com.russhwolf.settings.contains
 import com.russhwolf.settings.set
+import dev.gitlive.firebase.analytics.FirebaseAnalytics
 import dev.gitlive.firebase.firestore.FirebaseFirestore
 import io.ktor.client.call.body
 import kotlinx.coroutines.CoroutineDispatcher
@@ -29,12 +30,23 @@ internal class RealPostRepository(
 
     // TODO: Remove eventually
     private val firestore: FirebaseFirestore = DependencyInjector.inject()
+    private val analytics: FirebaseAnalytics = DependencyInjector.inject()
 
     override suspend fun post(
         postId: String,
         postMetadataFields: String
     ): Either<Throwable, DecoratedPost> = withContext(dispatcher) {
         either {
+            println("About to test Firestore")
+            val document = firestore.document("preferences/user1").get()
+            println(
+                "Got Firestore document: exists=${document.exists}, theme=${
+                    document.get<String>(
+                        "theme"
+                    )
+                }"
+            )
+
             val postRsp = apiService.post(
                 postUrl = postId,
                 postMetadataFields = postMetadataFields,
@@ -108,11 +120,9 @@ internal class RealPostRepository(
     override suspend fun toggleFavourite(
         postId: String
     ): Either<Throwable, Unit> = withContext(dispatcher) {
-        either {
-            println("About to test Firestore")
-            val document = firestore.document("preferences/user1").get()
-            println("Got Firestore document: exists=${document.exists}, theme=${document.get<String>("theme")}")
+        analytics.logEvent("toggle-favourite", mapOf("id" to postId))
 
+        either {
             val timestamp = favouriteTimestamp(postId).bind()
             if (timestamp != null) {
                 sharedPreferences.remove(postId)

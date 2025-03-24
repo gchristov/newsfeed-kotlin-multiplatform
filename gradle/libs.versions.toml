@@ -16,12 +16,14 @@ junit = "4.13.2"
 kodein = "7.21.2"
 moko-mvvm = "0.12.0"
 ktor = "2.3.9"
-kermit = "2.0.3"
+touchlab-kermit = "2.0.3"
+touchlab-crashkios = "0.8.6"
 multiplatform-settings = "1.1.1"
 arrow = "1.2.3"
 gitlive = "2.1.0"
 google-services = "4.4.2"
 google-firebase = "33.9.0"
+google-crashlytics = "3.0.3"
 
 [libraries]
 junit = { module = "junit:junit", version.ref = "junit" }
@@ -51,14 +53,19 @@ ktor-client-serializationJson = { module = "io.ktor:ktor-serialization-kotlinx-j
 ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
 ktor-client-android = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
 ktor-client-ios = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
-kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
+touchlab-kermit = { module = "co.touchlab:kermit", version.ref = "touchlab-kermit" }
+touchlab-kermit-crashlytics = { module = "co.touchlab:kermit-crashlytics", version.ref = "touchlab-kermit" }
+touchlab-crashkios = { module = "co.touchlab.crashkios:crashlytics", version.ref = "touchlab-crashkios" }
 sqlDelight-core = { module = "app.cash.sqldelight:primitive-adapters", version.ref = "sqlDelight" }
 sqlDelight-android = { module = "app.cash.sqldelight:android-driver", version.ref = "sqlDelight" }
 sqlDelight-native = { module = "app.cash.sqldelight:native-driver", version.ref = "sqlDelight" }
 multiplatformSettings = { module = "com.russhwolf:multiplatform-settings", version.ref = "multiplatform-settings" }
 arrow-core = { module = "io.arrow-kt:arrow-core", version.ref = "arrow" }
 gitlive-firebase-firestore = { module = "dev.gitlive:firebase-firestore", version.ref = "gitlive" }
+gitlive-firebase-analytics = { module = "dev.gitlive:firebase-analytics", version.ref = "gitlive" }
 google-firebase = { module = "com.google.firebase:firebase-bom", version.ref = "google-firebase" }
+google-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
+google-analytics = { module = "com.google.firebase:firebase-analytics" }
 
 # Dependencies of the included gradle-plugins
 android-gradlePlugin = { module = "com.android.tools.build:gradle", version.ref = "android-gradlePlugin" }
@@ -74,6 +81,7 @@ kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "ko
 buildKonfig = { id = "com.codingfeline.buildkonfig", version.ref = "buildKonfig" }
 sqlDelight = { id = "app.cash.sqldelight", version.ref = "sqlDelight" }
 google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
+google-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "google-crashlytics" }
 
 # Plugins defined by this project
 newsfeed-android-base = { id = "android-base-plugin", version = "unspecified" }
