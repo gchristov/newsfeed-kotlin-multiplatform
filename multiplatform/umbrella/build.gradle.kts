@@ -42,6 +42,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             exportedDependencies.forEach { api(it) }
+            implementation(projects.multiplatform.auth.data)
             implementation(projects.multiplatform.common.firebase)
             implementation(libs.kotlinx.coroutines.core) // Needed for coroutine dispatchers
         }

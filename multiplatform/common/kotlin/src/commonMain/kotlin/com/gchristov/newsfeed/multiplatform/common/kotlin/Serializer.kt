@@ -1,9 +1,7 @@
 package com.gchristov.newsfeed.multiplatform.common.kotlin
 
-import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 
-@OptIn(ExperimentalSerializationApi::class)
 sealed class JsonSerializer {
     abstract val json: Json
 

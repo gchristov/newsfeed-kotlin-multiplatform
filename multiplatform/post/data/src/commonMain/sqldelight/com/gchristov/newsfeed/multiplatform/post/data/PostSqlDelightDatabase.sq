@@ -7,16 +7,16 @@ CREATE TABLE Post (
 );
 CREATE INDEX post_id ON Post(id);
 
-clearTable:
+deletePost:
 DELETE
 FROM Post
 WHERE Post.id == ?;
 
-selectWithId:
+selectPostWithId:
 SELECT *
 FROM Post
 WHERE Post.id == ?;
 
-insert:
+insertPost:
 INSERT OR REPLACE INTO Post(id, date, headline, body, thumbnail)
 VALUES (?, ?, ?, ?, ?);

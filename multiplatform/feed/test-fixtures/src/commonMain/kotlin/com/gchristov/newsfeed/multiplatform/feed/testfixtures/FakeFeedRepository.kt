@@ -7,6 +7,7 @@ import com.gchristov.newsfeed.multiplatform.common.test.execute
 import com.gchristov.newsfeed.multiplatform.feed.data.DefaultSearchQuery
 import com.gchristov.newsfeed.multiplatform.feed.data.FeedRepository
 import com.gchristov.newsfeed.multiplatform.feed.data.model.DecoratedFeedPage
+import com.gchristov.newsfeed.multiplatform.feed.data.model.FeedFilter
 import com.gchristov.newsfeed.multiplatform.post.data.PostRepository
 import kotlin.test.assertEquals
 
@@ -19,11 +20,11 @@ class FakeFeedRepository(
     var feedLoadMoreResponse: FakeResponse = FakeResponse.CompletesNormally
     var pageIndex = 0
 
-    private var lastSearchQuery: String = DefaultSearchQuery
+    private var lastFeedFilter: FeedFilter = FeedFilter(query = DefaultSearchQuery)
 
     override suspend fun feedPage(
         pageId: Int,
-        feedQuery: String
+        filter: FeedFilter
     ): Either<Throwable, DecoratedFeedPage> {
         val fakeResponse = if (pageIndex == 0) feedResponse else feedLoadMoreResponse
         val indexToLoad = pageIndex
@@ -54,16 +55,16 @@ class FakeFeedRepository(
         return Either.Right(Unit)
     }
 
-    override suspend fun saveSearchQuery(searchQuery: String): Either<Throwable, Unit> {
-        lastSearchQuery = searchQuery
+    override suspend fun saveFeedFilter(filter: FeedFilter): Either<Throwable, Unit> {
+        lastFeedFilter = filter
         return Either.Right(Unit)
     }
 
-    override suspend fun searchQuery(): Either<Throwable, String> {
-        return Either.Right(lastSearchQuery)
+    override suspend fun feedFilter(): Either<Throwable, FeedFilter> {
+        return Either.Right(lastFeedFilter)
     }
 
-    fun assertSearchQuery(query: String) {
-        assertEquals(query, lastSearchQuery)
+    fun assertFeedFilter(filter: FeedFilter) {
+        assertEquals(filter, lastFeedFilter)
     }
 }

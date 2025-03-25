@@ -3,6 +3,7 @@ package com.gchristov.newsfeed.multiplatform.feed.feature
 import arrow.core.raise.either
 import com.gchristov.newsfeed.multiplatform.common.mvvm.CommonViewModel
 import com.gchristov.newsfeed.multiplatform.feed.data.FeedRepository
+import com.gchristov.newsfeed.multiplatform.feed.data.model.FeedFilter
 import com.gchristov.newsfeed.multiplatform.feed.data.model.SectionedFeed
 import com.gchristov.newsfeed.multiplatform.feed.data.model.hasNextPage
 import com.gchristov.newsfeed.multiplatform.feed.data.usecase.BuildSectionedFeedUseCase
@@ -46,7 +47,7 @@ class FeedViewModel(
                 .debounce(FeedSearchDebounceIntervalMillis)
                 .filterNotNull()
                 .collect { debouncedText ->
-                    feedRepository.saveSearchQuery(debouncedText)
+                    feedRepository.saveFeedFilter(FeedFilter(query = debouncedText))
                     loadNextPage()
                 }
         }
@@ -99,7 +100,7 @@ class FeedViewModel(
 
         launchCoroutine {
             either {
-                val searchQuery = feedRepository.searchQuery().bind()
+                val feedFilter = feedRepository.feedFilter().bind()
                 setState {
                     copy(
                         loading = startFromFirst,
@@ -107,7 +108,7 @@ class FeedViewModel(
                         reachedEnd = false,
                         blockingError = null,
                         nonBlockingError = null,
-                        searchQuery = searchQuery,
+                        searchQuery = feedFilter.query,
                     )
                 }
 
@@ -121,7 +122,7 @@ class FeedViewModel(
 
                 val flatNewFeed = feedRepository.feedPage(
                     pageId = nextPage,
-                    feedQuery = searchQuery,
+                    filter = feedFilter,
                 ).bind()
                 val sectionedNewFeed =
                     buildSectionedFeedUseCase(BuildSectionedFeedUseCase.Dto(flatNewFeed)).bind()

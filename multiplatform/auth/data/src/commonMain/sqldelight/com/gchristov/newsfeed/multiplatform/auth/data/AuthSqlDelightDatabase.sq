@@ -1,0 +1,17 @@
+CREATE TABLE UserSession (
+    id TEXT NOT NULL PRIMARY KEY,
+    userName TEXT NOT NULL
+);
+CREATE INDEX user_session_id ON UserSession(id);
+
+clearSession:
+DELETE
+FROM UserSession;
+
+getSession:
+SELECT *
+FROM UserSession;
+
+insertSession:
+INSERT OR REPLACE INTO UserSession(id, userName)
+VALUES (?, ?);
