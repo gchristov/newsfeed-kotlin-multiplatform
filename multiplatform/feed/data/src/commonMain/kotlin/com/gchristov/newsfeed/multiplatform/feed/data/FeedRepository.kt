@@ -150,7 +150,7 @@ internal class RealFeedRepository(
     override suspend fun feedFilter(): Either<Throwable, FeedFilter> = withContext(dispatcher) {
         either {
             val userSession = authRepository.getUserSession().bind()
-            val feedFilterPath = "feed_filter/${userSession.id}"
+            val feedFilterPath = "feed_filter/${userSession.userId}"
             val feedFilterDocument = firestore.document(feedFilterPath).get()
 
             val result: Either<Throwable, FeedFilter> = if (feedFilterDocument.exists) {
@@ -172,7 +172,7 @@ internal class RealFeedRepository(
     ): Either<Throwable, Unit> = withContext(dispatcher) {
         either {
             val userSession = authRepository.getUserSession().bind()
-            val feedFilterPath = "feed_filter/${userSession.id}"
+            val feedFilterPath = "feed_filter/${userSession.userId}"
 
             try {
                 firestore.document(feedFilterPath).set(filter.toFeedFilter())

@@ -24,18 +24,18 @@ internal class RealAuthRepository(
                 val userSessionRes = queries.getSession().executeAsOneOrNull()
                 if (userSessionRes == null) {
                     userSession = UserSession(
-                        id = Uuid.random().toString(),
+                        userId = Uuid.random().toString(),
                         userName = "User Name",
                     )
                     queries.transaction {
                         queries.insertSession(
-                            id = userSession.id,
+                            userId = userSession.userId,
                             userName = userSession.userName,
                         )
                     }
                 } else {
                     userSession = UserSession(
-                        id = userSessionRes.id,
+                        userId = userSessionRes.userId,
                         userName = userSessionRes.userName
                     )
                 }

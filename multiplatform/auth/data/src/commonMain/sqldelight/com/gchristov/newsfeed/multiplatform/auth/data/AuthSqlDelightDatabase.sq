@@ -1,8 +1,8 @@
 CREATE TABLE UserSession (
-    id TEXT NOT NULL PRIMARY KEY,
+    userId TEXT NOT NULL PRIMARY KEY,
     userName TEXT NOT NULL
 );
-CREATE INDEX user_session_id ON UserSession(id);
+CREATE INDEX user_session_id ON UserSession(userId);
 
 clearSession:
 DELETE
@@ -13,5 +13,5 @@ SELECT *
 FROM UserSession;
 
 insertSession:
-INSERT OR REPLACE INTO UserSession(id, userName)
+INSERT OR REPLACE INTO UserSession(userId, userName)
 VALUES (?, ?);
