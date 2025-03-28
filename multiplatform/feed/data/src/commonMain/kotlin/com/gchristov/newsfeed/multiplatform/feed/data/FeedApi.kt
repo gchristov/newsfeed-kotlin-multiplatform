@@ -3,9 +3,10 @@ package com.gchristov.newsfeed.multiplatform.feed.data
 import arrow.core.Either
 import com.gchristov.newsfeed.multiplatform.common.network.NetworkClient
 import com.gchristov.newsfeed.multiplatform.common.network.NetworkConfig
+import com.gchristov.newsfeed.multiplatform.feed.data.api.ApiFeedResponse
+import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.header
-import io.ktor.client.statement.HttpResponse
 
 internal class FeedApi(
     private val client: NetworkClient.Json,
@@ -14,7 +15,7 @@ internal class FeedApi(
     suspend fun feed(
         pageId: Int,
         feedQuery: String
-    ): Either<Throwable, HttpResponse> {
+    ): Either<Throwable, ApiFeedResponse> {
         return try {
             val rsp = client.http.get(
                 "${config.guardianApiUrl}/search?"
@@ -25,7 +26,7 @@ internal class FeedApi(
                         + "&q=$feedQuery"
             ) {
                 header("api-key", config.guardianApiKey)
-            }
+            }.body<ApiFeedResponse>()
             Either.Right(rsp)
         } catch (error: Throwable) {
             Either.Left(error)

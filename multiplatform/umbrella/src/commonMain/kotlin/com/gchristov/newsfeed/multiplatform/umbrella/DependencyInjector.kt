@@ -1,5 +1,6 @@
 package com.gchristov.newsfeed.multiplatform.umbrella
 
+import com.gchristov.newsfeed.multiplatform.auth.data.MplAuthDataModule
 import com.gchristov.newsfeed.multiplatform.common.firebase.MplCommonFirebaseModule
 import com.gchristov.newsfeed.multiplatform.common.kotlin.MplCommonKotlinModule
 import com.gchristov.newsfeed.multiplatform.common.kotlin.di.DependencyInjector
@@ -23,6 +24,7 @@ import com.gchristov.newsfeed.multiplatform.post.feature.PostViewModel
 @Suppress("unused")
 fun DependencyInjector.initialise() {
     val modules = mutableListOf<DependencyModule>().apply {
+        add(MplAuthDataModule)
         add(MplCommonKotlinModule)
         add(MplCommonNetworkModule)
         add(MplCommonPersistenceModule)

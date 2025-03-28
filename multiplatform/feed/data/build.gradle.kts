@@ -13,7 +13,8 @@ android {
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            api(projects.multiplatform.post.data) // Needed for knowing if post is favourite
+            api(projects.multiplatform.post.data)
+            implementation(projects.multiplatform.auth.data)
             implementation(projects.multiplatform.common.firebase)
         }
     }

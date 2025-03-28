@@ -5,6 +5,7 @@ import com.gchristov.newsfeed.multiplatform.common.test.FakeClock
 import com.gchristov.newsfeed.multiplatform.common.test.FakeCoroutineDispatcher
 import com.gchristov.newsfeed.multiplatform.common.test.FakeResponse
 import com.gchristov.newsfeed.multiplatform.feed.data.model.DecoratedFeedPage
+import com.gchristov.newsfeed.multiplatform.feed.data.model.FeedFilter
 import com.gchristov.newsfeed.multiplatform.feed.data.model.SectionedFeed
 import com.gchristov.newsfeed.multiplatform.feed.data.usecase.RealBuildSectionedFeedUseCase
 import com.gchristov.newsfeed.multiplatform.feed.data.usecase.RealFlattenSectionedFeedUseCase
@@ -225,15 +226,15 @@ class FeedViewModelTest : CommonViewModelTestClass() {
     fun searchQueryIsDebounced() = runTest { viewModel, feedRepository, _ ->
         viewModel.onSearchTextChanged("te")
         delay(FeedSearchDebounceIntervalMillis - 200)
-        feedRepository.assertSearchQuery("brexit,fintech")
+        feedRepository.assertFeedFilter(FeedFilter.Default)
 
         viewModel.onSearchTextChanged("text")
         delay(FeedSearchDebounceIntervalMillis - 100)
-        feedRepository.assertSearchQuery("brexit,fintech")
+        feedRepository.assertFeedFilter(FeedFilter.Default)
 
         viewModel.onSearchTextChanged("text")
         delay(FeedSearchDebounceIntervalMillis)
-        feedRepository.assertSearchQuery("text")
+        feedRepository.assertFeedFilter(FeedFilter(query = "text"))
     }
 
     private fun runTest(

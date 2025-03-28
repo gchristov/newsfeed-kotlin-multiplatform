@@ -14,6 +14,7 @@ android {
 
 dependencies {
     // Multiplatform leaf modules
+    implementation(projects.multiplatform.auth.data)
     implementation(projects.multiplatform.common.firebase)
     implementation(projects.multiplatform.feed.feature)
     implementation(projects.multiplatform.post.feature)

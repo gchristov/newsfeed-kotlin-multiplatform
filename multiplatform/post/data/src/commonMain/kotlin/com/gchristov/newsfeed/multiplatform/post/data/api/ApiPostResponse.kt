@@ -1,25 +1,26 @@
 package com.gchristov.newsfeed.multiplatform.post.data.api
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class ApiPostResponse(
-    val response: ApiPostDetails,
+    @SerialName("response") val response: ApiPostDetails,
 ) {
     @Serializable
-    data class ApiPostDetails(val content: ApiPost)
+    data class ApiPostDetails(@SerialName("content") val content: ApiPost)
 
     @Serializable
     data class ApiPost(
-        val id: String,
-        val webPublicationDate: String,
-        val fields: ApiPostFields? = null,
+        @SerialName("id") val id: String,
+        @SerialName("webPublicationDate") val webPublicationDate: String,
+        @SerialName("fields") val fields: ApiPostFields? = null,
     )
 
     @Serializable
     data class ApiPostFields(
-        val headline: String? = null,
-        val body: String? = null,
-        val thumbnail: String? = null,
+        @SerialName("headline") val headline: String? = null,
+        @SerialName("body") val body: String? = null,
+        @SerialName("thumbnail") val thumbnail: String? = null,
     )
 }

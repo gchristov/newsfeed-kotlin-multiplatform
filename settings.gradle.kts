@@ -32,6 +32,7 @@ gradleEnterprise {
 rootProject.name = "newsfeed-kotlin-multiplatform"
 
 // Multiplatform
+include(":multiplatform:auth:data")
 include(":multiplatform:common:firebase")
 include(":multiplatform:common:kotlin")
 include(":multiplatform:common:mvvm")

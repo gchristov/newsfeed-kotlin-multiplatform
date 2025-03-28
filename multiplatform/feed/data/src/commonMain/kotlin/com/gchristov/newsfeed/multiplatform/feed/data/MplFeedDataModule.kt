@@ -1,5 +1,6 @@
 package com.gchristov.newsfeed.multiplatform.feed.data
 
+import com.gchristov.newsfeed.multiplatform.auth.data.AuthRepository
 import com.gchristov.newsfeed.multiplatform.common.kotlin.di.DependencyModule
 import com.gchristov.newsfeed.multiplatform.common.network.NetworkClient
 import com.gchristov.newsfeed.multiplatform.common.network.NetworkConfig
@@ -13,7 +14,7 @@ import com.gchristov.newsfeed.multiplatform.feed.data.usecase.RealMergeSectioned
 import com.gchristov.newsfeed.multiplatform.feed.data.usecase.RealRedecorateSectionedFeedUseCase
 import com.gchristov.newsfeed.multiplatform.feed.data.usecase.RedecorateSectionedFeedUseCase
 import com.gchristov.newsfeed.multiplatform.post.data.PostRepository
-import com.russhwolf.settings.Settings
+import dev.gitlive.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.datetime.Clock
 import org.kodein.di.DI
@@ -44,7 +45,8 @@ object MplFeedDataModule : DependencyModule() {
                             )
                         )
                     ),
-                    sharedPreferences = instance()
+                    authRepository = instance(),
+                    firestore = instance()
                 )
             }
             bindProvider { provideBuildSectionedFeedUseCase() }
@@ -64,13 +66,15 @@ object MplFeedDataModule : DependencyModule() {
         api: FeedApi,
         postRepository: PostRepository,
         database: FeedSqlDelightDatabase,
-        sharedPreferences: Settings
+        authRepository: AuthRepository,
+        firestore: FirebaseFirestore
     ): FeedRepository = RealFeedRepository(
         dispatcher = Dispatchers.Default,
         apiService = api,
         postRepository = postRepository,
         database = database,
-        sharedPreferences = sharedPreferences
+        authRepository = authRepository,
+        firestore = firestore,
     )
 
     private fun provideFeedApi(
