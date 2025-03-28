@@ -2,9 +2,6 @@ package com.gchristov.newsfeed.multiplatform.post.data
 
 import arrow.core.Either
 import arrow.core.raise.either
-import com.gchristov.newsfeed.multiplatform.common.kotlin.di.DependencyInjector
-import com.gchristov.newsfeed.multiplatform.common.kotlin.di.inject
-import com.gchristov.newsfeed.multiplatform.post.data.api.ApiPostResponse
 import com.gchristov.newsfeed.multiplatform.post.data.model.DecoratedPost
 import com.gchristov.newsfeed.multiplatform.post.data.model.toPost
 import com.gchristov.newsfeed.multiplatform.post.data.usecase.EstimateReadingTimeMinutesUseCase
@@ -12,7 +9,6 @@ import com.russhwolf.settings.Settings
 import com.russhwolf.settings.contains
 import com.russhwolf.settings.set
 import dev.gitlive.firebase.analytics.FirebaseAnalytics
-import io.ktor.client.call.body
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.Clock
@@ -40,12 +36,10 @@ internal class RealPostRepository(
     private val apiService: PostApi,
     private val sharedPreferences: Settings,
     private val estimateReadingTimeMinutesUseCase: EstimateReadingTimeMinutesUseCase,
-    database: PostSqlDelightDatabase
+    database: PostSqlDelightDatabase,
+    private val analytics: FirebaseAnalytics
 ) : PostRepository {
     private val queries = database.postSqlDelightDatabaseQueries
-
-    // TODO: Inject via constructor
-    private val analytics: FirebaseAnalytics = DependencyInjector.inject()
 
     override suspend fun post(
         postId: String,
@@ -79,9 +73,9 @@ internal class RealPostRepository(
     override suspend fun cachedPost(
         postId: String
     ): Either<Throwable, DecoratedPost?> = withContext(dispatcher) {
-        val post = queries.selectPostWithId(postId).executeAsOneOrNull()
-        post?.let {
-            decoratePost(post)
+        val cachedPost = queries.selectPostWithId(postId).executeAsOneOrNull()
+        cachedPost?.let {
+            decoratePost(cachedPost)
         } ?: Either.Right(null)
     }
 

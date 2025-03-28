@@ -86,18 +86,18 @@ internal class RealFeedRepository(
 
     override suspend fun cachedFeedPage(): Either<Throwable, DecoratedFeedPage?> =
         withContext(dispatcher) {
-            val selectPage = queries.selectFeedPage().executeAsList()
-            if (selectPage.isEmpty()) {
+            val cachedPage = queries.selectFeedPage().executeAsList()
+            if (cachedPage.isEmpty()) {
                 return@withContext Either.Right(null)
             }
             // We only cache the first feed page, so using the first result is fine here
-            val firstPage = selectPage.first()
+            val firstPage = cachedPage.first()
             val page = FeedPage(
                 pageId = firstPage.pageId,
                 pages = firstPage.pages,
             )
             val feedItems = async {
-                selectPage.map {
+                cachedPage.map {
                     decorateFeedItem(
                         FeedItem(
                             itemId = it.itemId,

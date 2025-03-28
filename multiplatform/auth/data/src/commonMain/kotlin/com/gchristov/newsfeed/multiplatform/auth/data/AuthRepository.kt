@@ -33,13 +33,10 @@ internal class RealAuthRepository(
                             userName = userSession.userName,
                         )
                     }
+                    Either.Right(userSession)
                 } else {
-                    userSession = UserSession(
-                        userId = userSessionRes.userId,
-                        userName = userSessionRes.userName
-                    )
+                    Either.Right(userSessionRes)
                 }
-                Either.Right(userSession)
             } catch (error: Throwable) {
                 Either.Left(error)
             }

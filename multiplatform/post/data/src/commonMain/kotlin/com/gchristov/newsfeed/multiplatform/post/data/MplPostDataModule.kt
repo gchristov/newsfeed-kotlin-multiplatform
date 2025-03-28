@@ -7,6 +7,7 @@ import com.gchristov.newsfeed.multiplatform.common.persistence.SqlDriverProperti
 import com.gchristov.newsfeed.multiplatform.post.data.usecase.EstimateReadingTimeMinutesUseCase
 import com.gchristov.newsfeed.multiplatform.post.data.usecase.RealEstimateReadingTimeMinutesUseCase
 import com.russhwolf.settings.Settings
+import dev.gitlive.firebase.analytics.FirebaseAnalytics
 import kotlinx.coroutines.Dispatchers
 import org.kodein.di.DI
 import org.kodein.di.bindProvider
@@ -37,6 +38,7 @@ object MplPostDataModule : DependencyModule() {
                         )
                     ),
                     estimateReadingTimeMinutesUseCase = instance(),
+                    analytics = instance()
                 )
             }
             bindProvider { provideEstimateReadingTimeMinutesUseCase() }
@@ -48,12 +50,14 @@ object MplPostDataModule : DependencyModule() {
         sharedPreferences: Settings,
         database: PostSqlDelightDatabase,
         estimateReadingTimeMinutesUseCase: EstimateReadingTimeMinutesUseCase,
+        analytics: FirebaseAnalytics
     ): PostRepository = RealPostRepository(
         dispatcher = Dispatchers.Default,
         apiService = api,
         sharedPreferences = sharedPreferences,
         database = database,
         estimateReadingTimeMinutesUseCase = estimateReadingTimeMinutesUseCase,
+        analytics = analytics
     )
 
     private fun providePostApi(
