@@ -161,7 +161,7 @@ internal class RealFeedRepository(
                     Either.Left(e)
                 }
             } else {
-                Either.Right(FeedFilter(query = DefaultSearchQuery))
+                Either.Right(FeedFilter.Default)
             }
             result.bind()
         }
@@ -183,5 +183,3 @@ internal class RealFeedRepository(
         }
     }
 }
-
-const val DefaultSearchQuery = "fintech"

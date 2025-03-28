@@ -4,7 +4,6 @@ import arrow.core.Either
 import arrow.core.raise.either
 import com.gchristov.newsfeed.multiplatform.common.test.FakeResponse
 import com.gchristov.newsfeed.multiplatform.common.test.execute
-import com.gchristov.newsfeed.multiplatform.feed.data.DefaultSearchQuery
 import com.gchristov.newsfeed.multiplatform.feed.data.FeedRepository
 import com.gchristov.newsfeed.multiplatform.feed.data.model.DecoratedFeedPage
 import com.gchristov.newsfeed.multiplatform.feed.data.model.FeedFilter
@@ -20,7 +19,7 @@ class FakeFeedRepository(
     var feedLoadMoreResponse: FakeResponse = FakeResponse.CompletesNormally
     var pageIndex = 0
 
-    private var lastFeedFilter: FeedFilter = FeedFilter(query = DefaultSearchQuery)
+    private var lastFeedFilter = FeedFilter.Default
 
     override suspend fun feedPage(
         pageId: Int,
