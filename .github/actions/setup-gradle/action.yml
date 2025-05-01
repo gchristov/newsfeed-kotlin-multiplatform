@@ -8,11 +8,11 @@ runs:
         distribution: "zulu"
         java-version: "20" # When changing the Java version make sure to also update jvmToolchain
     - name: Set up Gradle
-      uses: gradle/actions/setup-gradle@v3 # By default, cache is only saved on the 'master' branch
+      uses: gradle/actions/setup-gradle@v4 # By default, cache is only saved on the 'master' branch
     - name: Set up Konan
       uses: actions/cache@v4
       with:
-        path: '~/.konan/**'
+        path: '~/.konan/**' # Will only exist for Kotlin Native gradle builds like iOS
         key: ${{ github.job }}-konan
     - name: Set up secrets
       shell: bash
