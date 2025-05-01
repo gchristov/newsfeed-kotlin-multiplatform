@@ -13,6 +13,12 @@ runs:
         cd ios
         tuist build App
         cd ..
+    - name: Check konan
+      shell: bash
+      run: |
+        set -Eeuo pipefail 
+        cd ~
+        ls -a
     - name: Artifacts
       uses: actions/upload-artifact@v4
       if: always() # Ensure all artifacts are collected, even after errors

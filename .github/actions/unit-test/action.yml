@@ -9,6 +9,12 @@ runs:
       run: |
         set -Eeuo pipefail 
         ./gradlew --no-daemon --continue testDebugUnitTest
+    - name: Check konan
+      shell: bash
+      run: |
+        set -Eeuo pipefail 
+        cd ~
+        ls -a
     - name: Generate test report
       uses: mikepenz/action-junit-report@v4
       if: always() # Ensure all test reports are collected, even after errors
