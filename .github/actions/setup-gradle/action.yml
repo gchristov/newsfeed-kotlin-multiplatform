@@ -12,7 +12,7 @@ runs:
     - name: Set up Konan
       uses: actions/cache@v4
       with:
-        path: '~/.konan/**'
+        path: '~/.konan/**' # Will only exist for Kotlin Native gradle builds like iOS
         key: ${{ github.job }}-konan
     - name: Set up secrets
       shell: bash
