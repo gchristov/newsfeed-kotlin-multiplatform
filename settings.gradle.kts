@@ -5,27 +5,26 @@ pluginManagement {
     repositories {
         google()
         gradlePluginPortal()
-        mavenCentral()
     }
 }
 
 plugins {
-    id("com.gradle.enterprise") version("3.16.2")
+    id("com.gradle.develocity") version("3.18.1")
 }
 
 dependencyResolutionManagement {
     repositories {
         google()
-        mavenCentral()
+        gradlePluginPortal()
         maven(uri("https://jitpack.io")) // For compose-html dependency
     }
 }
 
-gradleEnterprise {
+develocity {
     buildScan {
-        termsOfServiceUrl = "https://gradle.com/terms-of-service"
-        termsOfServiceAgree = "yes"
-        publishAlways()
+        termsOfUseUrl.set("https://gradle.com/help/legal-terms-of-use")
+        termsOfUseAgree.set("yes")
+        publishing.onlyIf { true }
     }
 }
 
