@@ -57,9 +57,18 @@ gradlePlugin {
         implementationClass =
             "com.gchristov.newsfeed.gradleplugins.multiplatform.MplFeaturePlugin"
     }
+    plugins.register("mpl-build-config-plugin") {
+        id = "mpl-build-config-plugin"
+        implementationClass =
+            "com.gchristov.newsfeed.gradleplugins.multiplatform.MplBuildConfigPlugin"
+    }
 }
 
 dependencies {
     compileOnly(libs.android.gradlePlugin)
     compileOnly(libs.kotlin.gradlePlugin)
+    // Allows these to be available and applied in the pre-compiled conventions plugin
+    implementation(libs.kotlin.serialization.gradlePlugin)
+    implementation(libs.buildKonfig.gradlePlugin)
+    implementation(libs.sqlDelight.gradlePlugin)
 }

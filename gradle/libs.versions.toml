@@ -67,19 +67,19 @@ google-firebase = { module = "com.google.firebase:firebase-bom", version.ref = "
 google-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
 google-analytics = { module = "com.google.firebase:firebase-analytics" }
 
-# Dependencies of the included gradle-plugins
+# Plugin dependencies included in the pre-compiled gradle-plugins/conventions project
 android-gradlePlugin = { module = "com.android.tools.build:gradle", version.ref = "android-gradlePlugin" }
 kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+kotlin-serialization-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-serialization", version.ref = "kotlin" }
+buildKonfig-gradlePlugin = { module = "com.codingfeline.buildkonfig:buildkonfig-gradle-plugin", version.ref = "buildKonfig" }
+sqlDelight-gradlePlugin = { module = "app.cash.sqldelight:gradle-plugin", version.ref = "sqlDelight" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android-gradlePlugin" }
 android-library = { id = "com.android.library", version.ref = "android-gradlePlugin" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
-kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-buildKonfig = { id = "com.codingfeline.buildkonfig", version.ref = "buildKonfig" }
-sqlDelight = { id = "app.cash.sqldelight", version.ref = "sqlDelight" }
 google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
 google-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "google-crashlytics" }
 
@@ -94,3 +94,4 @@ newsfeed-mpl-base = { id = "mpl-base-plugin", version = "unspecified" }
 newsfeed-mpl-module = { id = "mpl-module-plugin", version = "unspecified" }
 newsfeed-mpl-data = { id = "mpl-data-plugin", version = "unspecified" }
 newsfeed-mpl-feature = { id = "mpl-feature-plugin", version = "unspecified" }
+newsfeed-mpl-buildConfig = { id = "mpl-build-config-plugin", version = "unspecified" }

@@ -4,7 +4,7 @@ val packageId = "com.gchristov.newsfeed.multiplatform.common.network"
 
 plugins {
     alias(libs.plugins.newsfeed.mpl.module)
-    id("com.codingfeline.buildkonfig")
+    alias(libs.plugins.newsfeed.mpl.buildConfig)
 }
 
 android {
