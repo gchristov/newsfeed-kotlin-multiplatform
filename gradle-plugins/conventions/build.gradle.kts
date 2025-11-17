@@ -70,6 +70,7 @@ dependencies {
     // Allows these to be available and applied in the pre-compiled conventions plugin
     implementation(libs.kotlin.serialization.gradlePlugin)
     implementation(libs.kotlin.compose.gradlePlugin)
+    implementation(libs.kotlin.multiplatform.gradlePlugin)
     implementation(libs.buildKonfig.gradlePlugin)
     implementation(libs.sqlDelight.gradlePlugin)
 }
