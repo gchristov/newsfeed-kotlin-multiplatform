@@ -7,6 +7,11 @@ runs:
       run: |
         set -Eeuo pipefail
         sudo xcode-select -s /Applications/Xcode_16.2.app
+    - name: Set up iOS version
+      shell: bash
+      run: |
+        set -Eeuo pipefail
+        sudo xcodebuild -downloadPlatform iOS
     - name: Set up Tuist
       shell: bash
       run: |
