@@ -1,7 +1,6 @@
 package com.gchristov.newsfeed.gradleplugins.android
 
 import com.android.build.gradle.BaseExtension
-import com.gchristov.newsfeed.gradleplugins.libs
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
@@ -12,7 +11,7 @@ class AndroidComposePlugin : Plugin<Project> {
             extensions.configure<BaseExtension> {
                 buildFeatures.compose = true
                 with (plugins) {
-                    apply(libs.findPlugin("kotlin-compose").get().get().pluginId)
+                    apply("org.jetbrains.kotlin.plugin.compose")
                 }
             }
         }
