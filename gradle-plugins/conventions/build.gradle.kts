@@ -73,4 +73,5 @@ dependencies {
     implementation(libs.kotlin.multiplatform.gradlePlugin)
     implementation(libs.buildKonfig.gradlePlugin)
     implementation(libs.sqlDelight.gradlePlugin)
+    implementation(libs.google.services.gradlePlugin)
 }
