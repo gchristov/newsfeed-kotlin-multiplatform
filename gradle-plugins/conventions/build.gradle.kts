@@ -71,9 +71,11 @@ dependencies {
     implementation(libs.kotlin.serialization.gradlePlugin)
     implementation(libs.kotlin.compose.gradlePlugin)
     implementation(libs.kotlin.multiplatform.gradlePlugin)
+    implementation(libs.kotlin.android.gradlePlugin)
     implementation(libs.buildKonfig.gradlePlugin)
     implementation(libs.sqlDelight.gradlePlugin)
     implementation(libs.google.services.gradlePlugin)
     implementation(libs.google.crashlytics.gradlePlugin)
     implementation(libs.android.application.gradlePlugin)
+    implementation(libs.android.library.gradlePlugin)
 }
