@@ -13,7 +13,7 @@ let project = Project(
     targets: [
         .target(
             name: "App",
-            destinations: .iOS,
+            destinations: [.iPad, .iPhone],
             product: .app,
             bundleId: "com.gchristov.newsfeed",
             deploymentTargets: .iOS("15.0"),

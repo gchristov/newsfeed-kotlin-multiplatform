@@ -14,7 +14,7 @@ let project = Project(
     targets: [
         .target(
             name: "CommonSwiftUi",
-            destinations: .iOS,
+            destinations: [.iPad, .iPhone],
             product: .framework,
             bundleId: "com.gchristov.newsfeed.commonswiftui",
             deploymentTargets: .iOS("15.0"),

@@ -13,7 +13,7 @@ let project = Project(
     targets: [
         .target(
             name: "Feed",
-            destinations: .iOS,
+            destinations: [.iPad, .iPhone],
             product: .framework,
             bundleId: "com.gchristov.newsfeed.feed",
             deploymentTargets: .iOS("15.0"),
@@ -34,7 +34,7 @@ let project = Project(
         ),
         .target(
             name: "FeedUiTestHost",
-            destinations: .iOS,
+            destinations: [.iPad, .iPhone],
             product: .app,
             bundleId: "com.gchristov.newsfeed.feed.uitesthost",
             deploymentTargets: .iOS("15.0"),
@@ -52,7 +52,7 @@ let project = Project(
         ),
         .target(
             name: "FeedUiTests",
-            destinations: .iOS,
+            destinations: [.iPad, .iPhone],
             product: .uiTests,
             bundleId: "com.gchristov.newsfeed.feed.uitests",
             deploymentTargets: .iOS("15.0"),

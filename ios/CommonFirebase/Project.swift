@@ -16,7 +16,7 @@ let project = Project(
     targets: [
         .target(
             name: "CommonFirebase",
-            destinations: .iOS,
+            destinations: [.iPad, .iPhone],
             product: .staticFramework,
             bundleId: "com.gchristov.newsfeed.commonfirebase",
             deploymentTargets: .iOS("15.0"),

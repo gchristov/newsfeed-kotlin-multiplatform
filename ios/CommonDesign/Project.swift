@@ -13,7 +13,7 @@ let project = Project(
     targets: [
         .target(
             name: "CommonDesign",
-            destinations: .iOS,
+            destinations: [.iPad, .iPhone],
             product: .framework,
             bundleId: "com.gchristov.newsfeed.commondesign",
             deploymentTargets: .iOS("15.0"),
