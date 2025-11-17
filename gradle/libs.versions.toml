@@ -69,6 +69,7 @@ google-analytics = { module = "com.google.firebase:firebase-analytics" }
 
 # Plugin dependencies included in the pre-compiled gradle-plugins/conventions project
 android-gradlePlugin = { module = "com.android.tools.build:gradle", version.ref = "android-gradlePlugin" }
+android-application-gradlePlugin = { module = "com.android.application:com.android.application.gradle.plugin", version.ref = "android-gradlePlugin" }
 kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 kotlin-serialization-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-serialization", version.ref = "kotlin" }
 kotlin-compose-gradlePlugin = { module = "org.jetbrains.kotlin.plugin.compose:org.jetbrains.kotlin.plugin.compose.gradle.plugin", version.ref = "kotlin" }
@@ -79,7 +80,6 @@ google-services-gradlePlugin = { module = "com.google.gms:google-services", vers
 google-crashlytics-gradlePlugin = { module = "com.google.firebase.crashlytics:com.google.firebase.crashlytics.gradle.plugin", version.ref = "google-crashlytics" }
 
 [plugins]
-android-application = { id = "com.android.application", version.ref = "android-gradlePlugin" }
 android-library = { id = "com.android.library", version.ref = "android-gradlePlugin" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 
