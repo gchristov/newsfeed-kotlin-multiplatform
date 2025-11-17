@@ -8,9 +8,10 @@ runs:
         set -Eeuo pipefail
         sudo xcode-select -s /Applications/Xcode_16.2.app
     - name: Set up iOS runtime
-      uses: muukii/actions-xcode-install-simulator@main
-      with:
-        ios_version: "15.0"
+      shell: bash
+      run: |
+        set -Eeuo pipefail
+        sudo xcodes runtimes install "iOS 15.0"
     - name: Set up Tuist
       shell: bash
       run: |
