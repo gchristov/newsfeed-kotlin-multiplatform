@@ -13,7 +13,7 @@ let project = Project(
     targets: [
         .target(
             name: "Post",
-            destinations: [.iPad, .iPhone],
+            destinations: .iOS,
             product: .framework,
             bundleId: "com.gchristov.newsfeed.post",
             deploymentTargets: .iOS("15.0"),
@@ -33,7 +33,7 @@ let project = Project(
         ),
         .target(
             name: "PostUiTestHost",
-            destinations: [.iPad, .iPhone],
+            destinations: .iOS,
             product: .app,
             bundleId: "com.gchristov.newsfeed.post.uitesthost",
             deploymentTargets: .iOS("15.0"),
@@ -50,7 +50,7 @@ let project = Project(
         ),
         .target(
             name: "PostUiTests",
-            destinations: [.iPad, .iPhone],
+            destinations: .iOS,
             product: .uiTests,
             bundleId: "com.gchristov.newsfeed.post.uitests",
             deploymentTargets: .iOS("15.0"),

@@ -10,7 +10,7 @@ let project = Project(
     targets: [
         .target(
             name: "CommonKotlinMultiplatform",
-            destinations: [.iPad, .iPhone],
+            destinations: .iOS,
             product: .framework,
             bundleId: "com.gchristov.newsfeed.commonkotlinmultiplatform",
             deploymentTargets: .iOS("15.0"),
