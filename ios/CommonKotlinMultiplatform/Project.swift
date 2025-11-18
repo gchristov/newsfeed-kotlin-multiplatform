@@ -13,7 +13,7 @@ let project = Project(
             destinations: .iOS,
             product: .framework,
             bundleId: "com.gchristov.newsfeed.commonkotlinmultiplatform",
-            deploymentTargets: .iOS("18.2"),
+            deploymentTargets: .iOS("15.0"),
             scripts: [
                 TargetScript.pre(
                     script: """

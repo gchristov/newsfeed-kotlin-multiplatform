@@ -17,7 +17,7 @@ let project = Project(
             destinations: .iOS,
             product: .framework,
             bundleId: "com.gchristov.newsfeed.commonswiftui",
-            deploymentTargets: .iOS("18.2"),
+            deploymentTargets: .iOS("15.0"),
             sources: ["Sources/**"],
             dependencies: [
                 .project(target: "CommonDesign", path: "../CommonDesign"),

@@ -16,7 +16,7 @@ let project = Project(
             destinations: .iOS,
             product: .app,
             bundleId: "com.gchristov.newsfeed",
-            deploymentTargets: .iOS("18.2"),
+            deploymentTargets: .iOS("15.0"),
             infoPlist: InfoPlist.extendingDefault(with: [
                 "CFBundleDisplayName": "Newsfeed",
                 "UIMainStoryboardFile": "",
