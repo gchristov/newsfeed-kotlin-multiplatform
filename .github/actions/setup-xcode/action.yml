@@ -6,7 +6,7 @@ runs:
       shell: bash
       run: |
         set -Eeuo pipefail
-        sudo xcode-select -s /Applications/Xcode_16.2.app
+        sudo xcode-select -s /Applications/Xcode_16.4.app
     - name: Set up Tuist
       shell: bash
       run: |
