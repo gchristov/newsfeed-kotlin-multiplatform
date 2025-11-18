@@ -16,7 +16,7 @@ let project = Project(
             destinations: .iOS,
             product: .framework,
             bundleId: "com.gchristov.newsfeed.commondesign",
-            deploymentTargets: .iOS("15.0"),
+            deploymentTargets: .iOS("18.2"),
             sources: ["Sources/**"],
             resources: ["Resources/**"],
             settings: .settings(

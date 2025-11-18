@@ -16,7 +16,7 @@ let project = Project(
             destinations: .iOS,
             product: .framework,
             bundleId: "com.gchristov.newsfeed.feed",
-            deploymentTargets: .iOS("15.0"),
+            deploymentTargets: .iOS("18.2"),
             sources: ["Sources/**"],
             dependencies: [
                 .project(target: "CommonSwiftUi", path: "../CommonSwiftUi"),
@@ -37,7 +37,7 @@ let project = Project(
             destinations: .iOS,
             product: .app,
             bundleId: "com.gchristov.newsfeed.feed.uitesthost",
-            deploymentTargets: .iOS("15.0"),
+            deploymentTargets: .iOS("18.2"),
             sources: ["Tests/Host/**"],
             dependencies: [
                 .project(target: "Feed", path: "../Feed"),
@@ -55,7 +55,7 @@ let project = Project(
             destinations: .iOS,
             product: .uiTests,
             bundleId: "com.gchristov.newsfeed.feed.uitests",
-            deploymentTargets: .iOS("15.0"),
+            deploymentTargets: .iOS("18.2"),
             sources: ["Tests/Sources/**"],
             dependencies: [
                 .target(name: "FeedUiTestHost"),
